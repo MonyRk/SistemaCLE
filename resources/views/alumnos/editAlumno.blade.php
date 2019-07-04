@@ -14,12 +14,22 @@
 
         
             @if ($errors->any())
-                <p>No pudimos agregar los datos, <br> por favor, verifica la información</p>
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li> {{ $error }}</li>
-                    @endforeach
-                </ul>                            
+            <div class="alert alert-danger alert-block">
+                    <button type="button" class="close" data-dismiss="alert">×</button>	
+                    <strong>No pudimos agregar los datos, <br> por favor, verifica la información</strong>
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li> {{ $error }}</li>
+                        @endforeach
+                    </ul>  
+                </div>    
+             
+            @else 
+            @if(session()->has('message'))
+                <div class="alert alert-success">
+                     {{ session()->get('message') }}
+                </div>
+            @endif                           
             @endif
 
         <form method="post" action="{{ url("alumnos/{$alumno[0]->num_control}") }}" autocomplete="off">
@@ -66,11 +76,11 @@
                         <label class="form-control-label" for="input-sexo" >{{ __('Sexo') }}</label>
                         <div class="row">            
                             <div class="custom-control custom-radio">
-                                <input type="radio" id="sexof" name="sexo" value="{{ old('sexo', $alumno[0]->sexo) }}" class="custom-control-input">
+                                <input type="radio" id="sexof" name="sexo"  @if($alumno[0]->sexo ='F') checked @endif value = {{ old('sexo',$alumno[0]->sexo) }} class="custom-control-input">
                                 <label class="custom-control-label" for="sexof">&nbsp&nbsp&nbsp&nbsp&nbspFemenino</label>
                             </div>
                             <div class="custom-control custom-radio">
-                                <input type="radio" id="sexom" name="sexo" value="{{ old('sexo', $alumno[0]->sexo) }}" class="custom-control-input">
+                                <input type="radio" id="sexom" name="sexo" @if($alumno[0]->sexo ='M') checked @endif value = {{ old('sexo',$alumno[0]->sexo) }} class="custom-control-input">
                                 <label class="custom-control-label" for="sexom">&nbsp&nbsp&nbsp&nbsp&nbspMasculino</label>
                             </div>
                         </div>
@@ -113,7 +123,7 @@
                     </div>
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-email">{{ __('Email') }}</label>
-                        <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder="" value="{{ old('email', $alumno[0]->email) }}" required>
+                        <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder="" value="{{ old('email', $email[0]->email) }}" required>
                     </div>
                 </div>
         
@@ -150,6 +160,36 @@
                         </select>
                 </div>
             </div>
+            <div class="form-row">
+                    <div class="col-md-3"></div>
+                    <div class="form-group col-md-3">
+                        <label for="activarpago" class="form-control-label">{{ __('Activar Folio de Pago') }}</label>
+                        <div><label class="custom-toggle" >
+                                <input type="checkbox" id="activarpago" onchange="comprobar(this);">
+                                <span class="custom-toggle-slider rounded-circle"></span>
+                              </label>
+                            </div>
+                    </div>
+                   
+                    <div class="form-group col-md" id="folio" style="display:none">
+                        <label for="foliopago" class="form-control-label"> {{ __('Folio de Pago') }}</label>
+                        <input type="text" name="foliopago" id="foliopago" class="form-control" placeholder=""  value="">
+                    </div>
+                </div>
+            </div>
+            <script>
+             function comprobar(obj)
+                {   
+                    if (obj.checked){
+                    
+                document.getElementById('folio').style.display = "";
+                } else{
+                    
+                document.getElementById('folio').style.display = "none";
+                }     
+                }
+            </script>
+
             <div class="text-center">
                 <button type="submit" class="btn btn-primary mt-4">{{ __('Actualizar') }}</button>
             </div>

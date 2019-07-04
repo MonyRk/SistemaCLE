@@ -9,9 +9,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class HorasDisponible extends Model
 {
     protected $primaryKey = 'id_hora';
+    public $timestamps = false;
     protected $fillable = [
         'hora1','hora2','hora3', 'hora4', 'hora5', 'hora6','hora7','hora8','hora9', 'hora10', 'hora11', 'hora12', 'hora13'
     ];
+
     use SoftDeletes;
     protected $dates = ['deleted_at'];
     

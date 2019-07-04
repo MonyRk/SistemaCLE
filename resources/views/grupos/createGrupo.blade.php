@@ -52,8 +52,8 @@
                 </div>
                 <div class="row">
                         <div class="form-group col-md">
-                                <label class="form-control-label" for="input-aula">{{ __('Modalidad') }}</label>
-                                <select id="input-aula" class="form-control" name="modalidad">
+                                <label class="form-control-label" for="input-modalidad">{{ __('Modalidad') }}</label>
+                                <select id="input-modalidad" class="form-control" name="modalidad">
                                     <option selected></option>
                                         <option value="Semanal">{{ __('Semanal') }}</option>
                                         <option value="Sabatino">{{ __('Sabatino') }}</option>
@@ -63,30 +63,14 @@
                         <label class="form-control-label" for="input-aula">{{ __('Aula') }}</label>
                         <select id="input-aula" class="form-control" name="aula">
                             <option selected></option>
-                                @foreach ($grupos as $grupo)
-                                <option value="{{ $grupo->id_aula }}">{{ $grupo->edificio }}{{ $grupo->num_aula }}</option>                             
+                                @foreach ($aulas as $aula)
+                                <option value="{{ $aula->id_aula }}">{{ $aula->edificio }}{{ $aula->num_aula }}</option>                             
                                 @endforeach
                         </select>                  
                     </div>
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-hora">{{ __('Hora') }}</label>
-                        
-                        <select id="input-hora" class="form-control" name="hora">  
-                                    {{-- <option value="13:00">13:00</option>                                        --}}
-                                        {{-- <option value="{{ $horasaula[$grupo->id_aula]->hora1 }}">{{ $horasaula[$grupo->id_aula]->hora1 }}</option>
-                                        <option value="{{ $horasaula->hora2 }}">{{ $horasaula->hora2 }}</option>
-                                        <option value="{{ $horasaula->hora3 }}">{{ $horasaula->hora3 }}</option>
-                                        <option value="{{ $horasaula->hora4 }}">{{ $horasaula->hora4 }}</option>
-                                        <option value="{{ $horasaula->hora5 }}">{{ $horasaula->hora5 }}</option>
-                                        <option value="{{ $horasaula->hora6 }}">{{ $horasaula->hora6 }}</option>
-                                        <option value="{{ $horasaula->hora7 }}">{{ $horasaula->hora7 }}</option>
-                                        <option value="{{ $horasaula->hora8 }}">{{ $horasaula->hora8 }}</option>
-                                        <option value="{{ $horasaula->hora9 }}">{{ $horasaula->hora9 }}</option>
-                                        <option value="{{ $horasaula->hora10 }}">{{ $horasaula->hora10 }}</option>
-                                        <option value="{{ $horasaula->hora11 }}">{{ $horasaula->hora11 }}</option>
-                                        <option value="{{ $horasaula->hora12 }}">{{ $horasaula->hora12 }}</option>
-                                        <option value="{{ $horasaula->hora13 }}">{{ $horasaula->hora13 }}</option>  --}}
-                                       
+                        <select id="input-hora" class="form-control" name="hora"> 
                         </select>                  
                     </div>
                 </div>
@@ -122,15 +106,21 @@
 
 @section('script')
 <script>
-    $(document).ready(function(){
-        $('#input-aula').on('change',function(){
-            var aula_id = $(this).val();
-            if ($.trim(aula_id) != ''){
-                $.get('aulas',{id_aula: aula_id},function('aulas'){
-                    $('#input-hora').empty();
-                    $('#input-aula').append("<option value=''>Selecciona un aula</option>");
-                    $.each(aulas, function(index, value){
-                        $('#input-aula').append("<option value='"+ index +"'>"+ value +"</option>");
+    var $jq = jQuery.noConflict();
+    $jq(document).ready(function(){
+        $jq('#input-aula').on('change',function(){
+            var aula_id = $jq(this).val();
+            if ($jq.trim(aula_id) != ''){
+                $jq.get('aulas',{id_aula: aula_id},function(aulas){
+                    $jq('#input-hora').empty();
+                    $jq('#input-hora').append("<option value=''></option>");
+                    $jq.each(aulas, function(index, value){ 
+                        console.log(index,value);
+                        for (let i = 0; i < 14; i++) {
+                            if (value[i] != null) {
+                                $jq('#input-hora').append("<option value='"+ i +"'>"+ value[i] +"</option>");
+                            }
+                        }
                     });
                 });
             }

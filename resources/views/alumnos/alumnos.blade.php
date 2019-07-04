@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('sidebar')
-@include('layouts.navbars.sidebar')
+    @include('layouts.navbars.sidebar')
+    
 @endsection
 @section('content')
 
@@ -23,8 +24,11 @@
      {{-- -contenido --}}
      <div class="container-fluid">
         <div class="row">
+        
             <!-- espacio de busqueda-->
-            <div class="col-md"></div>
+            <div class="col-md">
+                    @include('flash-message')
+            </div>
             <div class="col-md">
                 <div class="">
                     <form class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-9"  style="margin-top: 15px" >
@@ -129,9 +133,7 @@
                                             <a href="alumnos/{{ $alumno->num_control }}/eliminar"><i class="far fa-trash-alt"></i></a>
                                         </td>
                                     </tr>
-                                    @empty
-                                        
-                                    @endforelse
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

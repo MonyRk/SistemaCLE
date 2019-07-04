@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('sidebar')
-@include('layouts.navbars.sidebar')
+    @include('layouts.navbars.sidebar')
 @endsection
+
 @section('content')
 
 <div class="header bg-gradient-white py-5 py-lg-3">
@@ -24,7 +25,9 @@
      <div class="container-fluid">
         <div class="row">
             <!-- espacio de busqueda-->
-            <div class="col-md"></div>
+            <div class="col-md">
+                @include('flash-message')
+            </div>
             <div class="col-md">
                 <div class="">
                     <form class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-9"  style="margin-top: 15px" >
@@ -94,7 +97,7 @@
                                     <tr> 
                                         <th scope="col">Matricula</th>
                                         <th scope="col">Nombre</th>
-                                        <th scope="col">Estatus</th>
+                                        <th scope="col">Grado de <br> Estudios</th>
                                         <th scope="col">Editar</th>
                                         <th scope="col">Eliminar</th>
                                         

@@ -13,21 +13,22 @@
     <div class="container-fluid m--t">
         <div class="card-body ">
             
-            
-            
             @if ($errors->any())
-                <p>No pudimos agregar los datos, <br> por favor, verifica la información</p>
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li> {{ $error }}</li>
-                    @endforeach
-                </ul> 
+            <div class="alert alert-danger alert-block">
+                    <button type="button" class="close" data-dismiss="alert">×</button>	
+                    <strong>No pudimos agregar los datos, <br> por favor, verifica la información</strong>
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li> {{ $error }}</li>
+                        @endforeach
+                    </ul>  
+                </div> 
             @else 
             @if(session()->has('message'))
-    <div class="alert alert-success">
-        {{ session()->get('message') }}
-    </div>
-@endif                           
+                <div class="alert alert-success">
+                     {{ session()->get('message') }}
+                </div>
+            @endif                           
             @endif
 
         <form method="post" action="@yield('action')" autocomplete="off">
@@ -49,7 +50,7 @@
                         <label class="form-control-label" for="input-name">{{ __('Nombre(s)') }}</label>
                         <input type="text" name="name" id="input-name" class="form-control" placeholder="" value="{{ old('name') }}" >
                     </div>
-                    <div class="col-md">
+                    <div class="col-md"> 
                         <label class="form-control-label" for="input-apPaterno">{{ __('Apellido Paterno') }}</label>
                         <input type="text" name="apPaterno" id="input-apPaterno" class="form-control" placeholder="" value="{{ old('apPaterno') }}" >
                     </div>
@@ -101,7 +102,7 @@
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-municipio">{{ __(' ') }}</label>
                         <select id="input-municipio" class="form-control" name="municipio">
-                            <option selected>Municipio</option>
+                            <option selected value=""></option>
                                 @foreach ($nombres_municipios as $mun)
                                 <option value="{{ $mun->id }}">{{ $mun->nombre_municipio }}</option>                             
                                 @endforeach

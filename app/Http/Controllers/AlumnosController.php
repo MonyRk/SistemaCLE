@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 use App\Alumno;
 use App\Persona;
 use App\Municipio;
@@ -37,17 +38,10 @@ class AlumnosController extends Controller
     public function store(ValidarCrearAlumnoRequest $request)
     {
         $data = request()->all();
-        // dd($data);            //valido si no existe el alumno
-        //    $existePersona= Persona::find($data['curp']);
-        //     $existeAlumno = Persona::where('curp_alumno',$data['curp']);
-        // si esta en persona se verifica si esta o no en alumno 
-        // if($existePersona->isEmpty()){
-        //     if($existeAlumno->isEmpty()){
-        //         echo('Ya existe un alumno con esa curp, revisa tus datos');
-        //     }
-        // }else{
-                $agregar = Persona::create([
-                    'curp' => $data['curp'],
+        
+                $agregar = Persona::firstOrCreate([
+                    'curp' => $data['curp']
+                ],[
                     'nombres' => $data['name'],
                     'ap_paterno' => $data['apPaterno'],
                     'ap_materno' => $data['apMaterno'],
@@ -62,26 +56,27 @@ class AlumnosController extends Controller
                 ]);
         
         
-                Alumno::create([
-                    'curp_alumno' => $data['curp'],
+                Alumno::firstOrCreate([
+                    'curp_alumno' => $data['curp']
+                ],[
                     'num_control' => $data['numControl'],
                     'carrera' => $data['carrera'],
                     'semestre' => $data['semestre'],
                     'estatus' => 'no inscrito',
                 ]);
 
-                // Usuario::create([
-        //     'curp_alumno' => $data['curp'],
-        //     'num_control' => $data['numControl'],
-        //     'carrera' => $data['carrera'],
-        //     'semestre' => $data['semestre'],
-        //     'estatus' => 'no inscrito',
-        // ]);
+                User::firstOrCreate([
+                    'curp_user' => $data['curp']
+                ],[
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'password' => bcrypt($data['curp'])
+                ]);
             
         // }       
         
 
-        return redirect()->route('verAlumnos');
+        return redirect()->route('verAlumnos')->with('success','Datos del estudiante agregados correctamente!');
     }
 
     /**
@@ -108,8 +103,11 @@ class AlumnosController extends Controller
                         ->get();
                         //dd($datos_alumno);
         $nombres_municipios = Municipio::select('nombre_municipio')->pluck('nombre_municipio');
+//dd($alumno);
+        $email = User::where('curp_user',$alumno[0]->curp)->get();
+        
 
-        return view('alumnos.editAlumno',compact('alumno','nombres_municipios'));// ['alumno' =>$datos_alumno]);
+        return view('alumnos.editAlumno',compact('alumno','nombres_municipios','email'))->with('success','Datos del estudiante agregados correctamente!');// ['alumno' =>$datos_alumno]);
     }
 
     /**
