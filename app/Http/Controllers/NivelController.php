@@ -28,7 +28,7 @@ class NivelController extends Controller
      */
     public function create()
     {
-        return view('catalogos.niveles.createNivel');
+        //return view('catalogos.niveles.createNivel');
     }
 
     /**

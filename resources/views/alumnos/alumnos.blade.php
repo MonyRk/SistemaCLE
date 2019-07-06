@@ -118,13 +118,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($datos_alumnos as $alumno)
+                                    @foreach ($datos_alumnos as $alumno) 
+                                    
                                     <tr>
                                         <th scope="row">
                                             {{ $alumno->num_control }}
                                         </th>
                                         <th>
-                                            <a href="">{{ $alumno->nombres }} {{ $alumno->ap_paterno }} {{ $alumno->ap_materno }}</a>
+                                            <a href="{{ route('verInfo',$alumno->num_control )}}">{{ $alumno->nombres }} {{ $alumno->ap_paterno }} {{ $alumno->ap_materno }}</a>
                                         </th>
                                         <td name="name">{{ $alumno->estatus }}</td>
                                         <td> <a href="alumnos/{{ $alumno->num_control }}/editar"><i class="fas fa-edit"></i></a>
@@ -136,7 +137,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            
                         </div>
+                        {{ $datos_alumnos->links() }}
                     </div>
                 </div>
             </div>
@@ -149,8 +152,6 @@
 {{-- @push('js')
     <script src="{{ asset('argon') }}/vendor/chart.js/dist/Chart.min.js"></script>
     <script src="{{ asset('argon') }}/vendor/chart.js/dist/Chart.extension.js"></script>
-@endpush --}}
-
- 
+@endpush --}} 
 </div>
-            
+

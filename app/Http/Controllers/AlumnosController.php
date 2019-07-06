@@ -10,6 +10,8 @@ use App\Municipio;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ValidarCrearAlumnoRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\PaginationServiceProvider;
+use Illuminate\Pagination\Paginator;
 
 class AlumnosController extends Controller
 {
@@ -17,10 +19,12 @@ class AlumnosController extends Controller
 
     public function index()
     {
-        $datos_alumnos = Alumno::join('personas','personas.curp','=','alumnos.curp_alumno')
+        $datos_alumnos = DB::table('alumnos')
+                        ->join('personas','personas.curp','=','alumnos.curp_alumno')
                         ->select('personas.*','alumnos.*')
                         ->where('tipo', 'like' , '%alumno%')
-                        ->get();
+                        // ->get()
+                        ->paginate(10);// dd($datos_alumnos);
         return view('alumnos.alumnos',compact('datos_alumnos'));
     }
 
@@ -87,7 +91,12 @@ class AlumnosController extends Controller
      */
     public function show($id)
     {
-        //
+        $datos_alumno = Alumno::join('personas','personas.curp','=','alumnos.curp_alumno')
+        ->select('personas.*','alumnos.*')
+        ->where('num_control',$id)
+        ->get();
+        return view('alumnos.showEstudiante',compact('datos_alumno'));
+
     }
 
     /**

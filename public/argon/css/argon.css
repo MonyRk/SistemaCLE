@@ -46,6 +46,7 @@
     --darker: black;
     --lightsteelblue: #89c0ff;
     --steelblue: #4682b4;
+    --pantone: #1B396A;
     --breakpoint-xs: 0;
     --breakpoint-sm: 576px;
     --breakpoint-md: 768px;
@@ -12505,6 +12506,10 @@ button.bg-lighter:focus {
 
 .bg-gradient-lighter {
     background: linear-gradient(87deg, #e9ecef 0, #e9eaef 100%) !important;
+}
+
+.bg-gradient-pantone {
+    background: linear-gradient(87deg, #1b396a 0, #1b396a 100%) !important;
 }
 
 .bg-translucent-primary {

@@ -30,6 +30,7 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::get('/alumnos', 'AlumnosController@index')->name('verAlumnos');
+Route::get('alumnos/{alumno}','AlumnosController@show')->name('verInfo');
 Route::get('/nuevoAlumno', 'AlumnosController@create')->name('agregarAlumno');
 Route::post('/guardarAlumno', 'AlumnosController@store')->name('guardarDatosAlumno');
 Route::get('/alumnos/{alumno}/editar', 'AlumnosController@edit');
