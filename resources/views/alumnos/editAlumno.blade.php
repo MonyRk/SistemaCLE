@@ -121,15 +121,19 @@
                         <label class="form-control-label" for="input-telefono">{{ __('Teléfono') }}</label>
                         <input type="text" name="telefono" id="input-telefono" class="form-control" placeholder="" value="{{ old('telefono', $alumno[0]->telefono) }}" required autofocus>
                     </div>
-                    <div class="form-group col-md">
+                    {{-- <div class="form-group col-md">
                         <label class="form-control-label" for="input-email">{{ __('Email') }}</label>
                         <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder="" value="{{ old('email', $email[0]->email) }}" required>
-                    </div>
+                    </div> --}}
                 </div>
         
-        <hr class="my-4" />
+        
+            </div>
 
+            <hr class="my-4" />
             <h6 class="heading-small text-muted mb-4">{{ __('Información Escolar') }}</h6>
+            
+            <div class="pl-lg-4">
             <div class="row">
                 <div class="form-group col-md-4">
                     <label class="form-control-label" for="input-numControl">{{ __('Número de Control') }}</label>

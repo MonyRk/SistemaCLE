@@ -1,33 +1,80 @@
-@extends('layouts.app')
-@section('sidebar')
-    @include('layouts.navbars.sidebar')
-    
+@extends('viewsBase.show')
+@section('tiutlo')
+{{ __('Datos del Estudiante') }}
 @endsection
-@section('content')
 
-
-<div class="header bg-gradient-pantone py-5 py-lg-3">
-       
-        <div class="separator separator-bottom separator-skew zindex-100">
-            <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                <polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>
-            </svg>
-        </div>
-    </div>
-    <div class="container">
-            <div class="header-body text-center mb-2">
-                <div class="row justify-content-center">
-                    <div class="col-lg-5 col-md-6">
-                         <h3 class="text-dark">{{ __('Datos del Estudiante') }}</h3>
+@section('informacion')
+<hr class="my-4"/>
+    <h6 class="heading-small text-muted mb-4">{{ __('Información Escolar') }}</h6>
+    <div>
+        <div class="row">
+            <div class="col-xl col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <span class="card-title">{{ __('Número de Control: ') }}</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="">
+                                    <p class="card-text font-weight-bold">{{ $datos[0]->num_control }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <span class="card-title">{{ __('Carrera: ') }}</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="">
+                                    <p class="card-text font-weight-bold">{{ $datos[0]->carrera }}<p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-
-    <div>
-            <label for="nombre">{{ __('Nombre: ') }}</label>
-            {{ $datos_alumno[0]->nombres }} {{ $datos_alumno[0]->ap_paterno }} {{ $datos_alumno[0]->ap_materno }}
-        
+            <div class="row">
+                <div class="col-xl col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <span class="card-title">{{ __('Semestre: ') }}</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="">
+                                    <p class="card-text font-weight-bold">{{ $datos[0]->semestre }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl col-lg-6">
+                    <div class="card card-stats mb-4 mb-xl">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <span class="card-title">{{ __('Estatus: ') }}</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="">
+                                    <p class="card-text font-weight-bold">{{ $datos[0]->estatus }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </div>
+    
 @endsection

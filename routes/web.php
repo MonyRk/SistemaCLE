@@ -35,7 +35,7 @@ Route::get('/nuevoAlumno', 'AlumnosController@create')->name('agregarAlumno');
 Route::post('/guardarAlumno', 'AlumnosController@store')->name('guardarDatosAlumno');
 Route::get('/alumnos/{alumno}/editar', 'AlumnosController@edit');
 Route::put('/alumnos/{alumno}', 'AlumnosController@update')->name('actualizarAlumno');
-Route::get('/alumnos/{alumno}/eliminar','AlumnosController@destroy');
+Route::delete('/alumnos/{alumno}','AlumnosController@destroy')->name('eliminarAlumno');// Route::get('/alumnos/{alumno}/eliminar','AlumnosController@destroy')->name('eliminarAlumno');
 
 Route::get('/docentes', 'DocentesController@index')->name('verDocentes');
 Route::get('/agregarDocente', 'DocentesController@create')->name('agregarDocente');

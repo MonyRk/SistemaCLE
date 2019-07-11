@@ -65,7 +65,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-5">
                         <label class="form-control-label" for="input-curp">{{ __('CURP') }}</label>
-                        <input type="text" class="form-control" name="curp" id="input-curp" value="{{ old('curp') }}">
+                        <input type="text" class="form-control" name="curp" id="input-curp" onkeyup="this.value = this.value.toUpperCase();" value="{{ old('curp') }}">
                     </div>
                     <div class="form-group col-md-2">
                         <label class="form-control-label" for="input-edad">{{ __('Edad') }}</label>

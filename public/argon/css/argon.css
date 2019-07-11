@@ -47,14 +47,15 @@
     --lightsteelblue: #89c0ff;
     --steelblue: #4682b4;
     --pantone: #1B396A;
+    --indianred: #cd5c5c;
     --breakpoint-xs: 0;
     --breakpoint-sm: 576px;
     --breakpoint-md: 768px;
     --breakpoint-lg: 992px;
     --breakpoint-xl: 1200px;
-    /* --font-family-sans-serif: "Soberana Sans"; */
-    /* --font-family-sans-serif: Open Sans, sans-serif;
-    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; */
+    --font-family-sans-serif: "Soberana Sans";
+    --font-family-sans-serif: Open Sans, sans-serif;
+    --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
 
 *,
@@ -127,8 +128,8 @@
 }
 
 html {
-    /* font-family: sans-serif; */
-    font-family: "Soberana Sans";
+    font-family: sans-serif;
+    /* font-family: "Soberana Sans"; */
     line-height: 1.15;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
@@ -154,8 +155,8 @@ section {
 }
 
 body {
-    /* font-family: Open Sans, sans-serif; */
-    font-family: 'Soberana Sans';
+    font-family: Open Sans, sans-serif;
+    /* font-family: 'Soberana Sans'; */
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
@@ -292,8 +293,8 @@ pre,
 code,
 kbd,
 samp {
-    /* font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; */
-    font-family: 'Soberana Sans';
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    /* font-family: 'Soberana Sans'; */
     font-size: 1em;
 }
 
@@ -3225,6 +3226,14 @@ fieldset:disabled a.btn {
 .btn-outline-default {
     color: #172b4d;
     border-color: #172b4d;
+    background-color: transparent;
+    background-image: none;
+}
+
+.btn-outline-pantone {
+    color: #1b396a;
+    border-color: #1b396a;
+    border: 2px solid #1b396a;
     background-color: transparent;
     background-image: none;
 }
@@ -6161,8 +6170,8 @@ button.close {
 }
 
 .tooltip {
-    /* font-family: Open Sans, sans-serif; */
-    font-family: 'Soberana Sans';
+    font-family: Open Sans, sans-serif;
+    /* font-family: 'Soberana Sans'; */
     font-size: .875rem;
     font-weight: 400;
     font-style: normal;
@@ -11892,8 +11901,14 @@ button.bg-darker:focus {
 }
 
 .text-monospace {
-    font-family: 'Soberana Sans';
-    /*SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;*/
+    /* font-family: 'Soberana Sans'; */
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    'Liberation Mono',
+    'Courier New',
+    monospace;
 }
 
 .text-justify {
@@ -12398,6 +12413,10 @@ a.bg-lighter:focus,
 button.bg-lighter:hover,
 button.bg-lighter:focus {
     background-color: #cbd3da !important;
+}
+
+.bg-gradient-indianred {
+    background: linear-gradient(87deg, #cd5c5c 0, #fa8072 100%) !important;
 }
 
 .bg-gradient-primary {
@@ -14909,8 +14928,7 @@ textarea[resize='horizontal'] {
 
 .has-success:after,
 .has-danger:after {
-    font-family: 'Soberana Sans';
-    /*'NucleoIcons';*/
+    font-family: 'NucleoIcons';
     font-size: 9px;
     line-height: 19px;
     position: absolute;

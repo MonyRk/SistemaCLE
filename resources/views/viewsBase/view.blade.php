@@ -9,7 +9,7 @@
         <div class="header-body text-center mb-2">
             <div class="row justify-content-center">
                 <div class="col-lg-5 col-md-6">
-                     <h3 class="text-dark" style="font-family: 'Soberana Sans'">@yield('title')</h3>{{-- aqui irá la variable del nombre del modulo en el que se esta --}}
+                     <h3 class="text-dark">@yield('title')</h3>{{-- aqui irá la variable del nombre del modulo en el que se esta --}}
                 </div>
             </div>
         </div>
@@ -24,9 +24,11 @@
      <div class="container-fluid">
         <div class="row">
             <!-- espacio de busqueda-->
-            <div class="col-md"></div>
             <div class="col-md">
-                <div class="">
+                @include('flash-message')
+            </div>
+            <div class="col-md">
+                <div class="text-right">
                     <form class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-9"  style="margin-top: 15px" >
                         <div class="form-group mb-0">
                             <div class="input-group input-group-alternative">
