@@ -17,10 +17,11 @@ class CreateDocentesTable extends Migration
             $table->increments('id_docente');
             $table->string('curp_docente',20);
             $table->foreign('curp_docente')->references('curp')->on('personas')->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->string('rfc',20);
+            $table->string('rfc');
             $table->string('grado_estudios');
             $table->string('titulo');
-            $table->string('ced_prof',20);
+            $table->string('ced_prof');
+            $table->enum('estatus',['Activo','Inactivo'])->default('Inactivo');
             $table->softDeletes();
             $table->timestamps();
         });

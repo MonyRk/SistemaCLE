@@ -6,13 +6,16 @@
 
 @section('content')
 
-<div class="header pb-5 pt-5 pt-lg-8 d-flex align-items-center" >
-</div>
     {{-- editar alumno --}}
     <div class="container-fluid m--t">
+        <div class="text-right">
+            <a href=" {{ route('verEstudiantes') }} " class="btn btn-primary mt-4">
+                <span>
+                    <i class="fas fa-reply"></i> &nbsp; Regresar
+                </span>
+            </a>
+        </div>
     <div class="card-body ">
-
-        
             @if ($errors->any())
             <div class="alert alert-danger alert-block">
                     <button type="button" class="close" data-dismiss="alert">×</button>	
@@ -32,7 +35,7 @@
             @endif                           
             @endif
 
-        <form method="post" action="{{ url("alumnos/{$alumno[0]->num_control}") }}" autocomplete="off">
+        <form method="post" action="{{ route('actualizarEstudiante',$datos_alumno[0]->num_control) }}" autocomplete="off">
             @csrf
             @method('put')
 
@@ -49,15 +52,15 @@
                 <div class="row">
                     <div class="col-md">
                         <label class="form-control-label" for="input-name">{{ __('Nombre(s)') }}</label>
-                        <input type="text" name="name" id="input-name" class="form-control" placeholder="" value="{{ old('name', $alumno[0]->nombres) }}" required autofocus>
+                        <input type="text" name="name" id="input-name" class="form-control" placeholder="" value="{{ old('name', $datos_alumno[0]->nombres) }}" required autofocus>
                     </div>
                     <div class="col-md">
                         <label class="form-control-label" for="input-apPaterno">{{ __('Apellido Paterno') }}</label>
-                        <input type="text" name="apPaterno" id="input-apPaterno" class="form-control" placeholder="" value="{{ old('apPaterno', $alumno[0]->ap_paterno) }}" required autofocus>
+                        <input type="text" name="apPaterno" id="input-apPaterno" class="form-control" placeholder="" value="{{ old('apPaterno', $datos_alumno[0]->ap_paterno) }}" required autofocus>
                     </div>
                     <div class="col-md">
                         <label class="form-control-label" for="input-apMaterno">{{ __('Apellido Materno') }}</label>
-                        <input type="text" name="apMaterno" id="input-apMaterno" class="form-control" placeholder="" value="{{ old('apMaterno', $alumno[0]->ap_materno) }}" required autofocus>
+                        <input type="text" name="apMaterno" id="input-apMaterno" class="form-control" placeholder="" value="{{ old('apMaterno', $datos_alumno[0]->ap_materno) }}" required autofocus>
                     </div>
                 </div>
                 
@@ -66,21 +69,21 @@
                 <div class="form-row">
                     <div class="form-group col-md-5">
                         <label class="form-control-label" for="input-curp">{{ __('CURP') }}</label>
-                        <input type="text" class="form-control" name="curp" id="input-curp" value="{{ old('curp', $alumno[0]->curp) }}">
+                        <input type="text" class="form-control" name="curp" id="input-curp" value="{{ old('curp', $datos_alumno[0]->curp) }}" onkeyup="this.value = this.value.toUpperCase();">
                     </div>
                     <div class="form-group col-md-2">
                         <label class="form-control-label" for="input-edad">{{ __('Edad') }}</label>
-                        <input type="text" class="form-control" name="edad" id="input-edad" value="{{ old('edad', $alumno[0]->edad) }}">
+                        <input type="text" class="form-control" name="edad" id="input-edad" value="{{ old('edad', $datos_alumno[0]->edad) }}">
                     </div>
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-sexo" >{{ __('Sexo') }}</label>
                         <div class="row">            
                             <div class="custom-control custom-radio">
-                                <input type="radio" id="sexof" name="sexo"  @if($alumno[0]->sexo ='F') checked @endif value = {{ old('sexo',$alumno[0]->sexo) }} class="custom-control-input">
+                                <input type="radio" id="sexof" name="sexo"  @if($datos_alumno[0]->sexo ='F') checked @endif value = {{ old('sexo',$datos_alumno[0]->sexo) }} class="custom-control-input">
                                 <label class="custom-control-label" for="sexof">&nbsp&nbsp&nbsp&nbsp&nbspFemenino</label>
                             </div>
                             <div class="custom-control custom-radio">
-                                <input type="radio" id="sexom" name="sexo" @if($alumno[0]->sexo ='M') checked @endif value = {{ old('sexo',$alumno[0]->sexo) }} class="custom-control-input">
+                                <input type="radio" id="sexom" name="sexo" @if($datos_alumno[0]->sexo ='M') checked @endif value = {{ old('sexo',$datos_alumno[0]->sexo) }} class="custom-control-input">
                                 <label class="custom-control-label" for="sexom">&nbsp&nbsp&nbsp&nbsp&nbspMasculino</label>
                             </div>
                         </div>
@@ -89,28 +92,26 @@
                 <div class="row">
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-calle">{{ __('Dirección') }}</label>
-                        <input type="text" name="calle" id="input-calle" class="form-control" placeholder="Calle" value="{{ old('calle', $alumno[0]->calle) }}" required autofocus>
+                        <input type="text" name="calle" id="input-calle" class="form-control" placeholder="Calle" value="{{ old('calle', $datos_alumno[0]->calle) }}" required autofocus>
                     </div>
                     <div class="form-group col-md-2">
                             <label class="form-control-label" for="input-numero">{{ __('') }}</label>
-                        <input type="text" name="numero" id="input-numero" class="form-control" placeholder="Número" value="{{ old('numero', $alumno[0]->numero) }}" required autofocus>
+                        <input type="text" name="numero" id="input-numero" class="form-control" placeholder="Número" value="{{ old('numero', $datos_alumno[0]->numero) }}" required autofocus>
                     </div>
                     <div class="form-group col-md">
                             <label class="form-control-label" for="input-colonia">{{ __(' ') }}</label>
-                        <input type="text" name="colonia" id="input-colonia" class="form-control" placeholder="Colonia" value="{{ old('colonia', $alumno[0]->colonia) }}" required autofocus>
+                        <input type="text" name="colonia" id="input-colonia" class="form-control" placeholder="Colonia" value="{{ old('colonia', $datos_alumno[0]->colonia) }}" required autofocus>
                     </div>
                     <div class="form-group col-md">
                             <label class="form-control-label" for="input-municipio">{{ __(' ') }}</label>
                         <select id="input-municipio" class="form-control" name="municipio">
                             
-                                {{ $nm = App\Municipio::select('id','nombre_municipio')->where('id',$alumno[0]->municipio)->pluck('nombre_municipio') }}
+                                {{ $nm = App\Municipio::select('id','nombre_municipio')->where('id',$datos_alumno[0]->municipio)->pluck('nombre_municipio') }}
                             
-                        <option selected value="{{ old('municipio', $alumno[0]->municipio) }}">{{ $nm[0] }} </option>
-                        @forelse ($nombres_municipios as $mun)
+                        <option selected value="{{ old('municipio', $datos_alumno[0]->municipio) }}">{{ $nm[0] }} </option>
+                        @foreach ($nombres_municipios as $mun)
                         <option value="{{ $mun }}">{{ $mun }}</option>  
-                        @empty
-                            
-                        @endforelse
+                        @endforeach
                         
                         </select>                  
                     </div>
@@ -119,12 +120,12 @@
                 <div class="row">
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-telefono">{{ __('Teléfono') }}</label>
-                        <input type="text" name="telefono" id="input-telefono" class="form-control" placeholder="" value="{{ old('telefono', $alumno[0]->telefono) }}" required autofocus>
+                        <input type="text" name="telefono" id="input-telefono" class="form-control" placeholder="" value="{{ old('telefono', $datos_alumno[0]->telefono) }}" required autofocus>
                     </div>
-                    {{-- <div class="form-group col-md">
+                    <div class="form-group col-md">
                         <label class="form-control-label" for="input-email">{{ __('Email') }}</label>
-                        <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder="" value="{{ old('email', $email[0]->email) }}" required>
-                    </div> --}}
+                        <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder=""{{-- value="old('email',$email[0]->email)" --}}required >
+                    </div>
                 </div>
         
         
@@ -137,12 +138,12 @@
             <div class="row">
                 <div class="form-group col-md-4">
                     <label class="form-control-label" for="input-numControl">{{ __('Número de Control') }}</label>
-                    <input type="text" name="numControl" id="input-numControl" class="form-control" placeholder="" value="{{ old('numControl', $alumno[0]->num_control) }}">
+                    <input type="text" name="numControl" id="input-numControl" class="form-control" placeholder="" value="{{ old('numControl', $datos_alumno[0]->num_control) }}">
                 </div>
                 <div class="form-group col-md-6">
                     <label class="form-control-label" for="input-carrera">{{ __('Carrera') }}</label>
-                    <select id="input-carrera" class="form-control" name="carrera" value="{{ old('carrera', $alumno[0]->carrera) }}">
-                    <option selected value="{{ old('carrera', $alumno[0]->carrera) }}">{{ old('carrera', $alumno[0]->carrera) }}</option>
+                    <select id="input-carrera" class="form-control" name="carrera" value="{{ old('carrera', $datos_alumno[0]->carrera) }}">
+                    <option selected value="{{ old('carrera', $datos_alumno[0]->carrera) }}">{{ old('carrera', $datos_alumno[0]->carrera) }}</option>
                     <option value="Ingeniería Eléctrica">{{ __('Ing. Eléctrica') }}</option>
                     <option value="Ingeniería Electrónica">{{ __('Ing. Electrónica') }}</option>
                     <option value="Ingeniería Civil">{{ __('Ing. Civil') }}</option>
@@ -157,7 +158,7 @@
                 <div class="form-group col-md-2">
                         <label class="form-control-label" for="input-semestre">{{ __('Semestre') }}</label>
                         <select  id="input-semestre" class="form-control" name="semestre">
-                        <option selected value="{{ old('semestre', $alumno[0]->semestre) }}">{{ old('semestre', $alumno[0]->semestre) }}</option>
+                        <option selected value="{{ old('semestre', $datos_alumno[0]->semestre) }}">{{ old('semestre', $datos_alumno[0]->semestre) }}</option>
                             @for ($i = 1; $i <= 12; $i++)
                                 <option value="{{ $i }}">{{ ($i) }}</option>
                             @endfor 

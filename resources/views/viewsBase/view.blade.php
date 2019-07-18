@@ -9,7 +9,7 @@
         <div class="header-body text-center mb-2">
             <div class="row justify-content-center">
                 <div class="col-lg-5 col-md-6">
-                     <h3 class="text-dark">@yield('title')</h3>{{-- aqui irá la variable del nombre del modulo en el que se esta --}}
+                     <h3 class="text-dark">@yield('title')</h3>
                 </div>
             </div>
         </div>

@@ -10,27 +10,43 @@ use App\Nivel;
 use App\Municipio;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ValidarCrearAlumnoRequest;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\PaginationServiceProvider;
-use Illuminate\Pagination\Paginator;
+
 
 class AlumnosController extends Controller
 {
     
 
     public function index()
-    {
-        $niveles = Nivel::whereNull('deleted_at')->get();
-        // dd($niveles);
-        $datos_alumnos = DB::table('alumnos')
+    {       
+            $datos_alumnos = DB::table('alumnos')
                         ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
                         ->where('tipo', 'like' , '%alumno%')
                         ->whereNull('personas.deleted_at')
                         ->orderBy('alumnos.num_control','ASC')
-                        ->paginate(10);
+                        ->paginate(25);
+    
+        return view('alumnos.alumnos',compact('datos_alumnos'));
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->all();
+        
+        $datos_alumnos = DB::table('alumnos')
+                ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+                ->where('tipo', 'like' , '%alumno%')
+                ->whereNull('personas.deleted_at')
+                ->where('personas.nombres','like','%'.$search['buscar'].'%')
+                ->orWhere('personas.ap_paterno','like','%'.$search['buscar'].'%')
+                ->orWhere('personas.ap_materno','like','%'.$search['buscar'].'%')
+                ->orWhere('alumnos.num_control','like','%'.$search['buscar'].'%')
+                ->orWhere('alumnos.estatus','like',$search['buscar'].'%')
+                ->orWhere('alumnos.carrera','like','%'.$search['buscar'].'%')
+                ->orderBy('alumnos.num_control','ASC')
+                ->paginate(25)
+                ->appends('buscar',$search['buscar']);
                         
-                
-        return view('alumnos.alumnos',compact('datos_alumnos','niveles'));
+        return view ('alumnos.alumnos',compact('datos_alumnos'));
     }
 
     public function create()
@@ -39,6 +55,8 @@ class AlumnosController extends Controller
        
         return view('alumnos.createAlumno',compact('nombres_municipios'));
     }
+
+    
 
     /**
      * Valida si los datos ingresados estan correctamente escritos y 
@@ -81,11 +99,8 @@ class AlumnosController extends Controller
                     'email' => $data['email'],
                     'password' => bcrypt($data['curp'])
                 ]);
-            
-        // }       
-        
 
-        return redirect()->route('verAlumnos')->with('success','Datos del estudiante agregados correctamente!');
+        return redirect()->route('verEstudiantes')->with('success','Datos del estudiante agregados correctamente!');
     }
 
     /**
@@ -96,12 +111,13 @@ class AlumnosController extends Controller
      */
     public function show($id)
     {
-        $datos = Alumno::join('personas','personas.curp','=','alumnos.curp_alumno')
+        $datos = Alumno::leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
         ->select('personas.*','alumnos.*')
         ->where('num_control',$id)
         ->get();
 
-        $municipio = Municipio::select('nombre_municipio')->where('id',$datos[0]->municipio)->get();//dd($nombres_municipios);//pluck('nombre_municipio');
+        $municipio = Municipio::select('nombre_municipio')->where('id',$datos[0]->municipio)->pluck('nombre_municipio');//dd($nombres_municipios);//pluck('nombre_municipio');
+        //dd($municipio);
         return view('alumnos.showEstudiante',compact('datos','municipio'));
 
     }
@@ -112,41 +128,30 @@ class AlumnosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Alumno $alumno){
-
-        $alumno = Alumno::join('personas','personas.curp','=','alumnos.curp_alumno')
+    public function edit(Alumno $alumno)
+    {
+        $datos_alumno = Alumno::leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
                         ->select('personas.*','alumnos.*')
-                        ->where('num_control', '=' , $alumno->num_control)
+                        ->where('alumnos.num_control', '=' , $alumno->num_control)
                         ->get();
-                        //dd($datos_alumno);
+                        // dd($datos_alumno);           
         $nombres_municipios = Municipio::select('nombre_municipio')->pluck('nombre_municipio');
-//dd($alumno);
-        $email = User::where('curp_user',$alumno[0]->curp)->get();
+
         
-// dd($email);
-        return view('alumnos.editAlumno',compact('alumno','nombres_municipios','email'));
+      //  $email = User::where('curp_user',$datos_alumno[0]->curp)->get();
+        
+        return view('alumnos.editAlumno',compact('datos_alumno','nombres_municipios'));//,'email'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Alumno $alumno)
-    {                             
-        $curp= $alumno->curp_alumno;//curp original
-        $numControl = $alumno->num_control; //num de control original
-  
-        //obtener los datos de la misma persona en todas las tablas relacionadas
-        $persona = Persona::find($curp); 
-        $infoAlumno= Alumno::find($numControl);
-        $user = User::where('curp_user',$curp)->first();    
+    {                     
+        $curp = $alumno->curp_alumno;//curp original
+        $numControl = $alumno->num_control; //num de control original  
         
         //validacion de los datos
         $data = request()->validate([
             'name' => 'required|alpha_spaces',
-            'curp' => array('required','alpha_num','regex:/^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0\d|1[0-2])(?:[0-2]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/','unique:personas,curp'),
+            'curp' => array('required','alpha_num','regex:/^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0\d|1[0-2])(?:[0-2]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/'),
             'apPaterno' => 'required|alpha_spaces',
             'apMaterno' =>'required|alpha_spaces',
             'calle' => array('required','regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ,.]*$/'),
@@ -154,41 +159,49 @@ class AlumnosController extends Controller
             'colonia' => 'required|alpha_spaces',
             'municipio' => 'required',
             'telefono' =>'required|numeric',
-            'email' => array('required','email','regex:/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/','unique:users,email'),
+            'email' => array('required','email','regex:/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/'),
             'edad' =>'required|digits:2',
             'sexo' => 'required',
             'numControl' => 'required|digits:8',
             'carrera' => 'required',
             'semestre' => 'required'
         ]);
-        
-        $persona->curp = $data['curp'];
-        $persona->nombres = $data['name'];
-        $persona->ap_paterno = $data['apPaterno'];
-        $persona->ap_materno = $data['apMaterno'];
-        $persona->calle = $data['calle'];
-        $persona->numero = $data['numero'];
-        $persona->colonia = $data['colonia'];
-        $persona->municipio = $data['municipio'];
-        $persona->telefono = $data['telefono'];
-        $persona->edad = $data['edad'];
-        $persona->sexo = $data['sexo'];
-        $persona->save();
+        //obtener los datos de la misma persona en todas las tablas relacionadas
+        $persona = Persona::find($curp)->update([
+            // 'curp' => $data['curp'],
+            'nombres' => $data['name'],
+            'ap_paterno' => $data['apPaterno'],
+            'ap_materno' => $data['apMaterno'],
+            'calle' => $data['calle'],
+            'numero' => $data['numero'],
+            'colonia' => $data['colonia'],
+            'municipio' => $data['municipio'],
+            'telefono' => $data['telefono'],
+            'edad' => $data['edad'],
+            'sexo' => $data['sexo']
+        ]); 
+          
 
+        $infoAlumno= Alumno::find($numControl);
+        
         $infoAlumno->num_control = $data['numControl'];
-        $infoAlumno->curp_alumno = $data['curp'];
+        // $infoAlumno->curp_alumno = $data['curp'];
         $infoAlumno->carrera = $data['carrera'];
         $infoAlumno->semestre = $data['semestre'];
         $infoAlumno->save();
+        
+        $user = User::where('curp_user',$curp)->first();
 
         $user->name = $data['name'];
-        $user->curp_user = $data['curp'];
+        // $user->curp_user = $data['curp'];
         $user->email = $data['email'];
-        $user->name = $data['name'];
         $user->save();
+        
+        
+        DB::update('update personas set curp = ? where curp = ?', [$data['curp'],$curp]);
 
 
-        return redirect()->route('verAlumnos')->with('success','!Los datos de actualizaron correctamente!');
+        return redirect()->route('verEstudiantes')->with('success','!Los datos de actualizaron correctamente!');
     }
 
     /**
@@ -199,25 +212,20 @@ class AlumnosController extends Controller
      */
     public function destroy(Request $request)//(Alumno $alumno)
     {
-        $alumno = Alumno::findOrFail($request->alumno_id);
-       
-        $persona = Persona::findOrFail($alumno->curp_alumno);
+        // dd();
+        $alumno = Alumno::where('num_control',$request->alumno_id)->get();
         
-        $user = User::where('curp_user',$alumno->curp_alumno)->get();//->softDeletes();
-        //dd($user[0]);
+        $persona = Persona::where('curp',$alumno[0]->curp_alumno)->get();
+        
+        $user = User::where('curp_user',$alumno[0]->curp_alumno)->get();
+        // dd($alumno,$persona,$user);
         $user[0]->delete();
-        $alumno->delete();
-
-        //dd($alumno);
-        // $clave= $alumno->curp_alumno;
-        // $persona = Persona::where('curp','=', $clave);
-        // $alumno = Alumno::where('curp_alumno', '=', $clave);
-        // $user = User::where('curp_user',$clave);
-         
-        $persona->delete();
+        $alumno[0]->delete();
+        $persona[0]->delete();
         
-        return redirect()->route('verAlumnos')->with('warning','Los datos se eliminaron');
+        return redirect()->route('verEstudiantes')->with('warning','Los datos se eliminaron');
     }
 
+    
 
 }

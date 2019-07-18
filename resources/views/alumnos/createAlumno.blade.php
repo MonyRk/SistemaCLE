@@ -1,6 +1,9 @@
 @extends('viewsBase.create')
+@section('titlecreate')
+    Agregar Estudiante
+@endsection
 @section('action')
-{{ url("guardarAlumno") }}
+{{ url("guardarEstudiante") }}
 @endsection
 
 @section('nombreTipodeInformacion')

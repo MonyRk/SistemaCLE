@@ -5,25 +5,14 @@
 @endsection
 @section('content')
 
-<div class="header bg-gradient-pantone py-5 py-lg-3">
-    <div class="separator separator-bottom separator-skew zindex-100">
-        <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>
-        </svg>
-    </div>
-</div>
-<div class="container">
-    <div class="header-body text-center mb-2">
-        <div class="row justify-content-center">
-            <div class="col-lg-5 col-md-6">
-                    <h3 class="text-dark">@yield('titulo')</h3>
-            </div>
-        </div>
-    </div>
-</div>
+
 <div class="container-fluid m--t">
         <div class="text-right">
-                <a href="{{ route('verAlumnos') }}" class="btn btn-primary mt-4">Regresar</a>
+                <a href=" @yield('regresar') " class="btn btn-primary mt-4">
+                    <span>
+                        <i class="fas fa-reply"></i> &nbsp; Regresar
+                    </span>
+                </a>
             </div>
 <h6 class="heading-small text-muted mb-4">{{ __('Información Personal') }}</h6>
 <div>
@@ -72,7 +61,7 @@
                 </div>
                 <div class="col-auto">
                     <div class="">  
-                        <p class="card-text font-weight-bold">{{ $datos[0]->calle }} {{ $datos[0]->numero }}, {{ $datos[0]->colonia }}, {{ $municipio[0]->nombre_municipio }}</p>
+                        <p class="card-text font-weight-bold">{{ $datos[0]->calle }} {{ $datos[0]->numero }}, {{ $datos[0]->colonia }}, {{ $municipio[0] }}</p>
                     </div>
                 </div>
             </div>
@@ -106,7 +95,7 @@
                 </div>
                 <div class="col-auto">
                     <div class="">
-                        <p class="card-text font-weight-bold"> email</p>
+                        <p class="card-text font-weight-bold">{{ $datos[0]->email }}</p>
                     </div>
                 </div>
             </div>

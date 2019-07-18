@@ -29,18 +29,23 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'ProfileController@password']);
 });
 
-Route::get('/alumnos', 'AlumnosController@index')->name('verAlumnos');
-Route::get('alumnos/{alumno}','AlumnosController@show')->name('verInfo');
-Route::get('/nuevoAlumno', 'AlumnosController@create')->name('agregarAlumno');
-Route::post('/guardarAlumno', 'AlumnosController@store')->name('guardarDatosAlumno');
-Route::get('/alumnos/{alumno}/editar', 'AlumnosController@edit');
-Route::put('/alumnos/{alumno}', 'AlumnosController@update')->name('actualizarAlumno');
-Route::delete('/alumnos/{alumno}','AlumnosController@destroy')->name('eliminarAlumno');// Route::get('/alumnos/{alumno}/eliminar','AlumnosController@destroy')->name('eliminarAlumno');
+Route::get('/estudiantes', 'AlumnosController@index')->name('verEstudiantes');
+Route::get('estudiantes/{estudiante}','AlumnosController@show')->name('verInfoEstudiante');
+Route::get('/nuevoEstudiante', 'AlumnosController@create')->name('agregarEstudiante');
+Route::post('/guardarEstudiante', 'AlumnosController@store')->name('guardarDatosEstudiante');
+Route::get('/estudiantes/{alumno}/editar', 'AlumnosController@edit')->name('editarEstudiante');
+Route::put('/estudiantes/{alumno}', 'AlumnosController@update')->name('actualizarEstudiante');
+Route::delete('/estudiantes/{estudiante}','AlumnosController@destroy')->name('eliminarEstudiante');
+Route::any('/search/estudiante', 'AlumnosController@search')->name('buscarEstudiante');
 
 Route::get('/docentes', 'DocentesController@index')->name('verDocentes');
+Route::get('docentes/{docente}','DocentesController@show')->name('verInfoDocente');
 Route::get('/agregarDocente', 'DocentesController@create')->name('agregarDocente');
 Route::post('/guardarDocente', 'DocentesController@store');
-Route::get('/docentes/{docente}/eliminar','DocentesController@destroy');
+Route::get('/docentes/{docente}/editar','DocentesController@edit')->name('editarDocente');
+Route::put('/docentes/{docente}', 'DocentesController@update')->name('actualizarDocente');
+Route::delete('/docentes/{docente}','DocentesController@destroy')->name('eliminarDocente');
+Route::any('/search/docente', 'DocentesController@search')->name('buscarDocente');
 
 Route::get('/grupos', 'GruposController@index')->name('verGrupos');
 Route::get('/agregarGrupo', 'GruposController@create')->name('crearGrupo');

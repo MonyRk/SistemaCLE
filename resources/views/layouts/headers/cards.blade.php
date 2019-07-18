@@ -5,10 +5,10 @@
             <div class="row">
                 <div class="col-xl-3 col-lg-6">
                     <div class="card card-stats mb-4 mb-xl-0">
-                        <a href="{{ route('verAlumnos')}}"><div class="card-body">
+                        <a href="{{ route('verEstudiantes')}}"><div class="card-body">
                             <div class="row">
                                 <div class="col">
-                                    <span class="font-weight-bold mb-0">Alumnos</span>
+                                    <span class="font-weight-bold mb-0">Estudiantes</span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-danger text-white rounded-circle shadow">

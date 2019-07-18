@@ -5,22 +5,6 @@
 
 @section('content')
 
-<div class="header bg-gradient-white py-5 py-lg-3">
-    <div class="container">
-        <div class="header-body text-center mb-2">
-            <div class="row justify-content-center">
-                <div class="col-lg-5 col-md-6">
-                     <h3 class="text-dark">{{ _('Docentes') }}</h3>{{-- aqui irá la variable del nombre del modulo en el que se esta --}}
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="separator separator-bottom separator-skew zindex-100">
-        <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>
-        </svg>
-    </div>
-</div>
      {{-- -contenido --}}
      <div class="container-fluid">
         <div class="row">
@@ -30,13 +14,13 @@
             </div>
             <div class="col-md">
                 <div class="">
-                    <form class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-9"  style="margin-top: 15px" >
+                    <form action="{{ route('buscarDocente') }}" method="GET" class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-9"  style="margin-top: 15px" >
                         <div class="form-group mb-0">
                             <div class="input-group input-group-alternative">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fas fa-search"></i></span>
                                 </div>
-                                <input class="form-control" placeholder="Buscar" type="text">
+                                <input name ="buscar"class="form-control" placeholder="Buscar" type="text">
                             </div>
                         </div>
                     </form>
@@ -45,36 +29,8 @@
         </div>
 
         <div class="row">
-                <!-- filtros de busqueda -->
-            <div class="col-xl-4">
-                
-                Grado de Estudios <br> <br>
-                <select id="input-estudios" class="form-control" name="estudios">
-                        <option selected></option>
-                        <option value="Licenciatura">{{ __('Licenciatura') }}</option>
-                        <option value="Maestría">{{ __('Maestría') }}</option>
-                        <option value="Doctorado">{{ __('Doctorado') }}</option>
-                        </select>
-
-                <br><br>
-                Estatus
-                <div class="row">     <!-- se deben sustituir los checkbox por cada nivel que haya -->       
-                    <div class="col">
-                        <div class="custom-control custom-control-alternative custom-checkbox mb-3">
-                            <input class="custom-control-input" id="customCheck5" type="checkbox">
-                            <label class="custom-control-label" for="customCheck5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __('    Activo') }}</label>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="form-check form-check-inline custom-control custom-control-alternative custom-checkbox mb-3">
-                            <input class="custom-control-input" id="customCheck7" type="checkbox">
-                            <label class="custom-control-label" for="customCheck7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __('   Inactivo') }}</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-8">
+          
+            <div class="col-xl">
                 <!-- header de la tabla-->
                 <div class="col-xl">
                     <div class="card shadow ">
@@ -98,6 +54,7 @@
                                         <th scope="col">Matricula</th>
                                         <th scope="col">Nombre</th>
                                         <th scope="col">Grado de <br> Estudios</th>
+                                        <th scope="col">Estatus</th>
                                         <th scope="col">Editar</th>
                                         <th scope="col">Eliminar</th>
                                         
@@ -110,13 +67,16 @@
                                             {{ $docente->id_docente }}
                                         </th>
                                         <th>
-                                            <a href="">{{ $docente->nombres }} {{ $docente->ap_paterno }} {{ $docente->ap_materno }}</a>
+                                            <a href="{{ route('verInfoDocente',$docente->id_docente) }}">{{ $docente->nombres }} {{ $docente->ap_paterno }} {{ $docente->ap_materno }}</a>
                                         </th>                                      
-                                        <td name="name">{{ $docente->grado_estudios }}</td>
+                                        <td name="">{{ $docente->grado_estudios }}</td>
+                                        <td>
+                                            {{ $docente->estatus }}
+                                        </td>
                                         <td> <a href="docentes/{{ $docente->id_docente }}/editar"><i class="fas fa-edit"></i></a>
                                         </td>
                                         <td>
-                                            <a href="docentes/{{ $docente->id_docente }}/eliminar"><i class="far fa-trash-alt"></i></a>
+                                            <a href="" id="docenteid" data-docenteid="{{ $docente->id_docente }}" data-toggle="modal" data-target="#modal-notification" ><i class="far fa-trash-alt"></i></a>
                                         </td>
                                     </tr>
                                     @empty
@@ -125,11 +85,63 @@
                                 </tbody>
                             </table>
                         </div>
+                        {{ $datos_docentes->links() }}
                     </div>
                 </div>
             </div>
+
         </div>
     
+        <div class="col-md-4">
+            <div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-" role="document">
+                    <div class="modal-content bg-gradient-white">
+                        
+                        <div class="modal-header">
+                            <h6 class="modal-title" id="modal-title-notification">¡Espera!</h6>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            
+                        </div>
+                        <form action="{{ route('eliminarDocente','test') }}" method="POST" class="delete" id="deleteForm">
+                        @csrf
+                        @method('delete')
+                        <div class="modal-body">
+                            
+                            <div class="py-3 text-center">
+                                    <i class="fas fa-times fa-3x" style="color:#CD5C5C;"></i>
+                                <h4 class="heading mt-4">¡Da tu confirmaci&oacute;n para Eliminar!</h4>
+                                <p>¿Realmente deseas eliminar los datos del estudiante?</p>
+                                <input type="hidden" name="docente_id" id="docente_id" value="">
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-white">S&iacute;, Eliminar</button>
+                            <button type="button" class="btn btn-link text-gray ml-auto" data-dismiss="modal">No, Cambi&eacute; de opinion</button> 
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+                </div>
+    
+    
+               @section('script')
+               <script>
+                $('#modal-notification').on('show.bs.modal', function(event){
+                    var button = $(event.relatedTarget) //
+                    var docent_id = button.attr('data-docenteid')
+                    var modal = $(this)
+                    modal.find('.modal-body #docente_id').val(docent_id);
+                } )
+                </script>
+               @endsection
+
+
+
 @endsection
  
 </div>

@@ -5,16 +5,24 @@
 @endsection
 
 @section('content')
-
-
-<div class="header pb-5 pt-5 pt-lg-8 d-flex align-items-center" >
+<div class="header pb-2 pt-5 pt-lg-8 d-flex align-items-center text-center" >
+    <div class="col-lg col-md">
+        <h4 class="text-dark">@yield('titlecreate')</h4>
+    </div>
 </div>
     
     <div class="container-fluid m--t">
+            <div class="text-right">
+                <a href=" @yield('regresar') " class="btn btn-primary mt-4">
+                    <span>
+                        <i class="fas fa-reply"></i> &nbsp; Regresar
+                    </span>
+                </a>
+            </div>
         <div class="card-body ">
             
             @if ($errors->any())
-            <div class="alert alert-danger alert-block">
+            <div class="alert alert-danger alert-block pt-2">
                     <button type="button" class="close" data-dismiss="alert">×</button>	
                     <strong>No pudimos agregar los datos, <br> por favor, verifica la información</strong>
                     <ul>
@@ -102,7 +110,7 @@
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-municipio">{{ __(' ') }}</label>
                         <select id="input-municipio" class="form-control" name="municipio">
-                            <option selected value=""></option>
+                            <option selected value="">Municipio</option>
                                 @foreach ($nombres_municipios as $mun)
                                 <option value="{{ $mun->id }}">{{ $mun->nombre_municipio }}</option>                             
                                 @endforeach

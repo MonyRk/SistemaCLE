@@ -12818,6 +12818,10 @@ button.section-darker:focus {
     fill: #adb5bd;
 }
 
+.fill-pantone {
+    fill: #1b396a;
+}
+
 .stroke-light {
     stroke: #adb5bd;
 }

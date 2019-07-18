@@ -1,12 +1,24 @@
 <!-- Top navbar -->
+<div class=" bg-gradient-pantone py-3 py-lg-4 ">
+        <div class="container">
+            <div class="row  align-items-center" style="resize: both;">
+                <div class="navbar navbar-expand-lg" data-toggle="collapse" data-target="#icono">
+                    <img src="{{ asset('argon') }}/img/brand/logosep.png" class="img-responsive" HSPACE="10" VSPACE="10">
+                    <img src="{{ asset('argon') }}/img/brand/logotecnmblanco1.png" style="" HSPACE="10" VSPACE="10">
+                </div>
+                <div class="offset-1 ">
+                    <img src="{{ asset('argon') }}/img/brand/logotec1.png" class="" HSPACE="10" VSPACE="10">
+                    <img src="{{ asset('argon') }}/img/brand/logo11.png" class="" HSPACE="10" VSPACE="10">
+                </div>
+            </div>
+        </div>
+    </div>
 <nav class="navbar navbar-top navbar-expand-md navbar-light" id="navbar-main">
-    <div class="container-fluid">
+    
+    <div class="container-fluid text-right">
     <!-- End Top navbar -->
-             
-
         <!-- Brand -->
-        <a class="h6 mb-0 text-dark text-uppercase d-none d-lg-inline-block" href="{{ route('home') }}">{{ __('Coordinador') }}</a>
-        
+        <a class="h6 mb-0 mt--3 text-white text-uppercase  d-lg-inline-block" href="">{{ __(' ') }}</a>
         <!-- User -->
         <ul class="navbar-nav align-items-center d-none d-md-flex">
             <li class="nav-item dropdown">
@@ -16,7 +28,7 @@
                             <img alt="Image placeholder" src="{{ asset('argon') }}/img/theme/team-4-800x800.jpg">
                         </span>
                         <div class="media-body ml-2 d-none d-lg-block">
-                            <span class="mb-0 text-sm  font-weight-bold">{{ auth()->user()->name }}</span>
+                            <span class="mb-0 text-sm  font-weight-bold text-white">{{ auth()->user()->name }}</span>
                         </div>
                     </div>
                 </a>

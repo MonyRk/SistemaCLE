@@ -20,13 +20,18 @@ class Persona extends Model
     
     //persona puede ser muchos alumnos
     public function alumnos(){
-        return $this->hasMany(Alumno::class,'curp_alumno');
+        return $this->hasMany(Alumno::class,'curp_alumno','num_control');
 
     }
 
     //persona puede ser muchos docentes
     public function docentes(){
-        return $this->hasMany(Docente::class,'id_docente');
+        return $this->hasMany(Docente::class,'curp_docente','id_docente');
+    }
+
+    //persona puede tener un usuario
+    public function users(){
+        return $this->hasOne(User::class,'curp_user','id_user');
     }
 
 }

@@ -36,10 +36,11 @@ class ValidarCrearDocenteRequest extends FormRequest
             'email' => array('required','email','regex:/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/','unique:users,email'),
             'edad' =>'required|digits:2',
             'sexo' => 'required',
-            'rfc' => array('required','alpha_num'),//regex
+            'rfc' => 'required',
             'estudios' => 'required',
-            'titulo' => 'required|alpha_spaces',
-            'cedula' => 'required|digits:8'
+            'titulo' => 'required',
+            'cedula' => 'required',
+            'estatus' => 'required'
         ];
     }
 }

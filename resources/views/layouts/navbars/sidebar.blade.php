@@ -84,7 +84,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/sistema-cle/public/alumnos" >
+                    <a class="nav-link" href="{{ route('verEstudiantes') }}" >
                         <i class="fas fa-users text-danger" style= "color: danger"></i>{{ __('Estudiantes') }}</span>
                     </a>
 

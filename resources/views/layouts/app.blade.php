@@ -31,29 +31,22 @@
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                 @csrf
             </form>
-          @yield('sidebar') {{-- @include('layouts.navbars.sidebar')--}}
+
+          @yield('sidebar')
         @endauth
         
-        <div class="main-content">
+        <div class="main-content">      
             @include('layouts.navbars.navbar')
-            {{-- mensajes --}}
-            {{-- @include('flash-message') --}}
             @yield('content')
         </div>
-        
-        {{-- <div id='app'>
-            @include('flash-message')
-            @yield('contentmsj')
-        </div> --}}
 
         @guest()
             @include('layouts.footers.guest')
         @endguest
-
-
-        {{-- mensajes  --}}
-       
-
+        <br><br>
+        <div>
+            @include('layouts.footers.auth')
+        </div>
         <script src="{{ asset('argon') }}/vendor/jquery/dist/jquery.min.js"></script>
         <script src="{{ asset('argon') }}/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
         
@@ -62,6 +55,10 @@
         <!-- Argon JS -->
         <script src="{{ asset('argon') }}/js/argon.js?v=1.0.0"></script>
         <!-- jQuery CDN - Slim version (=without AJAX) -->
+        
+        <script src="{{ asset('argon') }}/vendor/jquery/dist/jquery.min.js"></script>
+        <script src="{{ asset('argon') }}/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         {{-- <script src="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"></script>

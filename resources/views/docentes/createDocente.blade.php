@@ -1,4 +1,10 @@
 @extends('viewsBase.create')
+@section('regresar')
+    {{ route('verDocentes') }}
+@endsection
+@section('titlecreate')
+    Agregar Docente
+@endsection
 @section('action')
     {{ url("guardarDocente") }}
 @endsection
@@ -7,11 +13,8 @@
 @endsection
 
 @section('informacionporTipo')
-    <div class="form-row">
-        <div class="form-group col-md">
-            <label class="form-control-label" for="input-rfc">{{ __('RFC') }}</label>
-            <input type="text" name="rfc" id="input-rfc" class="form-control" placeholder="" value="{{ old('rfc') }}">
-        </div>
+<input type="hidden" id="tipo" name="tipo" value="docente">
+<div class="form-row">  
         <div class="form-group col-md">
             <label class="form-control-label" for="input-estudios">{{ __('Grado de Estudios') }}</label>
             <select id="input-estudios" class="form-control" name="estudios">
@@ -21,16 +24,38 @@
             <option value="Doctorado">{{ __('Doctorado') }}</option>
             </select>
         </div>
+        <div class="form-group col-md">
+            <label class="form-control-label" for="input-estatus">{{ __('Estatus') }}</label>
+            <select id="input-estatus" class="form-control" name="estatus">
+            <option selected></option>
+            <option value="Activo">{{ __('Activo') }}</option>
+            <option value="Inactivo">{{ __('Inactivo') }}</option>
+            </select>
+        </div>
     </div>
     <div class="form-row">
         <div class="form-group col-md">
-            <label class="form-control-label" for="input-titulo">{{ __('Titulo') }}</label>
-            <input type="text" id="input-titulo" class="form-control" name="titulo" value="{{ old('titulo') }}"> 
+            <label class="form-control-label" for="input-rfc">{{ __('RFC') }}</label>
+            <div class="form-group">
+                <input type="file" class="form-control-file" id="input-rfc" name="rfc">
+                </div>
+         </div>
         </div>
-        <div class="form-group col-md">
-            <label class="form-control-label" for="input-cedula">{{ __('Cédula Profesional') }}</label>
-            <input type="text" id="input-cedula" class="form-control" name="cedula" value="{{ old('cedula') }}"> 
+         <div class="form-row">
+         <div class="form-group col-md">
+            <label class="form-control-label" for="input-titulo">{{ __('Título') }}</label>
+            <div class="form-group">
+                <input type="file" class="form-control-file" id="input-titulo" name="titulo">
+            </div>
         </div>
     </div>
-
+    <div class="form-row">
+        <div class="form-group col-md">
+            <label class="form-control-label" for="input-cedula">{{ __('Cédula Profesional') }}</label>
+            <div class="form-group">
+                <input type="file" class="form-control-file" id="input-cedula" name="cedula">
+            </div>
+        </div>
+    </div>
+    
 @endsection

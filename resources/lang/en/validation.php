@@ -172,6 +172,7 @@ return [
         'hora'                  => 'Hora',
         'docente'               => 'Docente',
         'periodo'               => 'Periodo',
+        'estatus'               => 'Estatus',
         'year'                  => 'año',
         'month'                 => 'mes',
         'day'                   => 'día',
