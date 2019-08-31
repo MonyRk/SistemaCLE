@@ -12,7 +12,7 @@
                     @include('flash-message')
             </div>
             
-                        <div class="col-md">
+            <div class="col-md">
                 <div class="">
                     <form action="{{ route('buscarEstudiante') }}" method="GET" class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-9"  style="margin-top: 15px" >
                         
@@ -69,13 +69,13 @@
                                         <th scope="row">
                                             {{ $alumno->num_control }}
                                         </th>
-                                        <th>
+                                        <th scope="row">
                                             <a href="{{ route('verInfoEstudiante',$alumno->num_control )}}">{{ $alumno->nombres }} {{ $alumno->ap_paterno }} {{ $alumno->ap_materno }}</a>
                                         </th>
-                                        <td name="">{{ $alumno->estatus }}</td>
-                                        <td> <a href="{{ route('editarEstudiante',$alumno->num_control) }}"><i class="fas fa-edit"></i></a>
+                                        <td scope="row">{{ $alumno->estatus }}</td>
+                                        <td scope="row"> <a href="{{ route('editarEstudiante',$alumno->num_control) }}"><i class="fas fa-edit"></i></a>
                                         </td>
-                                        <td>
+                                        <td scope="row">
                                             <a href="" id="alumnoid" data-alumnoid="{{ $alumno->num_control }}" data-toggle="modal" data-target="#modal-notification" ><i class="far fa-trash-alt"></i></a>{{-- alumnos/{{ $alumno->num_control }}/eliminar --}}
                                         </td>
                                     </tr>
@@ -120,7 +120,7 @@
                     </div>
                     
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-white">S&iacute;, Eliminar</button>
+                        <button type="submit" class="btn btn-danger">S&iacute;, Eliminar</button>
                         <button type="button" class="btn btn-link text-gray ml-auto" data-dismiss="modal">No, Cambi&eacute; de opinion</button> 
                     </div>
                     </form>
@@ -134,11 +134,11 @@
            <script>
             $('#modal-notification').on('show.bs.modal', function(event){
                 var button = $(event.relatedTarget) //
-                console.log(button)
+                // console.log(button)
                 var alumn_id = button.attr('data-alumnoid')
-                console.log(alumn_id)
+                // console.log(alumn_id)
                 var modal = $(this)
-                console.log(modal.find('.modal-body #alumno_id').val(alumn_id));
+                // console.log(modal.find('.modal-body #alumno_id').val(alumn_id));
                 modal.find('.modal-body #alumno_id').val(alumn_id);
             } )
             </script>

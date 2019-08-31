@@ -5,22 +5,13 @@
 
 @section('content')
 
-    <div class="header bg-gradient-white py-5 py-lg-3">
-        <div class="container">
-            <div class="header-body text-center mb-2">
-                <div class="row justify-content-center">
-                    <div class="col-lg-5 col-md-6">
-                        <h3 class="text-dark" style="font-family: 'Soberana Sans'"><br><br><br></h3>{{-- aqui irá la variable del nombre del modulo en el que se esta --}}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="separator separator-bottom separator-skew zindex-100">
-            <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                <polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>
-            </svg>
-        </div>
+<div class="container-fluid">
+<div class="row">   
+    <div class="col-md pt-3">
+            @include('flash-message')
     </div>
+</div>
+<div class="row">
     <div class="col-xl">
         <div class="card shadow ">
             <div class="card-header border-3">
@@ -39,8 +30,8 @@
                     <thead class="thead-light">
                         <tr>
                             <th></th>
-                            <th scope="col">Aula</th>
                             <th scope="col">Edificio</th>
+                            <th scope="col">Aula</th>
                             <th scope="col">Horas Disponibles</th>
                             <th scope="col">Editar</th>
                             <th scope="col">Eliminar</th>
@@ -52,45 +43,48 @@
                         <tr>
                             <th scope="row"></th>
                             <th scope="row">
-                                {{ $aula->num_aula }}
+                                {{ $aula->edificio }}
                             </th>
                             <th scope="row">
-                                {{ $aula->edificio }}
+                                {{ $aula->num_aula }}
                             </th> 
                             <th>       
-                               <select name = "horas">
-                                   <option value="" selected></option>                                         
-                                <option value="{{ $aula->hrdisponible }}">{{ $aula->hora1 }}</option>
-                                <option value="{{ $aula->hrdisponible }}">{{ $aula->hora2 }}</option>
-                                <option value="{{ $aula->hrdisponible }}">{{ $aula->hora3 }}</option>
-                                <option value="{{ $aula->hrdisponible }}">{{ $aula->hora4 }}</option>
-                                <option value="{{ $aula->hrdisponible }}">{{ $aula->hora5 }}</option>
-                                <option value="{{ $aula->hrdisponible }}">{{ $aula->hora6 }}</option>
-                                <option value="{{ $aula->hrdisponible }}">{{ $aula->hora7 }}</option>
-                                <option value="{{ $aula->hrdisponible }}">{{ $aula->hora8 }}</option>
-                                <option value="{{ $aula->hrdisponible }}">{{ $aula->hora9 }}</option>
-                                <option value="{{ $aula->hrdisponible }}">{{ $aula->hora10 }}</option>
-                                <option value="{{ $aula->hrdisponible }}">{{ $aula->hora11 }}</option>
-                                <option value="{{ $aula->hrdisponible }}">{{ $aula->hora12 }}</option>
-                                <option value="{{ $aula->hrdisponible }}">{{ $aula->hora13 }}</option> 
+                               <select  name = "horas" id="horas" style="font-size: 1rem; line-height: 1.5; display: block; width: 50%;height: 1.75rem; padding: .625rem .75rem; transition: all .2s cubic-bezier(.68, -.55, .265, 1.55); color: #8898aa; border: 1px solid #cad1d7;border-radius: .375rem; background-color: #fff; background-clip: padding-box; box-shadow: none;">
+                                   <option value="" selected></option> 
+                                   @if ($aula->hora1 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora1 }}</option> @endif 
+                                   @if ($aula->hora2 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora2 }}</option> @endif 
+                                   @if ($aula->hora3 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora3 }}</option> @endif 
+                                   @if ($aula->hora4 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora4 }}</option> @endif 
+                                   @if ($aula->hora5 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora5 }}</option> @endif 
+                                   @if ($aula->hora6 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora6 }}</option> @endif
+                                   @if ($aula->hora7 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora7 }}</option> @endif 
+                                   @if ($aula->hora8 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora8 }}</option> @endif 
+                                   @if ($aula->hora9 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora9 }}</option> @endif 
+                                   @if ($aula->hora10 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora10 }}</option> @endif 
+                                   @if ($aula->hora11 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora11 }}</option> @endif 
+                                   @if ($aula->hora12 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora12 }}</option> @endif
+                                   @if ($aula->hora13 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora13 }}</option> @endif
                                </select>
                             </th>
                             <td>
-                                <a href="{{ route('editarAula',[$aula->id_aula]) }}"><i class="fas fa-edit"></i></a>
+                                <a href="{{ route('editarAula',$aula->id_aula) }}" ><i class="fas fa-edit"></i></a>
                             </td>
                             <td>
-                                <a href="{{ route('eliminarAula',[$aula->id_aula]) }}"><i class="far fa-trash-alt"></i></a>
+                                <a href="" id="aulaid" data-aulaid="{{ $aula->id_aula }}" data-toggle="modal" data-target="#modal-notification" ><i class="far fa-trash-alt"></i></a>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
+            {{ $aulas->links() }}
         </div>
     </div>
-@endsection
+</div>
+</div>
+{{-- modal para crear --}}
 
-<div class="col-md-4">
+    <div class="col-md-4">
     
         <div class="modal fade" id="modal-form2" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
             <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
@@ -227,4 +221,63 @@
             </div>
         </div>
 </div>
+
+{{-- modal para eliminar --}}
+
+
+<div class="col-md-4">
+    <div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-" role="document">
+            <div class="modal-content bg-gradient-white">
+                
+                <div class="modal-header">
+                    <h6 class="modal-title" id="modal-title-notification">¡Espera!</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    
+                </div>
+                <form action="{{ route('eliminarAula','test') }}" method="POST" class="delete" id="deleteForm">
+                @csrf
+                @method('delete')
+                <div class="modal-body">
+                    
+                    <div class="py-3 text-center">
+                            <i class="fas fa-times fa-3x" style="color:#CD5C5C;"></i>
+                        <h4 class="heading mt-4">¡Da tu confirmaci&oacute;n para Eliminar!</h4>
+                        <p>¿Realmente deseas eliminar los datos del aula?</p>
+                        <input type="hidden" name="aula_id" id="aula_id" value="">
+                    </div>
+                    
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-white">S&iacute;, Eliminar</button>
+                    <button type="button" class="btn btn-link text-gray ml-auto" data-dismiss="modal">No, Cambi&eacute; de opinion</button> 
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section('script')
+<script>
+    // para eliminar
+ $('#modal-notification').on('show.bs.modal', function(event){
+     var button = $(event.relatedTarget) 
+     var a_id = button.attr('data-aulaid')
+     var modal = $(this)
+     modal.find('.modal-body #aula_id').val(a_id);
+ } )
+
+
+
+// para poner las horas de las aulas
+
+ </script>
+@endsection
+
+
+@endsection
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Periodo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PeriodoController extends Controller
 {
@@ -14,7 +15,8 @@ class PeriodoController extends Controller
      */
     public function index()
     {
-        //
+        $periodos = DB::table('periodos')->select('*')->paginate(15);
+        return view('catalogos.periodos.periodos', compact('periodos'));
     }
 
     /**
@@ -35,7 +37,17 @@ class PeriodoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = request()->validate([
+            'periodo' => 'required',
+            'anio' => 'required|digits:4'
+            ]);
+
+        Periodo::firstOrCreate([
+            'descripcion' => $data['periodo'],
+            'anio' => $data['anio']
+        ]);
+
+        return redirect()->route('periodos')->with('success','¡El periodo se agrego correctamente!');
     }
 
     /**

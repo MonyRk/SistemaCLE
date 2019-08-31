@@ -26,6 +26,7 @@ class CreateGruposTable extends Migration
             $table->unsignedInteger('periodo');
             $table->foreign('periodo')->references('id_periodo')->on('periodos')->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->time('hora');
+            $table->integer('cupo')->default('30');
             $table->softDeletes();
             $table->timestamps();
         });

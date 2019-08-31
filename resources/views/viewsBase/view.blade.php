@@ -29,7 +29,7 @@
             </div>
             <div class="col-md">
                 <div class="text-right">
-                    <form class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-9"  style="margin-top: 15px" >
+                    <form action=" @yield('actionseach') " method="GET" class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-9"  style="margin-top: 15px" >
                         <div class="form-group mb-0">
                             <div class="input-group input-group-alternative">
                                 <div class="input-group-prepend">
@@ -48,9 +48,9 @@
                @yield('filtros')
             </div>
 
-            <div class="col-xl-8">
+            
                 @yield('contenido')
-            </div>
+            
         </div>
     
 @endsection

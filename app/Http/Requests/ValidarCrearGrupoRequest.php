@@ -30,7 +30,8 @@ class ValidarCrearGrupoRequest extends FormRequest
             'aula' => 'required',
             'hora' => 'required',
             'docente' => 'required',
-            'periodo' => 'required'
+            'periodo' => 'required',
+            'cupo' => 'required|digits:2'
         ];
     }
 }

@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Alumno;
 use App\Boleta;
+use App\Grupo;
+use App\Inscripcion;
+use App\Periodo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BoletaController extends Controller
 {
@@ -14,7 +19,10 @@ class BoletaController extends Controller
      */
     public function index()
     {
-        //
+        $periodos = DB::table('periodos')->orderBy('anio','DESC')->orderBy('descripcion','ASC')->get();
+        $grupos = DB::table('grupos')->orderBy('grupo','ASC')->get();
+
+        return view('boletas.boletas',compact('periodos','grupos'));
     }
 
     /**
@@ -35,7 +43,7 @@ class BoletaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
     }
 
     /**
@@ -44,10 +52,57 @@ class BoletaController extends Controller
      * @param  \App\Boleta  $boleta
      * @return \Illuminate\Http\Response
      */
-    public function show(Boleta $boleta)
+    public function show($id_alumno)
     {
-        //
-    }
+        $data = request()->all();
+        // dd($data);
+
+        $infoGrupo = DB::table('grupos')
+        ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
+        ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
+        ->where('id_grupo',$data['grupo'])
+        ->get();
+
+
+
+
+
+
+        return view('boletas.calificaciones',compact('infoGrupo'));
+
+        // $alumno = Inscripcion::where('alumno_inscrito.num_control',$data['numero'])
+        // ->leftjoin('alumnos','alumnos.num_control','=','alumno_inscrito.num_control')
+        // ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+        // ->leftjoin('grupos','grupos.id_grupo','=','alumno_inscrito.id_grupo')
+        // ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
+        // ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
+        // ->leftjoin('docentes','grupos.docente','=','docentes.id_docente')
+        // ->where('periodos.id_periodo',$data['periodo'])
+        // ->get();
+
+        // $docente = Inscripcion::where('alumno_inscrito.num_control',$data['numero'])
+        // ->leftjoin('grupos','grupos.id_grupo','=','alumno_inscrito.id_grupo')
+        // ->leftjoin('docentes','docentes.id_docente','=','grupos.docente')
+        // ->leftjoin('personas','personas.curp','=','docentes.curp_docente')
+        // ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
+        // ->where('periodos.id_periodo',$data['periodo'])
+        // ->get();
+        
+        // $calificacion = Boleta::where('boletas.num_control',$data['numero'])
+        // ->leftjoin('grupos','grupos.id_grupo','=','boletas.id_grupo')
+        // ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
+        // ->where('periodos.id_periodo',$data['periodo'])
+        // ->get();
+        //         // dd($calificacion);
+
+        // if(empty($alumno[0])){
+        //     return redirect()->route('boletas')->with('error','No se encontró ningún estudiante con ese número de control en el periodo especificado');
+        // }else{
+
+        // return view('boletas.calificaciones',compact('alumno','docente','calificacion'));
+    // }
+
+}
 
     /**
      * Show the form for editing the specified resource.
@@ -69,7 +124,7 @@ class BoletaController extends Controller
      */
     public function update(Request $request, Boleta $boleta)
     {
-        //
+        dd(request()->all());
     }
 
     /**
@@ -81,5 +136,19 @@ class BoletaController extends Controller
     public function destroy(Boleta $boleta)
     {
         //
+    }
+
+
+    public function getGrupos(Request $request)
+    { 
+        if($request->ajax()){
+            $grupos = Grupo::where('periodo',$request->periodo)
+                            ->get();
+            
+            foreach ($grupos as $grupo) {
+                $gruposArray[$grupo->grupo] = array ($grupo->grupo);
+            }
+            return response()->json($gruposArray);
+        }
     }
 }

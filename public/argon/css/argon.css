@@ -53,7 +53,7 @@
     --breakpoint-md: 768px;
     --breakpoint-lg: 992px;
     --breakpoint-xl: 1200px;
-    --font-family-sans-serif: "Soberana Sans";
+    /* --font-family-sans-serif: "Soberana Sans"; */
     --font-family-sans-serif: Open Sans, sans-serif;
     --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }
@@ -1894,7 +1894,7 @@ pre code {
 .table-responsive {
     display: block;
     overflow-y: auto;
-    width: 100%;
+    width: 50%;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
 }
@@ -18104,4 +18104,10 @@ html:not([dir='rtl']) .noUi-horizontal .noUi-handle {
 .scrollbar-inner .scroll-element.scroll-x {
     bottom: 0;
     height: 3px;
+}
+
+.table-size {
+    width: 800px;
+    height: 400px;
+    overflow-y: scroll;
 }

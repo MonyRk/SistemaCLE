@@ -120,11 +120,11 @@
                 <div class="row">
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-telefono">{{ __('Teléfono') }}</label>
-                        <input type="text" name="telefono" id="input-telefono" class="form-control" placeholder="" value="{{ old('telefono', $datos_alumno[0]->telefono) }}" required autofocus>
+                        <input type="text" name="telefono" id="input-telefono" class="form-control" placeholder="" value="{{ old('telefono', $datos_alumno[0]->telefono) }}"autofocus>
                     </div>
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-email">{{ __('Email') }}</label>
-                        <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder=""{{-- value="old('email',$email[0]->email)" --}}required >
+                        <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder=""{{-- value="old('email',$email[0]->email)" --}} >
                     </div>
                 </div>
         
@@ -166,38 +166,41 @@
                 </div>
             </div>
             <div class="form-row">
-                    <div class="col-md-3"></div>
-                    <div class="form-group col-md-3">
-                        <label for="activarpago" class="form-control-label">{{ __('Activar Folio de Pago') }}</label>
-                        <div><label class="custom-toggle" >
-                                <input type="checkbox" id="activarpago" onchange="comprobar(this);">
-                                <span class="custom-toggle-slider rounded-circle"></span>
-                              </label>
-                            </div>
-                    </div>
+                <div class="form-group col-md-4">
+                    <label class="form-control-label" for="input-password">{{ __('Reestablecer Contraseña') }}</label>
+                    <input type="password" name="password" id="input-password" class="form-control">
+                </div>
+                <div class="form-group col-md">
+                    <label for="activarpago" class="form-control-label">{{ __('Activar Folio de Pago') }}</label>
+                    <div><label class="custom-toggle" >
+                            <input type="checkbox" id="activarpago" onchange="comprobar(this);">
+                            <span class="custom-toggle-slider rounded-circle"></span>
+                            </label>
+                        </div>
+                </div>
                    
-                    <div class="form-group col-md" id="folio" style="display:none">
-                        <label for="foliopago" class="form-control-label"> {{ __('Folio de Pago') }}</label>
-                        <input type="text" name="foliopago" id="foliopago" class="form-control" placeholder=""  value="">
-                    </div>
+                <div class="form-group col-md" id="folio" style="display:none">
+                    <label for="foliopago" class="form-control-label"> {{ __('Folio de Pago') }}</label>
+                    <input type="text" name="foliopago" id="foliopago" class="form-control" placeholder=""  value="">
                 </div>
             </div>
-            <script>
-             function comprobar(obj)
-                {   
-                    if (obj.checked){
-                    
-                document.getElementById('folio').style.display = "";
-                } else{
-                    
-                document.getElementById('folio').style.display = "none";
-                }     
-                }
-            </script>
+        </div>
+        <script>
+            function comprobar(obj)
+            {   
+                if (obj.checked){
+                
+            document.getElementById('folio').style.display = "";
+            } else{
+                
+            document.getElementById('folio').style.display = "none";
+            }     
+            }
+        </script>
 
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary mt-4">{{ __('Actualizar') }}</button>
-            </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary mt-4">{{ __('Actualizar') }}</button>
+        </div>
         </form>
     </div>
 </div>

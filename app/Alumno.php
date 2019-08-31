@@ -24,5 +24,9 @@ class Alumno extends Model
         return $this->belongsTo(Persona::class,'curp');
     }
 
+    public function boleta(){
+        return $this->hasMany(Boleta::class,'num_control');
+    }
+
     
 }

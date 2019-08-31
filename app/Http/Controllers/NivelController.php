@@ -47,7 +47,7 @@ class NivelController extends Controller
                 'idioma' => $data['idioma'],
             ]);
         
-        return redirect()->route('verNiveles');
+        return redirect()->route('verNiveles')->with('success','¡El nivel se agregó correctamente!');
     }
 
     /**
@@ -90,11 +90,10 @@ class NivelController extends Controller
      * @param  \App\Nivel  $nivel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Nivel $nivel)
-    {
-        //dd('perdida');
-        $nivelE = Nivel::where('id_nivel','=', $nivel->id_nivel);
-        $nivelE->delete();
-        return redirect()->route('verNiveles');
+    public function destroy(Request $request)
+    { 
+        $nivelE = Nivel::where('id_nivel','=', $request->nivel_id)->get(); 
+        $nivelE[0]->delete();
+        return redirect()->route('verNiveles')->with('warning','Los datos del nivel se eliminaron.');
     }
 }

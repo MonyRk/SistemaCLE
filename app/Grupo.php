@@ -9,12 +9,13 @@ use App\Aula;
 use App\Docente;
 use App\Periodo;
 use App\Hora;
+use App\Boleta;
 
 class Grupo extends Model
 {
     protected $primaryKey = 'id_grupo';
     protected $fillable = [
-        'grupo','nivel','aula', 'docente', 'periodo', 'hora' 
+        'grupo','nivel_id','aula', 'docente', 'periodo', 'hora' 
     ];
     use SoftDeletes;
     protected $dates = ['deleted_at'];
@@ -39,5 +40,13 @@ class Grupo extends Model
         return $this->hasOne(Periodo::class,'id_periodo');
     }
 
-    //hora??
+    //un grupo tiene varios alumnos inscritos
+    public function alumnos_inscritos(){
+        return $this->hasMany(Inscripcion::class,'num_inscripcion');
+    }
+
+    public function grupo(){
+        return $this->hasMany(Boleta::class,'id_grupo');
+    }
+
 }

@@ -112,7 +112,7 @@
                             <div class="py-3 text-center">
                                     <i class="fas fa-times fa-3x" style="color:#CD5C5C;"></i>
                                 <h4 class="heading mt-4">¡Da tu confirmaci&oacute;n para Eliminar!</h4>
-                                <p>¿Realmente deseas eliminar los datos del estudiante?</p>
+                                <p>¿Realmente deseas eliminar los datos del docente?</p>
                                 <input type="hidden" name="docente_id" id="docente_id" value="">
                             </div>
                             

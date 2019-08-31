@@ -147,13 +147,11 @@ class AlumnosController extends Controller
     {                     
         $curp = $alumno->curp_alumno;//curp original
         $numControl = $alumno->num_control; //num de control original  
-        
-        //validacion de los datos
         $data = request()->validate([
             'name' => 'required|alpha_spaces',
             'curp' => array('required','alpha_num','regex:/^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0\d|1[0-2])(?:[0-2]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/'),
             'apPaterno' => 'required|alpha_spaces',
-            'apMaterno' =>'required|alpha_spaces',
+            // 'apMaterno' =>'alpha_spaces',
             'calle' => array('required','regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ,.]*$/'),
             'numero' => 'required|numeric',
             'colonia' => 'required|alpha_spaces',
@@ -162,10 +160,12 @@ class AlumnosController extends Controller
             'email' => array('required','email','regex:/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/'),
             'edad' =>'required|digits:2',
             'sexo' => 'required',
-            'numControl' => 'required|digits:8',
+            'numControl' => array('required','regex:/^[A-Z]{1}\d{8}|\d{8}$/'),
             'carrera' => 'required',
-            'semestre' => 'required'
-        ]);
+            'semestre' => 'required',
+            
+        ]); 
+
         //obtener los datos de la misma persona en todas las tablas relacionadas
         $persona = Persona::find($curp)->update([
             // 'curp' => $data['curp'],
@@ -180,20 +180,29 @@ class AlumnosController extends Controller
             'edad' => $data['edad'],
             'sexo' => $data['sexo']
         ]); 
-          
-
+        
+        //actualizar la informacion en la tabla de alumno
         $infoAlumno= Alumno::find($numControl);
         
         $infoAlumno->num_control = $data['numControl'];
-        // $infoAlumno->curp_alumno = $data['curp'];
         $infoAlumno->carrera = $data['carrera'];
         $infoAlumno->semestre = $data['semestre'];
         $infoAlumno->save();
         
+        //actualizar la informacion del usuario verificando si se modifico la contraseña o no 
+        $c = request()->all();
+        if ($c['password']!= null) {
+            $contrasenia = request()->validate([
+                'password' => 'alpha_num|between:6,10'
+            ]);
+            $user = User::where('curp_user',$curp)->first();
+            $user->password = bcrypt($c['password']);
+            $user->save();
+        };
+        
         $user = User::where('curp_user',$curp)->first();
 
         $user->name = $data['name'];
-        // $user->curp_user = $data['curp'];
         $user->email = $data['email'];
         $user->save();
         
@@ -201,7 +210,7 @@ class AlumnosController extends Controller
         DB::update('update personas set curp = ? where curp = ?', [$data['curp'],$curp]);
 
 
-        return redirect()->route('verEstudiantes')->with('success','!Los datos de actualizaron correctamente!');
+        return redirect()->route('verEstudiantes')->with('success','!Los datos se actualizaron correctamente!');
     }
 
     /**

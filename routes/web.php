@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('dashboardCoordinador');
-});
+})->name('inicio');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
@@ -48,10 +48,14 @@ Route::delete('/docentes/{docente}','DocentesController@destroy')->name('elimina
 Route::any('/search/docente', 'DocentesController@search')->name('buscarDocente');
 
 Route::get('/grupos', 'GruposController@index')->name('verGrupos');
+Route::get('/grupos/{grupo}','GruposController@show')->name('verInfoGrupo');
 Route::get('/agregarGrupo', 'GruposController@create')->name('crearGrupo');
 Route::post('/guardarGrupo', 'GruposController@store')->name('agregarGrupo');
-Route::get('/grupos/{grupo}/eliminar','GruposController@destroy');
+Route::delete('/grupos/{grupo}','GruposController@destroy')->name('eliminarGrupo');
+Route::get('/grupos/{grupo}/editar','GruposController@edit')->name('editarGrupo');
+Route::post('/grupos/guardarGrupo/{grupo}','GruposController@update')->name('guardarGrupo');
 Route::get('/aulas', 'GruposController@getaulas');
+Route::any('/search/grupo', 'GruposController@search')->name('buscarGrupo');
 
 Route::get('/catalogos', function () {
 	return view('catalogos.cardscatalogos');
@@ -60,11 +64,26 @@ Route::get('/catalogos', function () {
 Route::get('/catalogos/niveles','NivelController@index')->name('verNiveles');
 Route::get('/catalogos/niveles/crearNivel','NivelController@create')->name('crearNivel');
 Route::post('/catalogos/niveles/agregarNivel', 'NivelController@store')->name('agregarNivel');
-Route::get ('/catalogos/niveles/{nivel}/eliminar','NivelController@destroy')->name('eliminarNivel');
+Route::delete('/catalogos/niveles/{nivel}','NivelController@destroy')->name('eliminarNivel');
 
 Route::get('/catalogos/aulas','AulaController@index')->name('verAulas');
-// Route::get('/catalogos/aulas/crearAula', 'AulaController@create')->name('crearAula');
 Route::post('/catalogos/aulas/agregarAula', 'AulaController@store')->name('agregarAula');
 Route::get('/catalogos/aulas/{aula}/editar', 'AulaController@edit')->name('editarAula');
-Route::put('/catalogos/aulas/{aula}', 'AulaController@update')->name('actualizarAlumno');
-Route::get ('/catalogos/aulas/{aula}/eliminar','AulaController@destroy')->name('eliminarAula');
+Route::put('/catalogos/aulas/{aula}','AulaController@update')->name('actualizarAula');
+Route::delete('/catalogos/aulas/{aula}','AulaController@destroy')->name('eliminarAula');
+
+Route::get('/catalogos/periodos','PeriodoController@index')->name('periodos');
+Route::post('/catalogos/periodos/agregarPeriodo','PeriodoController@store')->name('agregarPeriodo');
+
+Route::get('/periodoinscripciones','InscripcionesController@index')->name('periodoinscripciones');
+Route::get('/inscripciones','InscripcionesController@show')->name('inscripciones');
+Route::get('/inscripciones/grupo/{grupo}','InscripcionesController@create')->name('inscribirEstudiantes');
+Route::post('/inscripciones/grupo','InscripcionesController@store')->name('guardarLista');
+Route::any('/search/grupos', 'InscripcionesController@search')->name('buscarGrupoInscripcion');
+Route::any('/search/estudiantes', 'InscripcionesController@searchE')->name('buscarAlumnoInscribir');
+
+
+Route::get('/boleta','BoletaController@index')->name('boletas');
+Route::get('/boleta/{grupo}','BoletaController@show')->name('verBoleta');
+Route::post('/boleta/{alumno}','BoletaController@update')->name('calificar');
+Route::get('/boletaGrupo', 'BoletaController@getGrupos');

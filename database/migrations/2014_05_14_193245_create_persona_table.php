@@ -17,7 +17,7 @@ class CreatePersonaTable extends Migration
             $table->string('curp',20)->primary();
             $table->string('nombres', 60);
             $table->string('ap_paterno',50);
-            $table->string('ap_materno',50);
+            $table->string('ap_materno',50)->nullable();
             $table->string('calle',70);
             $table->integer('numero');
             $table->string('colonia',90);

@@ -102,12 +102,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-user-edit text-green"></i> {{ __('Curso') }}
+                    <a class="nav-link" href="{{ route('periodoinscripciones') }}">
+                        <i class="fas fa-user-edit text-green"></i> {{ __('Inscripciones') }}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{{ route('boletas') }}">
                         <i class="fas fa-check text-info"></i> {{ __('Calificaciones') }}
                     </a>
                 </li>
