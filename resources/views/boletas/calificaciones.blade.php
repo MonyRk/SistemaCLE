@@ -14,151 +14,125 @@
             <h6 class="text-dark">{{ $infoGrupo[0]->edificio }}{{ $infoGrupo[0]->aula }} {{ $infoGrupo[0]->hora }}</h6>
         </div>
     </div>
-    <div class="text-right">
+    <div class="msj">
+        @include('flash-message')
+    </div>
+    <div class="text-right mb-5">
         <a href=" {{ route('boletas') }} " class="btn btn-outline-primary mt-3">
             <span>
                 <i class="fas fa-reply"></i> &nbsp; Regresar
             </span>
         </a>
-    </div> <br>
-    <div>
-        <!-- Editable table -->
-<div class="card">
-        
-        {{-- <div class="card-body"> --}}
-          <div id="table" class="table-editable">
-            
-            <table class="table table-bordered table-responsive-md table-striped text-center table align-items-center table-flush th">
-              <thead>
-                <tr class="card-header">
-                  <th class="text-center">N&uacute;mero <br>de Control </th>
-                  <th class="text-center">Estudiante</th>
-                  <th class="text-center">Parcial 1</th>
-                  <th class="text-center">Parcial 2</th>
-                  <th class="text-center">Parcial 3</th>
-                  <th class="text-center">Final</th>
-                </tr>
-              </thead>
-              <tbody>
-               
-                <tr class="hide">
-                  <td class="pt-3-half" contenteditable="true">Elisa Gallagher</td>
-                  <td class="pt-3-half" contenteditable="true">31</td>
-                  <td class="pt-3-half" contenteditable="true">Portica</td>
-                  <td class="pt-3-half" contenteditable="true">United Kingdom</td>
-                  <td class="pt-3-half" contenteditable="true">London</td>
-                  <td class="pt-3-half">Final</td>
-                  
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        {{-- </div> --}}
-      </div>
-      <!-- Editable table -->
-    </div>
-        {{-- <div class="text-right">
-            <a href="" class="btn btn-primary mt-2 mb-2">
-                <span>
-                    <i class="fas fa-file-download"></i>
-                </span>
-            </a>
-        </div>
-   
-
-    <form method="post" action="{{ route('calificar',$alumno[0]->num_control) }}" autocomplete="off">
-        @csrf
-        @method('post')
-        <div class="col-xl" >
-                <div class="card shadow " >
-                    <div class="card-header border-3">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h1 class="heading-small text-muted mb-4 text-center">
-                                    Estudiante: <strong>{{ $alumno[0]->nombres }} {{ $alumno[0]->ap_paterno }}  @if($alumno[0]->ap_materno) {{ $alumno[0]->ap_materno }} @endif</strong>
-                                </h1>
-                            </div>
-                            
+    </div> 
+    
+    <form id="formtable">
+            @csrf
+        {{-- @method('post') --}}
+        <div class="row">    
+            <div class="col-xl">
+                <div class="col-xl">
+                    <div class="card shadow ">
+                        <div class="table-responsive">
+                            <table id="tabledata" class="table align-items-center table-flush th">
+                                <thead class="thead-light">
+                                    <tr class="card-header">
+                                        <th class="text">N&uacute;mero <br>de Control </th>
+                                        <th class="text">Estudiante</th>
+                                        <th class="text">Parcial 1</th>
+                                        <th class="text">Parcial 2</th>
+                                        <th class="text">Parcial 3</th>
+                                        <th class="text">Final</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($alumnos_inscritos as $alumno) 
+                                        <tr class="hide">
+                                            <td id="num" class="num_control pt-3-half" contenteditable="false">{{ $alumno->num_control }}</td>
+                                            {{-- <input type="hidden" name="nc" value="{{ $alumno->num_control }}"> --}}
+                                            <th class="pt-3-half" contenteditable="false">{{ $alumno->ap_paterno }} {{ $alumno->ap_materno }} {{ $alumno->nombres }} </th>
+                                            <td id="c1" class="1 pt-3-half" @if ($alumno->calif1 == null) contenteditable="true" @else contenteditable="false" @endif>@if ( $alumno->calif1 == null ) 0 @else{{ $alumno->calif1 }} @endif</td>
+                                            <td id="c2" class="2 pt-3-half" @if ($alumno->calif2 == null) contenteditable="true" @else contenteditable="false" @endif>@if ( $alumno->calif2 == null ) 0 @else{{ $alumno->calif2 }} @endif</td>
+                                            <td id="c3" class="3 pt-3-half" @if ($alumno->calif3 == null) contenteditable="true" @else contenteditable="false" @endif>@if ( $alumno->calif3 == null ) 0 @else{{ $alumno->calif3 }} @endif</td>
+                                            <th class="pt-3-half">@php $f =0; $f= round(($alumno->calif1+$alumno->calif2+$alumno->calif3)/3) @endphp {{ $f }}</th>
+                                            {{-- <input type="hidden" name="num_control[{{ $alumno->num_control }}]" value="{{ $alumno->calif1 }}"> --}}
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
-                    <div class="table-responsive" >
-                        <table class="table align-items-center table-flush th" id="tabledata"> {{ --style="width:500px;height:500px;overflow-y:auto;"-- }}
-                            <thead class="thead-light">
-                                <tr>  
-                                    <th >Nivel: <strong>{{ $alumno[0]->nivel }}{{ $alumno[0]->modulo }}</strong></th>
-                                    <th >Idioma: <strong>{{ $alumno[0]->idioma }}</strong></th>
-                                    <th colspan="2">Grupo: <strong>{{ $alumno[0]->grupo }}</strong></th>     
-                                </tr>
-                                <tr>
-                                    <th >Hora: <strong>{{ $alumno[0]->hora }}</strong></th>
-                                    <th >Periodo: <strong>{{ $alumno[0]->descripcion }} {{ $alumno[0]->anio }}</strong></th>
-                                    <th colspan="2">Docente: <strong>{{ $docente[0]->nombres }} {{ $docente[0]->ap_paterno }} @if($alumno[0]->ap_materno) {{ $docente[0]->ap_materno }} @endif</strong></th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-bordered text-center">
-                                <tr>
-                                    <td  name= "c[]" id="1" >@if ( $calificacion[0]->calif1 == null ) 0 @else {{ $calificacion[0]->calif1 }} @endif</td>
-                                    <td  name= "c[]" id="2" value="">@if ( $calificacion[0]->calif1 == null ) 0 @else {{ $calificacion[0]->calif2 }} @endif</td>
-                                    <td  name= "c[]" id="3" value="">@if ( $calificacion[0]->calif1 == null ) 0 @else {{ $calificacion[0]->calif3 }} @endif</td>
-                                    <th  id="fin"></th>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
-       
-    <div class="text-center">
-        <button type="submit" class="btn btn-primary mt-4">{{ __('Guardar') }}</button>
-    </div>
-</form>
-</div> --}}
+        </div>
+        <div class="text-center">
+            <button type="submit" id="guardar" class="btn btn-primary mt-4">Guardar</button>
+        </div>
+    </form>
+</div>
 
     @section('script')
         <script>
-        $(function () {
-            var suma = 0;
-            $("#tabledata td").click(function (e) {
-                e.preventDefault(); // <-- consume event
-                e.stopImmediatePropagation();
-        
-            $this = $(this);
+            var json="";
+            $(document).ready(function(){
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $('#formtable').on('submit',function(e){
+                    e.preventDefault();
+                    // var todo= [];
 
-            if ($this.data('editing')) return;  
-        
-            var val = $this.text();
-        
-            $this.empty()
-            $this.data('editing', true);       
-            console.log($('<input type="text" class="editfield" name="calif[]">').val(val).appendTo($this));
-            // $('<input type="text" class="editfield">').val(val).appendTo($this);
-        });
 
-        putOldValueBack = function () {
-            
-            $("#tabledata .editfield").each(function(){
-                $this = $(this);
-                var val = $this.val(); 
-                var td = $this.closest('td');
-                td.empty().html(val).data('editing', false);
-                suma = suma + parseInt(val);
-                var calif = suma/3;
-                console.log(calif);
-                $("#3").closest('th').append('<th scope="row" id="fin">'+calif+'</th>');
+                    // todo
+                    // $('#tabledata tbody tr').each(function(index){
+                    //     var uno = [];
+                    //     $(this).find('td').each(function(index) {
+                    //         uno [index]= $(this).html() + ",";
+                    //     });
+                    //      todo[index]=uno;
+                    // });
+                    //  console.log(todo);
+
+                    // funtion guardar(tablaid){
+                    //     var t = $('#'+tablaid+'')
+                    // }
+
+
+                    $("table tbody tr").each(function () {
+                        json ="";
+                        $(this).find("td").each(function () {
+                            $this=$(this);
+                            json+=',"'+$this.attr("id")+'":"'+$this.html()+'"'
+                        });
+                        obj=JSON.parse('{'+json.substr(1)+'}');
+                        console.log(obj);
+                    });
+                    // var arr = obj.pushItem
+                    
+
+                    // console.log(json);
+                    $.ajax({
+                        type:'POST',
+                        url:"{{ route('guardarCalificaciones') }}",
+                        data:json,
+                        // dataType:'json',
+                        success:function(data){
+                            // var datos = data.responseText;
+                            console.log(data);
+                            // $('.msj').append('<div class="alert alert-danger alert-block">'+
+                            //                 '<button type="button" class="close" data-dismiss="alert">×</button>'+
+                            //                 '<strong>Exito</strong>'+
+                            //                 '</div>')
+                        },
+                        
+                    });
+                });
             });
-
-            
-        }
-
-
-        $(document).click(function (e) {
-            putOldValueBack();
-            
-        });
-    });
-
-        
-    
         </script>
     @endsection
 @endsection
+
+
+
+

@@ -35,7 +35,7 @@ class BoletaController extends Controller
         //
     }
 
-    /**
+    /**_
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -52,10 +52,10 @@ class BoletaController extends Controller
      * @param  \App\Boleta  $boleta
      * @return \Illuminate\Http\Response
      */
-    public function show($id_alumno)
+    public function show($grupo_periodo)
     {
         $data = request()->all();
-        // dd($data);
+        // dd($grupo_periodo);
 
         $infoGrupo = DB::table('grupos')
         ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
@@ -63,12 +63,17 @@ class BoletaController extends Controller
         ->where('id_grupo',$data['grupo'])
         ->get();
 
+        $alumnos_inscritos = Inscripcion::where('alumno_inscrito.id_grupo',$data['grupo'])
+                                        ->leftJoin('alumnos','alumnos.num_control','=','alumno_inscrito.num_control')
+                                        ->leftjoin('boletas','alumnos.num_control','=','boletas.num_control')
+                                        ->leftJoin('personas','alumnos.curp_alumno','=','personas.curp')  
+                                        ->where('boletas.id_grupo',$data['grupo']) 
+                                        ->whereNull('boletas.deleted_at')
+                                        ->orderBy('personas.ap_paterno','ASC')  
+                                        ->get();
+// dd($alumnos_inscritos);
 
-
-
-
-
-        return view('boletas.calificaciones',compact('infoGrupo'));
+        return view('boletas.calificaciones',compact('infoGrupo','alumnos_inscritos'));
 
         // $alumno = Inscripcion::where('alumno_inscrito.num_control',$data['numero'])
         // ->leftjoin('alumnos','alumnos.num_control','=','alumno_inscrito.num_control')
@@ -122,17 +127,33 @@ class BoletaController extends Controller
      * @param  \App\Boleta  $boleta
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Boleta $boleta)
+    public function update(Request $request)
     {
-        dd(request()->all());
-    }
+        // $infoGrupo = DB::table('grupos')
+        // ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
+        // ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
+        // ->where('id_grupo',3)
+        // ->get();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Boleta  $boleta
-     * @return \Illuminate\Http\Response
-     */
+        // $alumnos_inscritos = Inscripcion::where('alumno_inscrito.id_grupo',3)
+        //                                 ->leftJoin('alumnos','alumnos.num_control','=','alumno_inscrito.num_control')
+        //                                 ->leftjoin('boletas','alumnos.num_control','=','boletas.num_control')
+        //                                 ->leftJoin('personas','alumnos.curp_alumno','=','personas.curp')  
+        //                                 ->where('boletas.id_grupo',3) 
+        //                                 ->whereNull('boletas.deleted_at')
+        //                                 ->orderBy('personas.ap_paterno','ASC')  
+        //                                 ->get();
+       
+        // dd(request()->all());
+        // $data = json_decode($request->getContent());
+
+        // dd($data);
+        // $input = request()->all();
+// dd($input);
+        if($request->ajax()){ 
+            return response()->json(['success',$request]);
+        }
+    }
     public function destroy(Boleta $boleta)
     {
         //
@@ -141,14 +162,19 @@ class BoletaController extends Controller
 
     public function getGrupos(Request $request)
     { 
-        if($request->ajax()){
-            $grupos = Grupo::where('periodo',$request->periodo)
+        if($request->ajax()){ 
+            $grupos = Grupo::where('periodo',$request->id_periodo)
                             ->get();
             
             foreach ($grupos as $grupo) {
-                $gruposArray[$grupo->grupo] = array ($grupo->grupo);
+                $gruposArray[$grupo->id_grupo] = array ($grupo->grupo);
             }
             return response()->json($gruposArray);
         }
+    }
+
+
+    public function pruebaDatos(Request $request){
+        return response()->json(['success'=>'HOLA MUNDO']);
     }
 }

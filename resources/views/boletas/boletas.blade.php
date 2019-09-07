@@ -33,7 +33,7 @@
             </span>
         </a>
     </div>
-    <form action="{{ route('verBoleta','numero') }}" method="GET">
+    <form action="{{ route('verBoleta','grupo') }}" method="GET">
 <div class="row">
     <div class="col-lg-4"></div>
         <div class="col-lg-4 text-center">
@@ -52,9 +52,9 @@
                 <div class="form-group col-md">
                     <label class="form-control-label" for="input-grupo">{{ __('Grupos') }}</label>
                     <select  id="input-grupo" class="form-control" name="grupo">
-                        @foreach ($grupos as $grupo)
+                        {{-- @foreach ($grupos as $grupo)
                             <option value="{{ $grupo->id_grupo }}">{{ $grupo->grupo }}</option>
-                        @endforeach
+                        @endforeach --}}
                     </select>
                 </div>
             </div>
@@ -71,26 +71,21 @@
 
 @section('script')
 <script>
-    // var $jq = jQuery.noConflict();
-    // $jq(document).ready(function(){
-    //     $jq('#input-periodo').on('change',function(){
-    //         var grupo_id = $jq(this).val();
-    //         if ($jq.trim(grupo_id) != ''){
-    //             $jq.get('boletaGrupo',{id_grupo: grupo_id},function(grupos){
-    //                 $jq('#input-grupo').empty();
-    //                 $jq('#input-grupo').append("<option value=''></option>");
-    //                 $jq.each(grupos, function(index, value){ 
-    //                     // console.log(index,value);
-    //                     for (let i = 0; i < 14; i++) {
-    //                         if (value[i] != null) {
-    //                             $jq('#input-grupo').append("<option value='"+ i +"'>"+ value[i] +"</option>");
-    //                         }
-    //                     }
-    //                 });
-    //             });
-    //         }
-    //     });
-    // });
+    var $jq = jQuery.noConflict();
+    $jq(document).ready(function(){
+        $jq('#input-periodo').on('change',function(){
+            var id_periodo_seleccionado = $jq(this).val();
+            if ($jq.trim(id_periodo_seleccionado) != ''){
+                $jq.get('boletaGrupo',{id_periodo: id_periodo_seleccionado},function(grupos){
+                    $jq('#input-grupo').empty();
+                    $jq('#input-grupo').append("<option value=''></option>");
+                    $jq.each(grupos, function(index, value){ 
+                                $jq('#input-grupo').append("<option value='"+ index +"'>"+ value +"</option>");
+                    });
+                });
+            }
+        });
+    });
     </script>
 @endsection
 @endsection

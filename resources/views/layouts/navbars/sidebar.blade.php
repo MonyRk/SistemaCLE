@@ -107,6 +107,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="">
+                        <i class="fas fa-spell-check text-green"></i> {{ __('Cursos') }} <i class="fas fa-prescription-bottle-alt"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ route('boletas') }}">
                         <i class="fas fa-check text-info"></i> {{ __('Calificaciones') }}
                     </a>

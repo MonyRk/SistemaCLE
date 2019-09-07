@@ -84,6 +84,7 @@ Route::any('/search/estudiantes', 'InscripcionesController@searchE')->name('busc
 
 
 Route::get('/boleta','BoletaController@index')->name('boletas');
-Route::get('/boleta/{grupo}','BoletaController@show')->name('verBoleta');
-Route::post('/boleta/{alumno}','BoletaController@update')->name('calificar');
+Route::get('/boletaGrupo/{grupo}','BoletaController@show')->name('verBoleta');
+Route::post('/boletaGrupo/calificar','BoletaController@update')->name('guardarCalificaciones');
 Route::get('/boletaGrupo', 'BoletaController@getGrupos');
+Route::post('unaprueba', 'BoletaController@pruebaDatos')->name('prueba');
