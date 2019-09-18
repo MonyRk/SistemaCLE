@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Alumno;
+use App\Historial;
 use App\Persona;
 use App\Nivel;
 use App\Municipio;
@@ -52,8 +53,10 @@ class AlumnosController extends Controller
     public function create()
     {
         $nombres_municipios = Municipio::select('*')->get();
+    
+        $niveles = Nivel::select('*')->get();
        
-        return view('alumnos.createAlumno',compact('nombres_municipios'));
+        return view('alumnos.createAlumno',compact('nombres_municipios','niveles'));
     }
 
     
@@ -65,41 +68,113 @@ class AlumnosController extends Controller
     public function store(ValidarCrearAlumnoRequest $request)
     {
         $data = request()->all();
-        
-                $agregar = Persona::firstOrCreate([
-                    'curp' => $data['curp']
-                ],[
-                    'nombres' => $data['name'],
-                    'ap_paterno' => $data['apPaterno'],
-                    'ap_materno' => $data['apMaterno'],
-                    'calle' => $data['calle'],
-                    'numero' => $data['numero'],
-                    'colonia' => $data['colonia'],
-                    'municipio' => $data['municipio'],
-                    'telefono' => $data['telefono'],
-                    'edad' => $data['edad'],
-                    'sexo' => $data['sexo'],
-                    'tipo' => 'alumno'
-                ]);
-        
-        
-                Alumno::firstOrCreate([
-                    'curp_alumno' => $data['curp']
-                ],[
-                    'num_control' => $data['numControl'],
-                    'carrera' => $data['carrera'],
-                    'semestre' => $data['semestre'],
-                    'estatus' => 'no inscrito',
-                ]);
+            
+        // se crea la persona 
+        $agregar = Persona::firstOrCreate([
+            'curp' => $data['curp']
+        ],[
+            'nombres' => $data['name'],
+            'ap_paterno' => $data['apPaterno'],
+            'calle' => $data['calle'],
+            'numero' => $data['numero'],
+            'colonia' => $data['colonia'],
+            'municipio' => $data['municipio'],
+            'telefono' => $data['telefono'],
+            'edad' => $data['edad'],
+            'sexo' => $data['sexo'],
+            'tipo' => 'alumno'
+        ]);
 
-                User::firstOrCreate([
-                    'curp_user' => $data['curp']
-                ],[
-                    'name' => $data['name'],
-                    'email' => $data['email'],
-                    'password' => bcrypt($data['curp'])
-                ]);
+        DB::update('update personas set ap_materno = ? where curp = ?', [$data['apMaterno'],$data['curp']]);
+        
+        //se crea el estudiante
+        Alumno::firstOrCreate([
+            'curp_alumno' => $data['curp']
+        ],[
+            'num_control' => $data['numControl'],
+            'carrera' => $data['carrera'],
+            'semestre' => $data['semestre'],
+            'estatus' => 'no inscrito',
+        ]);
 
+        //se crea el usuario para accesar
+        User::firstOrCreate([
+            'curp_user' => $data['curp']
+        ],[
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['curp'])
+        ]);
+
+        //se verifica si hay apellido materno para agregar el nombre completo a la tabla historial
+        if ($data['apMaterno'] != null) {
+            $nombre = $data['name'].' '.$data['apPaterno'].' '.$data['apMaterno'];
+        }else{
+            $nombre = $data['name'].' '.$data['apPaterno'];
+        };
+
+        //se agrega el estudiante a la tabla historial
+        Historial::firstOrCreate([
+            'num_control' => $data['numControl'],
+        ],[
+            'nombre' => $nombre,
+            'carrera' => $data['carrera'],
+            'semestre' => $data['semestre']
+        ]);
+
+        //verifica si el estudiante realizo examen
+        if (request()->has('examen')) {
+            $a = Alumno::find($data['numControl']);
+            $a->nivel_inicial = $data['nivel'];
+            $a->save();
+
+            if ($data['nivel'] == 'A1M1') {
+                Historial::where('num_control',$data['numControl'])->update([
+                    $data['nivel'] => 'cursando'
+                ]);
+            };
+            if ($data['nivel'] == 'A2M1') {
+                Historial::where('num_control',$data['numControl'])->update([
+                    'A1M1' => 'aprobado',
+                    // 'calif1' => 70,
+                    'A2M1' => 'cursando'
+                ]);
+            };
+            if ($data['nivel'] == 'A2M2') {
+                Historial::where('num_control',$data['numControl'])->update([
+                    'A1M1' => 'aprobado',
+                    // 'calif1' => 70,
+                    'A2M1' => 'aprobado',
+                    // 'calif2' => 70,
+                    'A2M2' => 'cursando'
+                ]);
+            };
+            if ($data['nivel'] == 'B1M1') {
+                Historial::where('num_control',$data['numControl'])->update([
+                    'A1M1' => 'aprobado',
+                    // 'calif1' => 70,
+                    'A2M1' => 'aprobado',
+                    // 'calif2' => 70,
+                    'A2M2' => 'aprobado',
+                    // 'calif3' => 70,
+                    'B1M1' => 'cursando'
+                ]);
+            };
+            if ($data['nivel'] == 'B2M2') {
+                Historial::where('num_control',$data['numControl'])->update([
+                    'A1M1' => 'aprobado',
+                    // 'calif1' => 70,
+                    'A2M1' => 'aprobado',
+                    // 'calif2' => 70,
+                    'A2M2' => 'aprobado',
+                    // 'calif3' => 70,
+                    'B1M1' => 'aprobado',
+                    // 'calif4' => 70
+                    'B2M2' => 'cursando'
+                ]);
+            };
+        };
+                
         return redirect()->route('verEstudiantes')->with('success','Datos del estudiante agregados correctamente!');
     }
 
@@ -136,15 +211,17 @@ class AlumnosController extends Controller
                         ->get();
                         // dd($datos_alumno);           
         $nombres_municipios = Municipio::select('nombre_municipio')->pluck('nombre_municipio');
+        
+        $niveles = Nivel::select('*')->get();
 
         
-      //  $email = User::where('curp_user',$datos_alumno[0]->curp)->get();
+       $email = User::where('curp_user',$datos_alumno[0]->curp)->get();
         
-        return view('alumnos.editAlumno',compact('datos_alumno','nombres_municipios'));//,'email'));
+        return view('alumnos.editAlumno',compact('datos_alumno','nombres_municipios','niveles','email'));//,'email'));
     }
 
     public function update(Alumno $alumno)
-    {                     
+    {                    
         $curp = $alumno->curp_alumno;//curp original
         $numControl = $alumno->num_control; //num de control original  
         $data = request()->validate([
@@ -165,13 +242,17 @@ class AlumnosController extends Controller
             'semestre' => 'required',
             
         ]); 
-
+        // dd($data); 
         //obtener los datos de la misma persona en todas las tablas relacionadas
+        $apm = request()->all();
+            Persona::find($curp)->update([
+            'ap_materno' => $apm['apMaterno']
+            ]);
+
         $persona = Persona::find($curp)->update([
             // 'curp' => $data['curp'],
             'nombres' => $data['name'],
             'ap_paterno' => $data['apPaterno'],
-            'ap_materno' => $data['apMaterno'],
             'calle' => $data['calle'],
             'numero' => $data['numero'],
             'colonia' => $data['colonia'],
@@ -208,7 +289,18 @@ class AlumnosController extends Controller
         
         
         DB::update('update personas set curp = ? where curp = ?', [$data['curp'],$curp]);
-
+        
+        //tabla historial
+        if ($apm['apMaterno'] != null){
+            $nombre = $data['name'].' '.$data['apPaterno'].' '.$data['apMaterno'];
+        }else {
+            $nombre = $data['name'].' '.$data['apPaterno'];
+        }
+        $historial = Historial::where('num_control',$numControl)->get();
+        $historial[0]->num_control = $data['numControl'];
+        $historial[0]->carrera = $data['carrera'];
+        $historial[0]->semestre = $data['semestre'];
+        $historial[0]->save();
 
         return redirect()->route('verEstudiantes')->with('success','!Los datos se actualizaron correctamente!');
     }

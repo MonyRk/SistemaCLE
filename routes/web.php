@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\AlumnosController;
+use App\Inscripcion;
 use Carbon\Traits\Rounding;
 //use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +58,9 @@ Route::post('/grupos/guardarGrupo/{grupo}','GruposController@update')->name('gua
 Route::get('/aulas', 'GruposController@getaulas');
 Route::any('/search/grupo', 'GruposController@search')->name('buscarGrupo');
 
+Route::get('/pagos','InscripcionesController@indexPago')->name('iniciopagos');
+Route::get('/verificarpagos','InscripcionesController@pago')->name('pago');
+
 Route::get('/catalogos', function () {
 	return view('catalogos.cardscatalogos');
  })->name('catalogos');
@@ -82,9 +86,11 @@ Route::post('/inscripciones/grupo','InscripcionesController@store')->name('guard
 Route::any('/search/grupos', 'InscripcionesController@search')->name('buscarGrupoInscripcion');
 Route::any('/search/estudiantes', 'InscripcionesController@searchE')->name('buscarAlumnoInscribir');
 
-
 Route::get('/boleta','BoletaController@index')->name('boletas');
 Route::get('/boletaGrupo/{grupo}','BoletaController@show')->name('verBoleta');
 Route::post('/boletaGrupo/calificar','BoletaController@update')->name('guardarCalificaciones');
 Route::get('/boletaGrupo', 'BoletaController@getGrupos');
 Route::post('unaprueba', 'BoletaController@pruebaDatos')->name('prueba');
+
+Route::get('/cursos','InscripcionesController@getCursos')->name('cursos');
+Route::get('/cursos/avance','InscripcionesController@avance')->name('avance');

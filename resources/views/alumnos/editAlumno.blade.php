@@ -60,7 +60,7 @@
                     </div>
                     <div class="col-md">
                         <label class="form-control-label" for="input-apMaterno">{{ __('Apellido Materno') }}</label>
-                        <input type="text" name="apMaterno" id="input-apMaterno" class="form-control" placeholder="" value="{{ old('apMaterno', $datos_alumno[0]->ap_materno) }}" required autofocus>
+                        <input type="text" name="apMaterno" id="input-apMaterno" class="form-control" placeholder="" value="{{ old('apMaterno', $datos_alumno[0]->ap_materno) }}" autofocus>
                     </div>
                 </div>
                 
@@ -124,7 +124,7 @@
                     </div>
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-email">{{ __('Email') }}</label>
-                        <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder=""{{-- value="old('email',$email[0]->email)" --}} >
+                        <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder="" value="{{ old('email',$email[0]->email) }}" >
                     </div>
                 </div>
         
@@ -151,7 +151,7 @@
                     <option value="Ingeniería Industrial">{{ __('Ing. Industrial') }}</option>
                     <option value="Ingeniería Química">{{ __('Ing. Química') }}</option>
                     <option value="Ingeniería en Gestión Empresarial">{{ __('Ing. Gestión Empresarial') }}</option>
-                    <option value="Ingeniería en Sist. Computacionales">{{ __('Ing. Sistemas Computacionales') }}</option>
+                    <option value="Ingeniería en Sistemas Computacionales">{{ __('Ing. Sistemas Computacionales') }}</option>
                     <option value="Licenciatura en Administración">{{ __('Lic. Administración') }}</option>
                     </select>
                 </div>
@@ -166,25 +166,41 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-4">
+                {{-- <div class="form-group col-md-3">
+                    <label class="form-control-label" for="input-nivel">{{ __('Nivel Inicial') }}</label>
+                    <select id="input-nivel" class="form-control" name="nivel">
+                        <option selected></option>
+                            @foreach ($niveles as $nivel)
+                                <option value="{{ $nivel->id_nivel }}">{{ $nivel->nivel }}{{ $nivel->modulo }}&nbsp;-&nbsp; {{ $nivel->idioma }}</option>                             
+                            @endforeach
+                    </select>                  
+                </div>   --}}
+                {{-- <div class="form-group col-md-3 text-center">
+                    <label for="activarpago" class="form-control-label">{{ __('Activar Folio de Pago') }}</label>
+                    <div>
+                        <label class="custom-toggle" >
+                            <input type="checkbox" id="activarpago" onchange="comprobar(this);">
+                            <span class="custom-toggle-slider rounded-circle"></span>
+                        </label>
+                    </div>
+                </div> --}}
+                <div class="form-group col-md-3" id="folio" {{--style="display:none"--}}>
+                    <label for="foliopago" class="form-control-label"> {{ __('Folio de Pago') }}</label>
+                    <input type="text" name="foliopago" id="foliopago" class="form-control" placeholder=""  value="{{ old('foliopago') }}">
+                </div>
+                <div class="form-group col-md-3" id="monto" {{--style="display:none"--}}>
+                    <label for="foliopago" class="form-control-label"> {{ __('Monto de Pago') }}</label>
+                    <input type="text" name="monto" id="monto" class="form-control" placeholder=""  value="{{ old('monto') }}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-3">
                     <label class="form-control-label" for="input-password">{{ __('Reestablecer Contraseña') }}</label>
                     <input type="password" name="password" id="input-password" class="form-control">
                 </div>
-                <div class="form-group col-md">
-                    <label for="activarpago" class="form-control-label">{{ __('Activar Folio de Pago') }}</label>
-                    <div><label class="custom-toggle" >
-                            <input type="checkbox" id="activarpago" onchange="comprobar(this);">
-                            <span class="custom-toggle-slider rounded-circle"></span>
-                            </label>
-                        </div>
-                </div>
-                   
-                <div class="form-group col-md" id="folio" style="display:none">
-                    <label for="foliopago" class="form-control-label"> {{ __('Folio de Pago') }}</label>
-                    <input type="text" name="foliopago" id="foliopago" class="form-control" placeholder=""  value="">
-                </div>
             </div>
         </div>
+    </div>
         <script>
             function comprobar(obj)
             {   

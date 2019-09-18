@@ -20,7 +20,7 @@ class InscripcionesController extends Controller
     public function index()
     {   
         $periodos = DB::table('periodos')->orderBy('anio','DESC')->orderBy('descripcion','ASC')->get();
-        // dd($periodos);
+        
         return view('inscripciones.periodoInscripciones',compact('periodos'));
         
     }
@@ -94,13 +94,16 @@ class InscripcionesController extends Controller
     //muestra la lista de ALUMNOS que se pueden agregar al grupo 
     public function create($id)
     {
-        // dd($id);
         $grupo = DB::table('grupos')
         ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
         ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
         ->where('id_grupo',$id)
         ->get();
-//  dd($grupo);
+
+        $periodo_actual = Periodo::where('id_periodo',$grupo[0]->periodo)->get(); 
+        $nivel_del_grupo = $grupo[0]->nivel;
+        $modulo_del_grupo = $grupo[0]->modulo;
+
         $alumnos_en_el_grupo = Alumno::leftjoin('personas','alumnos.curp_alumno','=','personas.curp')
         ->leftjoin('alumno_inscrito','alumnos.num_control','=','alumno_inscrito.num_control')
         ->leftjoin('grupos','alumno_inscrito.id_grupo','=','grupos.id_grupo')
@@ -113,26 +116,96 @@ class InscripcionesController extends Controller
         ->whereNull('personas.deleted_at')
         ->where('alumnos.estatus','No Inscrito')
         ->get();
+        
+        // $alumnos =  
+            // DB::select('select * from alumnos where deleted_at is NULL and num_control not in 
+            //             (SELECT num_control FROM alumno_inscrito WHERE deleted_at IS NULL) ');
+
+        // $this->validar($nivel_del_grupo,$modulo_del_grupo,$periodo_actual);
 
        return view('inscripciones.listaGrupo',compact('grupo','alumnos','alumnos_en_el_grupo'))->with('success','probando');
     }
 
+
+    // verifica si el alumno aprobo o reprobo el curso anterior o si presento examen de ubicacion
+    public function validar($nivel,$modulo,$periodo_actual)
+    {
+    //     if ($nivel == "A1") {
+    //         // 
+    //         $cursos = Inscripcion::select('num_control')
+    //                 ->whereNull('deleted_at')
+    //                 ->get();
+
+    //         $alumnos = Alumno::select('*')
+    //                 ->whereNull('personas.deleted_at')
+    //                 ->whereNotIn('num_control',$cursos)
+    //                 ->leftJoin('personas','alumnos.curp_alumno','=','personas.curp')
+    //                 ->where('alumnos.estatus','like','%No Inscrito')
+    //                 ->get();
+                   
+    //         // reprobados
+                        
+    //     }
+
+    //     if ($nivel == "A2" && $modulo == "M1") {  
+
+    //         if($periodo_actual[0]->descripcion == "ENE-JUN" ){ 
+    //             $invierno = Periodo::where('descripcion',"Invierno")->where('anio',(date("Y")-1))->get();
+
+    //             if($invierno->isEmpty()){
+    //                 $reprobados = Boleta::leftJoin('grupos','grupos.id_grupo','=','boletas.id_grupo')
+    //                             ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
+    //                             ->where('periodos.descripcion',"AGO-DIC")
+    //                             ->where('periodos.anio',(date("Y")-1))
+    //                             ->where('boletas.calif_f','<', 70)
+    //                             ->get();
+                        
+    //             }else{
+    //                 $reprobados = Boleta::leftJoin('grupos','grupos.id_grupo','=','boletas.id_grupo')
+    //                             ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
+    //                             ->where('periodos.descripcion',"AGO-DIC")
+    //                             ->where('periodos.anio',(date("Y")-1))
+    //                             ->where('periodos.descripcion',"Invierno")
+    //                             ->where('periodos.anio',(date("Y")-1))
+    //                             ->where('boletas.calif_f','<', 70)
+    //                             ->get(); 
+    //             }
+    //         }
+
+
+    //         if($periodo_actual[0]->descripcion == "AGO-DIC"){
+    //             $reprobados = Boleta::leftJoin('grupos','grupos.id_grupo','=','boletas.id_grupo')
+    //             ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
+    //             ->where('periodos.descripcion',"ENE-DIC")
+    //             ->where('periodos.anio',date("Y"))
+    //             ->get();
+    //         }
+            
+            
+    //         dd($reprobados);          
+    //     }
+        
+    //     return 'hola';
+    }
+
+
+   
     public function store(Request $request)
     {
         $data = request()->all(); 
-        
         //cuenta cuantos estudiantes estaran en el grupo
         $totalEstudiantes = Inscripcion::where('id_grupo',$data['grupo'])->count();
         if(request()->has('inscribir')){
             $totalEstudiantes += count(request()->input('inscribir'));
             $arrayInscribir = request()->input('inscribir');
+            // $this->verificar($arrayInscribir,$data['periodo'],$data['grupo']);
         }
         if (request()->has('quitar')) {
             $totalEstudiantes -= count(request()->input('quitar'));
             $arrayQuitar = request()->input('quitar');
         }
 
-
+         
         // dependiendo del cupo se agregan o no los estudiantes seleccionados
         if ($totalEstudiantes <= $data['cupo']) {
             if (request()->has('inscribir')) {
@@ -192,7 +265,7 @@ class InscripcionesController extends Controller
 
     }
 
-
+    
     //muestra la lista de grupos del periodo seleccionado 
     public function show(Request $request) 
     {
@@ -223,39 +296,11 @@ class InscripcionesController extends Controller
         $aulas = Aula::leftjoin('horas_disponibles','horas_disponibles.id_hora','=','aulas.hrdisponible')
         ->select('aulas.*','horas_disponibles.*')
         ->get();
-// dd($grupos, $niveles, $p, $aulas, $data);
+
         return view('inscripciones.inscripciones',compact('grupos','niveles','p','aulas'))->with('success','lbioekls');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id, $grupo)
     {
         
@@ -263,7 +308,7 @@ class InscripcionesController extends Controller
                   ->update([
                       'estatus' => 'No Inscrito'
                   ]);
-                //   dd($estatusAlumno);
+                  
         $alumnoInscrito = Inscripcion::where('num_control',$id)
                           ->where('id_grupo',$grupo)
                           ->get();
@@ -277,4 +322,44 @@ class InscripcionesController extends Controller
         $alumnoInscrito[0]->delete();
         $boleta[0]->delete();
     }
+
+    public function getCursos()
+    {
+        return view('cursos.buscarCursos');
+    }
+
+    public function avance()
+    {
+        $data = request()->all();
+
+        $estudiante = Alumno::where('num_control',$data['numero'])
+                            ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+                            ->get();
+        $cursado = Boleta::where('num_control',$data['numero'])
+                                    ->leftjoin('grupos','boletas.id_grupo','=','grupos.id_grupo')
+                                    ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
+                                    ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
+                                    ->get();
+
+                                        // dd($cursos_del_alumno);
+        return view('cursos.avance',compact('estudiante','cursado'));
+    }
+
+    public function indexPago()
+    {
+        return view('pagos.iniciopagos');
+    }
+
+    public function pago()
+    {
+        $data = request()->all();
+
+        // $datos 
+        return view('pagos.pagos');
+    }
+
+
+
+
+
 }

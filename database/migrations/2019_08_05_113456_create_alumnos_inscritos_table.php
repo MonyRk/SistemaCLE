@@ -22,6 +22,8 @@ class CreateAlumnosInscritosTable extends Migration
             $table->integer('folio_pago')->nullable();
             $table->integer('monto_pago')->nullable();
             $table->date('fecha')->nullable();
+            $table->boolean('pago_verificado')->nullable();
+            $table->boolean('examen_ubicacion')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

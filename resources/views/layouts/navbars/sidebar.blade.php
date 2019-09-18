@@ -102,13 +102,18 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                        <a class="nav-link" href="{{ route('iniciopagos') }}">
+                            <i class="fas fa-receipt text-dark"></i>{{ __('Pagos') }}
+                        </a>
+                    </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ route('periodoinscripciones') }}">
                         <i class="fas fa-user-edit text-green"></i> {{ __('Inscripciones') }}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">
-                        <i class="fas fa-spell-check text-green"></i> {{ __('Cursos') }} <i class="fas fa-prescription-bottle-alt"></i>
+                    <a class="nav-link" href="{{ route('cursos') }}">
+                        <i class="fas fa-layer-group text-purple"></i> {{ __('Cursos') }}
                     </a>
                 </li>
                 <li class="nav-item">

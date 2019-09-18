@@ -41,6 +41,7 @@
                                         <th class="text">Parcial 1</th>
                                         <th class="text">Parcial 2</th>
                                         <th class="text">Parcial 3</th>
+                                        <th class="text">Faltas</th>
                                         <th class="text">Final</th>
                                     </tr>
                                 </thead>
@@ -53,6 +54,7 @@
                                             <td id="c1" class="1 pt-3-half" @if ($alumno->calif1 == null) contenteditable="true" @else contenteditable="false" @endif>@if ( $alumno->calif1 == null ) 0 @else{{ $alumno->calif1 }} @endif</td>
                                             <td id="c2" class="2 pt-3-half" @if ($alumno->calif2 == null) contenteditable="true" @else contenteditable="false" @endif>@if ( $alumno->calif2 == null ) 0 @else{{ $alumno->calif2 }} @endif</td>
                                             <td id="c3" class="3 pt-3-half" @if ($alumno->calif3 == null) contenteditable="true" @else contenteditable="false" @endif>@if ( $alumno->calif3 == null ) 0 @else{{ $alumno->calif3 }} @endif</td>
+                                            <td class="pt-3-half" contenteditable="true">faltas</td>
                                             <th class="pt-3-half">@php $f =0; $f= round(($alumno->calif1+$alumno->calif2+$alumno->calif3)/3) @endphp {{ $f }}</th>
                                             {{-- <input type="hidden" name="num_control[{{ $alumno->num_control }}]" value="{{ $alumno->calif1 }}"> --}}
                                         </tr>
