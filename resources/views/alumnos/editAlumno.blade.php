@@ -9,7 +9,7 @@
     {{-- editar alumno --}}
     <div class="container-fluid m--t">
         <div class="text-right">
-            <a href=" {{ route('verEstudiantes') }} " class="btn btn-primary mt-4">
+            <a href=" {{ route('verEstudiantes') }} " class="btn btn-outline-primary btn-sm mt-4">
                 <span>
                     <i class="fas fa-reply"></i> &nbsp; Regresar
                 </span>
@@ -166,24 +166,6 @@
                 </div>
             </div>
             <div class="form-row">
-                {{-- <div class="form-group col-md-3">
-                    <label class="form-control-label" for="input-nivel">{{ __('Nivel Inicial') }}</label>
-                    <select id="input-nivel" class="form-control" name="nivel">
-                        <option selected></option>
-                            @foreach ($niveles as $nivel)
-                                <option value="{{ $nivel->id_nivel }}">{{ $nivel->nivel }}{{ $nivel->modulo }}&nbsp;-&nbsp; {{ $nivel->idioma }}</option>                             
-                            @endforeach
-                    </select>                  
-                </div>   --}}
-                {{-- <div class="form-group col-md-3 text-center">
-                    <label for="activarpago" class="form-control-label">{{ __('Activar Folio de Pago') }}</label>
-                    <div>
-                        <label class="custom-toggle" >
-                            <input type="checkbox" id="activarpago" onchange="comprobar(this);">
-                            <span class="custom-toggle-slider rounded-circle"></span>
-                        </label>
-                    </div>
-                </div> --}}
                 <div class="form-group col-md-3" id="folio" {{--style="display:none"--}}>
                     <label for="foliopago" class="form-control-label"> {{ __('Folio de Pago') }}</label>
                     <input type="text" name="foliopago" id="foliopago" class="form-control" placeholder=""  value="{{ old('foliopago') }}">
@@ -218,6 +200,8 @@
             <button type="submit" class="btn btn-primary mt-4">{{ __('Actualizar') }}</button>
         </div>
         </form>
+        <br><br>
+           @include('layouts.footers.nav')
     </div>
 </div>
 @endsection

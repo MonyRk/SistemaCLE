@@ -3,18 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\EvaluacionDocente;
+use App\GrupoRespuesta;
+use App\Periodo;
+use App\Pregunta;
+use App\Respuesta;
 use Illuminate\Http\Request;
 
 class EvaluacionDocenteController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        //
+        // $respuestas = Respuesta::get();
+        $grupoRs = GrupoRespuesta::select('*')->distinct()->get();
+        $tipoPregunta = Pregunta::select('tipo')->distinct()->get();
+        $enfoque = Pregunta::where('tipo','Enfoque de Enseñanza')->get();
+        $clima = Pregunta::where('tipo','Clima Afectivo')->get();
+        $enseñanzas = Pregunta::where('tipo','Proceso de Enseñanza')->get();
+        $retroalimentacion = Pregunta::where('tipo','Estrategias de Retroalimentacion')->get();
+
+        return view('evaluacionDocente.evaluacion',compact('clima','enfoque','enseñanzas','tipoPregunta','retroalimentacion','grupoRs'));
     }
 
     /**

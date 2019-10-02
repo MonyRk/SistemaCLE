@@ -14,7 +14,7 @@
     
     <div class="container-fluid m--t">
         <div class="text-right">
-            <a href="{{route('verGrupos')}} " class="btn btn-primary mt-4">
+            <a href="{{route('verGrupos')}} " class="btn btn-outline-primary btn-sm mt-4">
                 <span>
                     <i class="fas fa-reply"></i> &nbsp; Regresar
                 </span>
@@ -118,6 +118,8 @@
                 </div>
             </div>
         </form>
+        <br><br>
+        @include('layouts.footers.nav')
     </div>
 </div>
 @endsection

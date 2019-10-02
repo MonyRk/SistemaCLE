@@ -16,7 +16,7 @@ class Persona extends Model
         ];
         use SoftDeletes;
     protected $dates = ['deleted_at'];
-    protected $softCascade = ['alumnos','docentes'];
+    protected $softCascade = ['alumnos','docentes'];//,'evaluacion','boleta','alumno_inscrito'];   ???
     
     //persona puede ser muchos alumnos
     public function alumnos(){
@@ -33,5 +33,10 @@ class Persona extends Model
     public function users(){
         return $this->hasOne(User::class,'curp_user','id_user');
     }
+
+    public function evaluacion(){
+        return $this->belongsToMany(EvaluacionDocente::class,'num_evaluacion');
+    }
+
 
 }

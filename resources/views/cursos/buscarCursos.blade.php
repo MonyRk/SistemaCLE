@@ -24,23 +24,29 @@
         </a>
     </div>
     <form action="{{ route('avance') }}" method="GET">
-<div class="row">
-    <div class="col-lg-4"></div>
-        <div class="col-lg-4 text-center">
-            <div class="row">
-                <div class="form-group col-md">
-                    <label class="form-control-label" for="input-numero">{{ __('Número de Control') }}</label>
-                    <input  id="input-numero" class="form-control" name="numero">
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4 text-center">
+                <div class="row">
+                    <div class="form-group col-md">
+                        <label class="form-control-label" for="input-numero">{{ __('Número de Control') }}</label>
+                        <input  id="input-numero" class="form-control" name="numero">
 
+                    </div>
                 </div>
             </div>
-        </form>
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary btn-lg mt-4"><span><i class="fas fa-arrow-right"></i></span></button>
-            </div>
+            <div class="col-lg-4"></div>
         </div>
-        <div class="col-lg-4"></div>
-    </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg mt-4"><span><i class="fas fa-arrow-right"></i></span></button>
+        </div>
+    </form>
+    
+    
+    
+    <br><br>
+    @include('layouts.footers.nav')
+    
 </div>
 
 

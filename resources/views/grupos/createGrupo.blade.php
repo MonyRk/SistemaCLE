@@ -6,9 +6,14 @@
 
 @section('content')
 
-    
     <div class="container-fluid m--t">
-        
+            <div class="text-right">
+                    <a href="{{route('verGrupos')}} " class="btn btn-outline-primary btn-sm mt-4">
+                        <span>
+                            <i class="fas fa-reply"></i> &nbsp; Regresar
+                        </span>
+                    </a>
+                </div>
         <div class="card-body">
             @include('flash-message')
             @if ($errors->any())
@@ -43,18 +48,6 @@
                         <input type="text" name="name" id="input-name" class="form-control" value="{{ old('name') }}" >
                     </div>
                     <div class="form-group col-md">
-                            <label class="form-control-label" for="input-nivel">{{ __('Docente') }}</label>
-                            <select id="input-docente" class="form-control" name="docente">
-                                <option selected></option>
-                                    @foreach ($maestros as $maestro)
-                                    <option value="{{ $maestro->id_docente }}">{{ $maestro->nombres }} {{ $maestro->ap_paterno }} {{ $maestro->ap_materno }}</option>                             
-                                    @endforeach
-                            </select>                  
-                        </div>
-                                   
-                </div>
-                <div class="row">
-                    <div class="form-group col-md">
                         <label class="form-control-label" for="input-modalidad">{{ __('Modalidad') }}</label>
                         <select id="input-modalidad" class="form-control" name="modalidad">
                             <option selected></option>
@@ -62,6 +55,18 @@
                                 <option value="Sabatino">{{ __('Sabatino') }}</option>
                         </select>                  
                     </div>
+                    <div class="form-group col-md">
+                        <label class="form-control-label" for="input-nivel">{{ __('Nivel') }}</label>
+                        <select id="input-nivel" class="form-control" name="nivel">
+                            <option selected></option>
+                                @foreach ($niveles as $nivel)
+                                    <option value="{{ $nivel->id_nivel }}">{{ $nivel->nivel }}{{ $nivel->modulo }}&nbsp;-&nbsp; {{ $nivel->idioma }}</option>                             
+                                @endforeach
+                        </select>                  
+                    </div>
+                                   
+                </div>
+                <div class="row">
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-aula">{{ __('Aula') }}</label>
                         <select id="input-aula" class="form-control" name="aula">
@@ -76,18 +81,19 @@
                         <select id="input-hora" class="form-control" name="hora"> 
                         </select>                  
                     </div>
+                    <div class="form-group col-md-6">
+                        <label class="form-control-label" for="input-nivel">{{ __('Docente') }}</label>
+                        <select id="input-docente" class="form-control" name="docente">
+                            <option selected></option>
+                                @foreach ($maestros as $maestro)
+                                <option value="{{ $maestro->id_docente }}">{{ $maestro->nombres }} {{ $maestro->ap_paterno }} {{ $maestro->ap_materno }}</option>                             
+                                @endforeach
+                        </select>                  
+                    </div>
                 </div>
 
                 <div class="form-row">
-                    <div class="form-group col-md">
-                        <label class="form-control-label" for="input-nivel">{{ __('Nivel') }}</label>
-                        <select id="input-nivel" class="form-control" name="nivel">
-                            <option selected></option>
-                                @foreach ($niveles as $nivel)
-                                    <option value="{{ $nivel->id_nivel }}">{{ $nivel->nivel }}{{ $nivel->modulo }}&nbsp;-&nbsp; {{ $nivel->idioma }}</option>                             
-                                @endforeach
-                        </select>                  
-                    </div>  
+                      
                     <div class="col-md">
                         <label class="form-control-label" for="input-cupo">{{ __('Límite de Estudiantes en el grupo') }}</label>
                         <input type="text" name="cupo" id="input-cupo" class="form-control" placeholder="" value="{{ old('cupo') }}" >
@@ -107,6 +113,8 @@
                 </div>
             </div>
         </form>
+        <br><br>
+        @include('layouts.footers.nav')
     </div>
 </div>
 @endsection

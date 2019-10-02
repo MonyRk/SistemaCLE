@@ -1,3 +1,4 @@
+<hr class="my-4" />
 <div class="row align-items-center justify-content-xl-between">
     <div class="col-xl">
         <div class="copyright text-center text-xl-center text-muted">

@@ -4,7 +4,14 @@
 @endsection
 @section('content')
 
-    <div class="container-fluid">
+    <div class="container-fluid m--t">
+        <div class="text-right">
+            <a href="{{ route('inicio') }} " class="btn btn-outline-primary btn-sm mt-4">
+                <span>
+                    <i class="fas fa-reply"></i> &nbsp; Regresar
+                </span>
+            </a>
+        </div>    
         <div class="row">
             <!-- espacio de busqueda-->
             <div class="col-md">
@@ -55,6 +62,7 @@
                                         <th scope="col">Aula</th>
                                         <th scope="col">Hora</th>
                                         <th scope="col">Docente</th>
+                                        <th scope="col">Periodo</th>
                                         <th scope="col">Editar</th>
                                         <th scope="col">Eliminar</th>
 
@@ -81,6 +89,9 @@
                                         <th>
                                             {{ $grupo->nombres }} {{ $grupo->ap_paterno }} @if ( $grupo->ap_materno != null ) {{ $grupo->ap_materno }} @endif
                                         </th>
+                                        <th>
+                                            {{ $grupo->descripcion }} {{ $grupo->anio }}
+                                        </th>
                                         <td> <a href="grupos/{{ $grupo->id_grupo }}/editar"><i class="fas fa-edit"></i></a>
                                         </td>
                                         <td>
@@ -96,6 +107,8 @@
                 </div>
             </div>
         </div>
+<br><br>
+        @include('layouts.footers.nav')
     </div> 
 
 
@@ -136,6 +149,7 @@
                 </div>
             </div>
         </div>
+
             </div>
 
 
@@ -152,6 +166,7 @@
             } )
             </script>
            @endsection
+
 
 @endsection
  

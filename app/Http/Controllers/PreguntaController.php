@@ -7,14 +7,10 @@ use Illuminate\Http\Request;
 
 class PreguntaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -35,7 +31,22 @@ class PreguntaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $data = request()->validate([
+            'pregunta' => 'required',
+            'tipo' => 'required',
+            'respuestas' => 'required',
+            'vigencia' => 'required'
+        ]);
+
+        Pregunta::firstOrCreate([
+            'pregunta' => $data['pregunta'],
+            'tipo' => $data['tipo'],
+            'id_respuesta' => $data['respuestas'],
+            'vigencia' => $data['vigencia']
+        ]);
+
+        return redirect()->route('evaluacion')->with('success','¡La pregunta se agregó correctamente!');
     }
 
     /**
@@ -67,9 +78,26 @@ class PreguntaController extends Controller
      * @param  \App\Pregunta  $pregunta
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pregunta $pregunta)
+    public function update(Request $request)
     {
-        //
+        // dd($request->idpreg);
+        $data = request()->validate([
+            'pregunta' => 'required',
+            'respuestas' => 'required',
+            'tipo' => 'required',
+            'vigencia' => 'required'
+        ]);
+
+        $respuesta = Pregunta::find($request->idpreg)
+                                ->update([
+                                    'pregunta' => $data['pregunta'],
+                                    'tipo' => $data['tipo'],
+                                    'id_respuesta' => $data['respuestas'],
+                                    'vigencia' => $data['vigencia']
+                                ]);
+
+        return redirect()->route('evaluacion')->with('success','¡La pregunta se ha actualizado correctamente!');
+
     }
 
     /**
@@ -78,8 +106,12 @@ class PreguntaController extends Controller
      * @param  \App\Pregunta  $pregunta
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pregunta $pregunta)
+    public function destroy($id)
     {
-        //
+        $data = request()->all();
+        $pregunta = Pregunta::find($data['idpregunta']);
+        $pregunta->delete();
+
+        return redirect()->route('evaluacion')->with('error','La pregunta se elimino');
     }
 }

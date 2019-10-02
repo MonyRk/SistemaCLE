@@ -23,6 +23,7 @@ class CreateBoletasTable extends Migration
             $table->integer('calif2')->nullable();
             $table->integer('calif3')->nullable();
             $table->integer('calif_f')->nullable();
+            $table->integer('faltas')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

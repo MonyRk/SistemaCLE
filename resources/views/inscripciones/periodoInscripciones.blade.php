@@ -34,26 +34,32 @@
         </a>
     </div>
     <form action="{{ route('inscripciones') }}" method="GET">
-<div class="row">
-    <div class="col-lg-4"></div>
-        <div class="col-lg-4 text-center">
-            <div class="row">
-                <div class="form-group col-md">
-                    <label class="form-control-label" for="input-periodo">{{ __('Selecciona un Periodo') }}</label>
-                    <select id="input-periodo" class="form-control" name="periodo">
-                        <option selected value=""></option>
-                        @foreach ($periodos as $periodo)
-                            <option value="{{ $periodo->id_periodo }}">{{ $periodo->descripcion }} {{ $periodo->anio }}</option>
-                        @endforeach
-                    </select>                  
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4 text-center">
+                <div class="row">
+                    <div class="form-group col-md">
+                        <label class="form-control-label" for="input-periodo">{{ __('Selecciona un Periodo') }}</label>
+                        <select id="input-periodo" class="form-control" name="periodo">
+                            <option selected value=""></option>
+                            @foreach ($periodos as $periodo)
+                                <option value="{{ $periodo->id_periodo }}">{{ $periodo->descripcion }} {{ $periodo->anio }}</option>
+                            @endforeach
+                        </select>                  
+                    </div>
                 </div>
             </div>
-        </form>
+            <div class="col-lg-4"></div>
+        </div>
+    
             <div class="text-center">
                 <button type="submit" class="btn btn-primary mt-4">{{ __('Ir') }}</button>
             </div>
-        </div>
-        <div class="col-lg-4"></div>
-    </div>
+            
+        </form>
+        
+        <br><br>
+        @include('layouts.footers.nav')
 </div>
+
 @endsection

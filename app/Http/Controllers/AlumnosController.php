@@ -11,7 +11,8 @@ use App\Nivel;
 use App\Municipio;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ValidarCrearAlumnoRequest;
-
+use App\Inscripcion;
+use CreateAlumnosInscritosTable;
 
 class AlumnosController extends Controller
 {
@@ -136,45 +137,36 @@ class AlumnosController extends Controller
             if ($data['nivel'] == 'A2M1') {
                 Historial::where('num_control',$data['numControl'])->update([
                     'A1M1' => 'aprobado',
-                    // 'calif1' => 70,
                     'A2M1' => 'cursando'
                 ]);
             };
             if ($data['nivel'] == 'A2M2') {
                 Historial::where('num_control',$data['numControl'])->update([
                     'A1M1' => 'aprobado',
-                    // 'calif1' => 70,
                     'A2M1' => 'aprobado',
-                    // 'calif2' => 70,
                     'A2M2' => 'cursando'
                 ]);
             };
             if ($data['nivel'] == 'B1M1') {
                 Historial::where('num_control',$data['numControl'])->update([
                     'A1M1' => 'aprobado',
-                    // 'calif1' => 70,
                     'A2M1' => 'aprobado',
-                    // 'calif2' => 70,
                     'A2M2' => 'aprobado',
-                    // 'calif3' => 70,
                     'B1M1' => 'cursando'
                 ]);
             };
             if ($data['nivel'] == 'B2M2') {
                 Historial::where('num_control',$data['numControl'])->update([
                     'A1M1' => 'aprobado',
-                    // 'calif1' => 70,
                     'A2M1' => 'aprobado',
-                    // 'calif2' => 70,
                     'A2M2' => 'aprobado',
-                    // 'calif3' => 70,
                     'B1M1' => 'aprobado',
-                    // 'calif4' => 70
-                    'B2M2' => 'cursando'
+                    'B1M2' => 'cursando'
                 ]);
             };
         };
-                
+             
+
         return redirect()->route('verEstudiantes')->with('success','Datos del estudiante agregados correctamente!');
     }
 
@@ -242,9 +234,10 @@ class AlumnosController extends Controller
             'semestre' => 'required',
             
         ]); 
-        // dd($data); 
-        //obtener los datos de la misma persona en todas las tablas relacionadas
+        // // dd($data); 
+        // //obtener los datos de la misma persona en todas las tablas relacionadas
         $apm = request()->all();
+        // dd($data,$apm);
             Persona::find($curp)->update([
             'ap_materno' => $apm['apMaterno']
             ]);
@@ -271,13 +264,13 @@ class AlumnosController extends Controller
         $infoAlumno->save();
         
         //actualizar la informacion del usuario verificando si se modifico la contraseña o no 
-        $c = request()->all();
-        if ($c['password']!= null) {
+        // $c = request()->all();
+        if ($apm['password']!= null) {
             $contrasenia = request()->validate([
                 'password' => 'alpha_num|between:6,10'
             ]);
             $user = User::where('curp_user',$curp)->first();
-            $user->password = bcrypt($c['password']);
+            $user->password = bcrypt($apm['password']);
             $user->save();
         };
         
@@ -292,25 +285,58 @@ class AlumnosController extends Controller
         
         //tabla historial
         if ($apm['apMaterno'] != null){
-            $nombre = $data['name'].' '.$data['apPaterno'].' '.$data['apMaterno'];
+            $nombre = $data['name'].' '.$data['apPaterno'].' '.$apm['apMaterno'];
         }else {
             $nombre = $data['name'].' '.$data['apPaterno'];
         }
-        $historial = Historial::where('num_control',$numControl)->get();
-        $historial[0]->num_control = $data['numControl'];
-        $historial[0]->carrera = $data['carrera'];
-        $historial[0]->semestre = $data['semestre'];
-        $historial[0]->save();
 
-        return redirect()->route('verEstudiantes')->with('success','!Los datos se actualizaron correctamente!');
+        $historial = Historial::where('num_control',$numControl)->get();
+// dd($historial->isNotEmpty());
+        if($historial->isNotEmpty())
+        {
+
+            $historial[0]->num_control = $data['numControl'];
+            $historial[0]->nombre = $nombre;
+            $historial[0]->carrera = $data['carrera'];
+            $historial[0]->semestre = $data['semestre'];
+            $historial[0]->save();
+        }
+
+
+
+        if ($apm['foliopago']!= null) {
+            $pago = request()->validate([
+                'foliopago' => 'numeric',
+                'monto' => 'required|numeric'
+            ]);
+
+            $i= Inscripcion::where('num_control',$data['numControl'])
+                        ->whereNull('folio_pago')
+                        ->orderBy('updated_at','DESC')
+                        ->get();
+
+            if($i->isEmpty()){
+                Inscripcion::create([
+                    'num_control' => $data['numControl'],
+                    'folio_pago' => $apm['foliopago'],
+                    'monto' => $apm['monto'],
+                    'fecha' => date("Y-m-d")
+                ]);
+            }else{
+                $i[0]->num_control = $data['numControl'];
+                $i[0]->folio_pago = $apm['foliopago'];
+                $i[0]->monto = $apm['monto'];
+                $i[0]->fecha = date("Y-m-d");
+                $i[0]->save();
+            }          
+
+        };
+
+
+        return redirect()->route('verEstudiantes')->with('success','¡Los datos se actualizaron correctamente!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Request $request)//(Alumno $alumno)
     {
         // dd();

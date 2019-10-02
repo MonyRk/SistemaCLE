@@ -12,7 +12,7 @@
     </div>
 </div>
     <div class="text-right pb-4">
-        <a href="{{ route('catalogos') }}" class="btn btn-primary mt-4">
+        <a href="{{ route('catalogos') }}" class="btn btn-outline-primary btn-sm mt-4">
             <span>
                 <i class="fas fa-reply"></i> &nbsp; Regresar
             </span>
@@ -61,6 +61,8 @@
         </div>
     </div>
 </div>
+<br><br>
+@include('layouts.footers.nav')
 </div>
 {{-- modal para crear --}}
 

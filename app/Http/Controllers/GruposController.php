@@ -138,7 +138,8 @@ class GruposController extends Controller
         }
 
         if($i>0){
-            return redirect()->route('crearGrupo')->with('warning','Revise los datos, el Docente ya tiene un grupo asignado a esa hora');
+            return back()->with('warning','Revise los datos, el Docente ya tiene un grupo asignado a esa hora');
+        // redirect()->route('crearGrupo')
         }else{ 
             $nuevo_grupo = Grupo::create([
                 'grupo' => $data['name'],

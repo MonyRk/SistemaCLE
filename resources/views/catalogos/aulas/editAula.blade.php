@@ -12,13 +12,13 @@
 </div>
     
 <div class="container-fluid m--t">
-    <div class="text-right">
-        <a href=" {{ route('verAulas') }} " class="btn btn-primary mt-4">
-            <span>
-                <i class="fas fa-reply"></i> &nbsp; Regresar
-            </span>
-        </a>
-    </div>
+        <div class="text-right">
+                <a href="{{ route('verAulas') }}" class="btn btn-outline-primary btn-sm mt-4">
+                    <span>
+                        <i class="fas fa-reply"></i> &nbsp; Regresar
+                    </span>
+                </a>
+            </div>
     <div class="row">   
         <div class="col-md pt-3">
             @include('flash-message')
@@ -138,7 +138,8 @@
     </div>
 </div>
                 
-
+<br><br>
+@include('layouts.footers.nav')
 
 
 

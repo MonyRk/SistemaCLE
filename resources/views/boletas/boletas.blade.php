@@ -27,44 +27,48 @@
 
     <div class="text-right">
         
-        <a href="{{ route('boletas') }}" class="btn btn-outline-primary mt-4">
+        <a href="{{ route('boletas') }}" class="btn btn-outline-primary btn-sm mt-4">
             <span>
                 <i class="fas fa-reply"></i> &nbsp; Regresar
             </span>
         </a>
     </div>
     <form action="{{ route('verBoleta','grupo') }}" method="GET">
-<div class="row">
-    <div class="col-lg-4"></div>
-        <div class="col-lg-4 text-center">
-            <div class="row">
-                <div class="form-group col-md">
-                    <label class="form-control-label" for="input-periodo">{{ __('Periodo') }}</label>
-                    <select  id="input-periodo" class="form-control" name="periodo">
-                        <option selected value="{{ old('periodo') }}">{{ old('periodo') }}</option>
-                        @foreach ($periodos as $periodo)
-                            <option value="{{ $periodo->id_periodo }}">{{ $periodo->descripcion }} {{ $periodo->anio }}</option>
-                        @endforeach
-                    </select>
+        <div class="row">
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4 text-center">
+                <div class="row">
+                    <div class="form-group col-md">
+                        <label class="form-control-label" for="input-periodo">{{ __('Periodo') }}</label>
+                        <select  id="input-periodo" class="form-control" name="periodo">
+                            <option selected value="{{ old('periodo') }}">{{ old('periodo') }}</option>
+                            @foreach ($periodos as $periodo)
+                                <option value="{{ $periodo->id_periodo }}">{{ $periodo->descripcion }} {{ $periodo->anio }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md">
+                        <label class="form-control-label" for="input-grupo">{{ __('Grupos') }}</label>
+                        <select  id="input-grupo" class="form-control" name="grupo">
+                            {{-- @foreach ($grupos as $grupo)
+                                <option value="{{ $grupo->id_grupo }}">{{ $grupo->grupo }}</option>
+                            @endforeach --}}
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="form-group col-md">
-                    <label class="form-control-label" for="input-grupo">{{ __('Grupos') }}</label>
-                    <select  id="input-grupo" class="form-control" name="grupo">
-                        {{-- @foreach ($grupos as $grupo)
-                            <option value="{{ $grupo->id_grupo }}">{{ $grupo->grupo }}</option>
-                        @endforeach --}}
-                    </select>
-                </div>
-            </div>
-        </form>
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary btn-lg mt-4"><span><i class="fas fa-arrow-right"></i></span></button>
-            </div>
+            <div class="col-lg-4"></div>
         </div>
-        <div class="col-lg-4"></div>
-    </div>
+        
+            
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg mt-4"><span><i class="fas fa-arrow-right"></i></span></button>
+        </div>
+    </form>
+    <br><br>
+    @include('layouts.footers.nav')
 </div>
 
 

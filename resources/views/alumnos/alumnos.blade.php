@@ -5,7 +5,14 @@
 @endsection
 @section('content')
     
-     <div class="container-fluid">
+     <div class="container-fluid m--t">
+            <div class="text-right">
+                    <a href=" {{ route('inicio') }} " class="btn btn-outline-primary btn-sm mt-4">
+                        <span>
+                            <i class="fas fa-reply"></i> &nbsp; Regresar
+                        </span>
+                    </a>
+                </div>
         <div class="row">
             
             <div class="col-md">
@@ -143,7 +150,8 @@
             } )
             </script>
            @endsection
-
+           <br><br>
+           @include('layouts.footers.nav')
 @endsection
 
 </div>

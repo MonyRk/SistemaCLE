@@ -12,7 +12,14 @@
                 @include('flash-message')
         </div>
     </div>
-    <div class="row">
+    <div class="text-right">
+            <a href="{{ route('catalogos') }}" class="btn btn-outline-primary btn-sm mt-4">
+                <span>
+                    <i class="fas fa-reply"></i> &nbsp; Regresar
+                </span>
+            </a>
+        </div>
+    <div class="row mt-4">
     <div class="col-xl">
         <div class="card shadow ">
             <div class="card-header border-3">
@@ -61,6 +68,9 @@
             </div>
         </div>
     </div>
+</div>
+<br><br>
+@include('layouts.footers.nav')
 </div>
 
 

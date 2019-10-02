@@ -13572,6 +13572,15 @@ a.text-yellow:focus {
     color: #ccab00 !important;
 }
 
+.text-pantone {
+    color: #1B396A !important;
+}
+
+a.text-pantone:hover,
+a.text-pantone:focus {
+    color: rgb(9, 43, 99) !important;
+}
+
 .text-green {
     color: #2dce89 !important;
 }

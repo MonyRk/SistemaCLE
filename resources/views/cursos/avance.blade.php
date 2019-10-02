@@ -7,7 +7,7 @@
 @section('content')
 <div class="container-fluid m--t text-center">
         <div class="text-right mt-2">
-                <a href="{{ route('inicio') }}" class="btn btn-outline-primary mt-2">
+                <a href="{{ route('inicio') }}" class="btn btn-outline-primary btn-sm mt-2">
                     <span>
                         <i class="fas fa-reply"></i> &nbsp; Regresar
                     </span>
@@ -33,17 +33,24 @@
                     <div class="col-xl col-lg-6">
                         <div class="card card-stats mb-4 mb-xl-0">@php $i=9; @endphp
                             <div class="card-body 
-                            @foreach ($cursado as $curso)
-                            @if ($curso->nivel == "A1") 
+                            {{-- @foreach ($cursado as $curso) --}}
+                            @if ($cursado[0]->A1M1 == "aprobado") 
                             bg-success 
-                            @else
+                            @endif
+                            @if ($cursado[0]->A1M1 == "cursando")
+                            bg-purple
+                            @endif
+                            @if ($cursado[0]->A1M1 == "reprobado")
+                            bg-yellow
+                            @endif
+                            @if ($cursado[0]->A1M1 == NULL)
                             bg-gray
                             @endif
-                            @endforeach
+                            {{-- @endforeach --}}
                             ">
                                 <div class="row">
                                     <div class="col">
-                                        <span class="font-weight-bold mb-0">A1</span>
+                                        <span class="font-weight-bold mb-0">A1M1</span>
                                     </div>
                                 </div>
                             </div>
@@ -52,13 +59,20 @@
                     <div class="col-xl col-lg-6">
                         <div class="card card-stats mb-4 mb-xl-0">
                                 <div class="card-body 
-                                @foreach ($cursado as $curso)
-                                @if ($curso->nivel == "A2" && $curso->modulo == "M1") 
+                                {{-- @foreach ($cursado as $curso) --}}
+                                @if ($cursado[0]->A2M1 == "aprobado") 
                                 bg-success 
-                                @else
+                                @endif
+                                @if ($cursado[0]->A2M1 == "cursando")
+                                bg-purple
+                                @endif
+                                @if ($cursado[0]->A2M1 == "reprobado")
+                                bg-yellow
+                                @endif
+                                @if ($cursado[0]->A2M1 == NULL)
                                 bg-gray
                                 @endif
-                                @endforeach
+                                {{-- @endforeach --}}
                                 ">
                                 <div class="row">
                                     <div class="col">
@@ -71,13 +85,20 @@
                     <div class="col-xl col-lg-6">
                         <div class="card card-stats mb-4 mb-xl-0">
                                 <div class="card-body 
-                                @foreach ($cursado as $curso)
-                                @if ($curso->nivel == "A2" && $curso->modulo == "M2") 
+                                {{-- @foreach ($cursado as $curso) --}}
+                                @if ($cursado[0]->A2M2 == "aprobado") 
                                 bg-success 
-                                @else
+                                @endif
+                                @if ($cursado[0]->A2M2 == "cursando")
+                                bg-purple
+                                @endif
+                                @if ($cursado[0]->A2M2 == "reprobado")
+                                bg-yellow
+                                @endif
+                                @if ($cursado[0]->A2M2 == NULL)
                                 bg-gray
                                 @endif
-                                @endforeach
+                                {{-- @endforeach --}}
                                 ">
                                 <div class="row">
                                     <div class="col">
@@ -90,13 +111,20 @@
                     <div class="col-xl col-lg-6">
                         <div class="card card-stats mb-4 mb-xl-0">
                                 <div class="card-body 
-                                @foreach ($cursado as $curso)
-                                @if ($curso->nivel == "B1" && $curso->modulo == "M1") 
+                                {{-- @foreach ($cursado as $curso) --}}
+                                @if ($cursado[0]->B1M1 == "aprobado") 
                                 bg-success 
-                                @else
+                                @endif
+                                @if ($cursado[0]->B1M1 == "cursando")
+                                bg-purple
+                                @endif
+                                @if ($cursado[0]->B1M1 == "reprobado")
+                                bg-yellow
+                                @endif
+                                @if ($cursado[0]->B1M1 == NULL)
                                 bg-gray
                                 @endif
-                                @endforeach
+                                {{-- @endforeach --}}
                                 ">
                                 <div class="row">
                                     <div class="col">
@@ -109,13 +137,18 @@
                     <div class="col-xl col-lg-6">
                         <div class="card card-stats mb-4 mb-xl-0">
                                 <div class="card-body 
-                                @foreach ($cursado as $curso)
-                                @if ($curso->nivel == "B1" && $curso->modulo == "M2") 
+                                @if ($cursado[0]->B1M2 == "aprobado") 
                                 bg-success 
-                                @else
+                                @endif
+                                @if ($cursado[0]->B1M2 == "cursando")
+                                bg-purple
+                                @endif
+                                @if ($cursado[0]->B1M2 == "reprobado")
+                                bg-yellow
+                                @endif
+                                @if ($cursado[0]->B1M2 == NULL)
                                 bg-gray
                                 @endif
-                                @endforeach
                                 ">
                                 <div class="row">
                                     <div class="col">
@@ -185,5 +218,7 @@
         </div>
     </div>
 </div>
+<br><br>
+    @include('layouts.footers.nav')
 </div>
 @endsection

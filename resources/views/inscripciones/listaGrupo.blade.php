@@ -13,7 +13,7 @@
 </div>
     <div class="container-fluid m--t"> 
         <div class="text-right">
-            <a href="{{ back() }}" class="btn btn-outline-primary mt-4">
+            <a href="{{ back() }}" class="btn btn-outline-primary btn-sm mt-4">
                 <span>
                     <i class="fas fa-reply"></i> &nbsp; Regresar
                     <input type="hidden" name="periodo" value="{{ $grupo[0]->periodo }}">
@@ -26,28 +26,11 @@
                     {{-- @include('flash-message') --}}
             </div>
             
-                
-                <div class="col-md">
-                    <div class="">
-                        <form action="{{ route('buscarAlumnoInscribir') }}" method="GET" class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-9"  style="margin-top: 15px" >
-                            
-                            <div class="form-group mb-0">
-                                <div class="input-group input-group-alternative">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="fas fa-search"></i></span>
-                                    </div>
-                                    <input name='buscar' class="form-control" placeholder="Buscar" type="text" >
-                                    <input type="hidden" name="grupo" value="{{ $grupo[0]->id_grupo }}">
-                                </div>
-                            </div>
-                        </form> 
-                    </div>
-                </div>
             </div>
         <div class="card-body">
             @include('flash-message')
         </div>
-        <div class="pl-lg-4"> 
+        <div class="pl-lg-4"> @php $nivel =  $grupo[0]->nivel.$grupo[0]->modulo @endphp
             <form method="post" action="{{ route('guardarLista') }}" autocomplete="off">
                 @csrf
                 @method('post')
@@ -76,7 +59,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($alumnos as $alumno)
+                                                @foreach ($aprobados as $alumno)
                                                 <tr>
                                                 <th scope="row">
                                                     {{ $alumno->num_control }}
@@ -150,6 +133,8 @@
                 </div>
             </form>
         </div>
+        <br><br>
+        @include('layouts.footers.nav')
     </div>
 {{-- modal para cupo del grupo --}}
 <div class="col-md-4">

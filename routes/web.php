@@ -2,19 +2,7 @@
 use App\Http\Controllers\AlumnosController;
 use App\Inscripcion;
 use Carbon\Traits\Rounding;
-//use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
 Route::get('/', function () {
     return view('dashboardCoordinador');
@@ -58,13 +46,13 @@ Route::post('/grupos/guardarGrupo/{grupo}','GruposController@update')->name('gua
 Route::get('/aulas', 'GruposController@getaulas');
 Route::any('/search/grupo', 'GruposController@search')->name('buscarGrupo');
 
-Route::get('/pagos','InscripcionesController@indexPago')->name('iniciopagos');
-Route::get('/verificarpagos','InscripcionesController@pago')->name('pago');
+Route::get('/pagos','InscripcionesController@indexPago')->name('indexpagos');
+Route::post('/agregarPago', 'InscripcionesController@agregarPago')->name('agregarPago');
+Route::get('/verificarpagos', function(){return view('pagos.verificarpagos');})->name('verificarPagos');
+Route::get('/verificar', 'InscripcionesController@buscarPago')->name('buscarPago');
+Route::post('/guardarVerificados', 'InscripcionesController@guardarVerificados')->name('guardarVerificados');
 
-Route::get('/catalogos', function () {
-	return view('catalogos.cardscatalogos');
- })->name('catalogos');
-
+Route::get('/catalogos', function () {return view('catalogos.cardscatalogos');})->name('catalogos');
 Route::get('/catalogos/niveles','NivelController@index')->name('verNiveles');
 Route::get('/catalogos/niveles/crearNivel','NivelController@create')->name('crearNivel');
 Route::post('/catalogos/niveles/agregarNivel', 'NivelController@store')->name('agregarNivel');
@@ -94,3 +82,23 @@ Route::post('unaprueba', 'BoletaController@pruebaDatos')->name('prueba');
 
 Route::get('/cursos','InscripcionesController@getCursos')->name('cursos');
 Route::get('/cursos/avance','InscripcionesController@avance')->name('avance');
+
+Route::get('/catalogos/respuestas','RespuestaController@index')->name('respuestas');
+Route::post('/catalogos/respuestas/agregar','RespuestaController@store')->name('agregarRespuesta');
+Route::get('/catalogos/respuestas/editar/{respuesta}','RespuestaController@edit')->name('editarRespuesta');
+Route::patch('/catalogos/respuestas/{respuesta}','RespuestaController@update')->name('guardarRespuesta');
+Route::delete('/catalogos/respuestas/eliminar/{respuesta}','RespuestaController@destroy')->name('eliminarRespuesta');
+
+Route::post('/catalogos/respuestas/grupo_respuestas/agregar','GrupoRespuestaController@store')->name('agregargrupoR');
+
+Route::post('/pregunta/agregar','PreguntaController@store')->name('agregarPregunta');
+Route::patch('pregunta/guardar/{pregunta}','PreguntaController@update')->name('guardarPregunta');
+Route::delete('/pregunta/eliminar/{pregunta}','PreguntaController@destroy')->name('eliminarPregunta');
+
+Route::get('/evaluacionDocente','EvaluacionDocenteController@index')->name('evaluacion');
+
+Route::get('/inscripciones/lista/{grupo}','InscripcionesController@getLista')->name('descargarLista');
+
+Route::get('/reportes',function () {return view('reportes.cardsreportes');})->name('reportes');
+Route::get('/reportes/datosEstadisticos','ReportesController@index')->name('estadisticas');
+

@@ -51,9 +51,15 @@
             
                 @yield('contenido')
             
+                <br><br>
+           @include('layouts.footers.nav')
         </div>
+        
+    </div>
+
+    {{-- @include('layouts.footers.auth') --}}
     
 @endsection
- 
-</div>
+
+
             

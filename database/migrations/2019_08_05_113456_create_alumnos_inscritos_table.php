@@ -15,7 +15,7 @@ class CreateAlumnosInscritosTable extends Migration
     {
         Schema::create('alumno_inscrito', function (Blueprint $table) {
             $table->increments('num_inscripcion');
-            $table->unsignedInteger('id_grupo');
+            $table->unsignedInteger('id_grupo')->nullable();
             $table->foreign('id_grupo')->references('id_grupo')->on('grupos')->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->integer('num_control');
             $table->foreign('num_control')->references('num_control')->on('alumnos')->onUpdate('CASCADE')->onDelete('CASCADE');

@@ -102,7 +102,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                        <a class="nav-link" href="{{ route('iniciopagos') }}">
+                        <a class="nav-link" href="{{ route('indexpagos') }}">
                             <i class="fas fa-receipt text-dark"></i>{{ __('Pagos') }}
                         </a>
                     </li>
@@ -122,12 +122,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{{ route('evaluacion') }}">
                         <i class="fas fa-question text-gray"></i> {{ __('Evaluación Docente') }}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{{ route('reportes') }}">
                         <i class="fas fa-percent text-primary"></i> {{ __('Reportes') }}
                     </a>
                 </li>

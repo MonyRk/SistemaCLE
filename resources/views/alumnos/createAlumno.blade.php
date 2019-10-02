@@ -43,14 +43,14 @@
         
         </div>
         <div class="form-row">
-            <div class="form-group col-md">
+            <div class="form-group col-md-3">
                 <label class="form-control-label" for="input-sexo">{{ __('Examen de Ubicación') }}</label>
                 <div class="custom-control custom-checkbox">
-                    <input type="checkbox" id="examen" name="examen" value="true" class="custom-control-input">
+                    <input type="checkbox" id="examen" name="examen" onchange="comprobar(this);" value="true" class="custom-control-input">
                     <label class="custom-control-label" for="examen">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Realiz&oacute; examen</label>
                 </div>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-3" id="inicial" style="display:none">
                 <label class="form-control-label" for="input-nivel">{{ __('Nivel Donde Inicia') }}</label>
                 <select id="input-nivel" class="form-control" name="nivel">
                     <option selected></option>
@@ -60,7 +60,7 @@
                 </select>                  
             </div>  
                 {{-- <div class="form-group col-md-3 text-center">
-                    <label for="activarpago" class="form-control-label">{{ __('Activar Folio de Pago') }}</label>
+                    <label for="activarpago" class="form-control-label">{{ __('Realizó Examen de ubicación') }}</label>
                     <div>
                         <label class="custom-toggle" >
                             <input type="checkbox" id="activarpago" onchange="comprobar(this);">
@@ -68,24 +68,24 @@
                         </label>
                     </div>
                 </div> --}}
-            <div class="form-group col-md-3" id="folio" {{--style="display:none"--}}>
+            {{-- <div class="form-group col-md-3" id="folio" {{-- style="display:none" }}>
                 <label for="foliopago" class="form-control-label"> {{ __('Folio de Pago') }}</label>
                 <input type="text" name="foliopago" id="foliopago" class="form-control" placeholder=""  value="{{ old('foliopago') }}">
             </div>
-            <div class="form-group col-md-3" id="monto" {{--style="display:none"--}}>
+            <div class="form-group col-md-3" id="monto" {{--style="display:none">
                 <label for="foliopago" class="form-control-label"> {{ __('Monto de Pago') }}</label>
                 <input type="text" name="monto" id="monto" class="form-control" placeholder=""  value="{{ old('monto') }}">
-            </div>
+            </div> --}}
         </div>
     <script>
             function comprobar(obj)
                {   
                    if (obj.checked){
                    
-               document.getElementById('folio').style.display = "";
+               document.getElementById('inicial').style.display = "";
                } else{
                    
-               document.getElementById('folio').style.display = "none";
+               document.getElementById('inicial').style.display = "none";
                }     
                }
            </script>   

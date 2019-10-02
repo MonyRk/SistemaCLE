@@ -25,7 +25,11 @@ class Alumno extends Model
     }
 
     public function boleta(){
-        return $this->hasMany(Boleta::class,'num_control');
+        return $this->hasMany(Boleta::class,'id_boleta','num_control');
+    }
+
+    public function evaluacion(){
+        return $this->belongsToMany(EvaluacionDocente::class,'num_evaluacion');
     }
 
     

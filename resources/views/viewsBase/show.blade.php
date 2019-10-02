@@ -8,12 +8,12 @@
 
 <div class="container-fluid m--t">
         <div class="text-right">
-                <a href=" @yield('regresar') " class="btn btn-primary mt-4">
-                    <span>
-                        <i class="fas fa-reply"></i> &nbsp; Regresar
-                    </span>
-                </a>
-            </div>
+            <a href=" @yield('regresar') " class="btn btn-outline-primary btn-sm mt-4">
+                <span>
+                    <i class="fas fa-reply"></i> &nbsp; Regresar
+                </span>
+            </a>
+        </div>
 <h6 class="heading-small text-muted mb-4">{{ __('Información Personal') }}</h6>
 <div>
     <div class="row">
@@ -145,7 +145,8 @@
     @yield('informacion')
 </div>
 
-
+<br><br>
+           @include('layouts.footers.nav')
 </div>
 @endsection
 

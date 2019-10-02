@@ -18,7 +18,7 @@
         @include('flash-message')
     </div>
     <div class="text-right mb-5">
-        <a href=" {{ route('boletas') }} " class="btn btn-outline-primary mt-3">
+        <a href=" {{ route('boletas') }} " class="btn btn-outline-primary btn-sm mt-3">
             <span>
                 <i class="fas fa-reply"></i> &nbsp; Regresar
             </span>
@@ -50,10 +50,10 @@
                                         <tr class="hide">
                                             <td id="num" class="num_control pt-3-half" contenteditable="false">{{ $alumno->num_control }}</td>
                                             {{-- <input type="hidden" name="nc" value="{{ $alumno->num_control }}"> --}}
-                                            <th class="pt-3-half" contenteditable="false">{{ $alumno->ap_paterno }} {{ $alumno->ap_materno }} {{ $alumno->nombres }} </th>
-                                            <td id="c1" class="1 pt-3-half" @if ($alumno->calif1 == null) contenteditable="true" @else contenteditable="false" @endif>@if ( $alumno->calif1 == null ) 0 @else{{ $alumno->calif1 }} @endif</td>
-                                            <td id="c2" class="2 pt-3-half" @if ($alumno->calif2 == null) contenteditable="true" @else contenteditable="false" @endif>@if ( $alumno->calif2 == null ) 0 @else{{ $alumno->calif2 }} @endif</td>
-                                            <td id="c3" class="3 pt-3-half" @if ($alumno->calif3 == null) contenteditable="true" @else contenteditable="false" @endif>@if ( $alumno->calif3 == null ) 0 @else{{ $alumno->calif3 }} @endif</td>
+                                            <th class="pt-3-half">{{ $alumno->ap_paterno }} {{ $alumno->ap_materno }} {{ $alumno->nombres }} </th>
+                                            <td id="c1" class="1 pt-3-half" {{-- @if($alumno->calif1==null) --}}contenteditable="true"{{-- @else contenteditable="false"@endif --}}>@if ( $alumno->calif1 == null ) 0 @else{{ $alumno->calif1 }} @endif</td>
+                                            <td id="c2" class="2 pt-3-half" {{-- @if($alumno->calif2==null) --}}contenteditable="true"{{-- @else contenteditable="false"@endif --}}>@if ( $alumno->calif2 == null ) 0 @else{{ $alumno->calif2 }} @endif</td>
+                                            <td id="c3" class="3 pt-3-half" {{-- @if($alumno->calif3==null) --}}contenteditable="true"{{-- @else contenteditable="false"@endif --}}>@if ( $alumno->calif3 == null ) 0 @else{{ $alumno->calif3 }} @endif</td>
                                             <td class="pt-3-half" contenteditable="true">faltas</td>
                                             <th class="pt-3-half">@php $f =0; $f= round(($alumno->calif1+$alumno->calif2+$alumno->calif3)/3) @endphp {{ $f }}</th>
                                             {{-- <input type="hidden" name="num_control[{{ $alumno->num_control }}]" value="{{ $alumno->calif1 }}"> --}}
@@ -70,6 +70,8 @@
             <button type="submit" id="guardar" class="btn btn-primary mt-4">Guardar</button>
         </div>
     </form>
+    <br><br>
+    @include('layouts.footers.nav')
 </div>
 
     @section('script')
