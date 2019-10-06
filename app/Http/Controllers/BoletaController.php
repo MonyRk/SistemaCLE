@@ -8,6 +8,7 @@ use App\Grupo;
 use App\Inscripcion;
 use App\Periodo;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 
 class BoletaController extends Controller
@@ -129,30 +130,29 @@ class BoletaController extends Controller
      */
     public function update(Request $request)
     {
-        // $infoGrupo = DB::table('grupos')
-        // ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
-        // ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
-        // ->where('id_grupo',3)
-        // ->get();
-
-        // $alumnos_inscritos = Inscripcion::where('alumno_inscrito.id_grupo',3)
-        //                                 ->leftJoin('alumnos','alumnos.num_control','=','alumno_inscrito.num_control')
-        //                                 ->leftjoin('boletas','alumnos.num_control','=','boletas.num_control')
-        //                                 ->leftJoin('personas','alumnos.curp_alumno','=','personas.curp')  
-        //                                 ->where('boletas.id_grupo',3) 
-        //                                 ->whereNull('boletas.deleted_at')
-        //                                 ->orderBy('personas.ap_paterno','ASC')  
-        //                                 ->get();
-       
-        // dd(request()->all());
-        // $data = json_decode($request->getContent());
-
-        // dd($data);
-        // $input = request()->all();
-// dd($input);
-        if($request->ajax()){ 
-            return response()->json(['success',$request]);
+        $data = request()->all();
+        $total = count($data)-4;
+        
+        for ($i=0; $i < $total; $i++) { 
+            $arregloCalif = $data['calif'.$i];
+            if ($arregloCalif[4] < 9) {
+                $c_final = round(($arregloCalif[1]+$arregloCalif[2]+$arregloCalif[3])/3);
+            } else{
+                $c_final = 0;
+            }
+            Boleta::where('num_control',$arregloCalif[0])
+                    ->where('id_grupo',$data['grupo'])
+                    ->update([
+                        'calif1' => $arregloCalif[1],
+                        'calif2' => $arregloCalif[2],
+                        'calif3' => $arregloCalif[3],
+                        'faltas' => $arregloCalif[4],
+                        'calif_f' => $c_final
+                    ]);  
         }
+
+        return back()->with('success','¡Las calificaciones se han actualizado correctamente!');
+        
     }
     public function destroy(Boleta $boleta)
     {
@@ -173,8 +173,46 @@ class BoletaController extends Controller
         }
     }
 
-
-    public function pruebaDatos(Request $request){
-        return response()->json(['success'=>'HOLA MUNDO']);
+    public function descargarBoleta($grupo,$alumno){
+        
+        $datosEstudiante = Alumno::where('alumnos.num_control',$alumno)
+                                ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+                                ->leftjoin('boletas','alumnos.num_control','=','boletas.num_control')
+                                ->where('boletas.id_grupo',$grupo)
+                                ->get();
+        $datosGrupo = Grupo::where('grupos.id_grupo',$grupo)
+                            ->leftjoin('nivels','grupos.nivel_id','=','nivels.id_nivel')
+                            ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
+                            ->leftjoin('docentes','docentes.id_docente','=','grupos.docente')
+                            ->leftjoin('personas','personas.curp','=','docentes.curp_docente')
+                            ->get();
+                                    
+                                    // return view('pdf.boletaspdf',compact('datosEstudiante','datosGrupo'));
+        $pdfBoleta =  PDF::setPaper('A4','landscape')->loadView('pdf.boletaspdf',compact('datosEstudiante','datosGrupo'));
+        return $pdfBoleta->download($alumno.'-Boleta-'.strftime("%b%Y").'.pdf');
     }
+
+    public function generarActa($grupo){
+        // $data = $grupo;
+        $infoGrupo = Grupo::where('id_grupo',$grupo)
+        ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
+        ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
+        ->leftJoin('periodos','periodos.id_periodo','=','grupos.periodo')
+        ->leftjoin('personas','grupos.docente','=','grupos.docente')
+        ->get();
+
+        $alumnos_inscritos = Inscripcion::where('alumno_inscrito.id_grupo',$grupo)
+                                        ->leftJoin('alumnos','alumnos.num_control','=','alumno_inscrito.num_control')
+                                        ->leftjoin('boletas','alumnos.num_control','=','boletas.num_control')
+                                        ->leftJoin('personas','alumnos.curp_alumno','=','personas.curp')  
+                                        ->where('boletas.id_grupo',$grupo) 
+                                        ->whereNull('boletas.deleted_at')
+                                        ->orderBy('personas.ap_paterno','ASC')  
+                                        ->get();
+        return view('pdf.actaCalificaciones',compact('infoGrupo','alumnos_inscritos'));                          
+        $pdfBoleta =  PDF::loadView('pdf.actaCalificaciones',compact('infoGrupo','alumnos_inscritos'));
+        return $pdfBoleta->download($infoGrupo[0]->grupo.'-ActaCalificaciones-'.strftime("%b%Y").'.pdf');
+
+    }
+
 }

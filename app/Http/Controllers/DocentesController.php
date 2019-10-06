@@ -78,6 +78,7 @@ class DocentesController extends Controller
             'numero' => $data['numero'],
             'colonia' => $data['colonia'],
             'municipio' => $data['municipio'],
+            'cp' => $data['cp'],
             'telefono' => $data['telefono'],
             'edad' => $data['edad'],
             'sexo' => $data['sexo']
@@ -155,6 +156,7 @@ class DocentesController extends Controller
             'numero' => 'required|numeric',
             'colonia' => 'required|alpha_spaces',
             'municipio' => 'required',
+            'cp' => 'required|numeric',
             'telefono' =>'required|numeric',
             'email' => array('required','email','regex:/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/'),
             'edad' =>'required|digits:2',
@@ -174,6 +176,7 @@ class DocentesController extends Controller
         $persona->numero = $data['numero'];
         $persona->colonia = $data['colonia'];
         $persona->municipio = $data['municipio'];
+        $persona->cp = $data['cp'];
         $persona->telefono = $data['telefono'];
         $persona->edad = $data['edad'];
         $persona->sexo = $data['sexo'];

@@ -80,6 +80,7 @@ class AlumnosController extends Controller
             'numero' => $data['numero'],
             'colonia' => $data['colonia'],
             'municipio' => $data['municipio'],
+            'cp' => $data['cp'],
             'telefono' => $data['telefono'],
             'edad' => $data['edad'],
             'sexo' => $data['sexo'],
@@ -108,17 +109,19 @@ class AlumnosController extends Controller
         ]);
 
         //se verifica si hay apellido materno para agregar el nombre completo a la tabla historial
-        if ($data['apMaterno'] != null) {
-            $nombre = $data['name'].' '.$data['apPaterno'].' '.$data['apMaterno'];
-        }else{
-            $nombre = $data['name'].' '.$data['apPaterno'];
-        };
+        // if ($data['apMaterno'] != null) {
+        //     $nombre = $data['name'].' '.$data['apPaterno'].' '.$data['apMaterno'];
+        // }else{
+        //     $nombre = $data['name'].' '.$data['apPaterno'];
+        // };
 
         //se agrega el estudiante a la tabla historial
         Historial::firstOrCreate([
             'num_control' => $data['numControl'],
         ],[
-            'nombre' => $nombre,
+            'nombres' => $data['name'],
+            'ap_paterno' => $data['apPaterno'],
+            'ap_materno' => $data['apMaterno'],
             'carrera' => $data['carrera'],
             'semestre' => $data['semestre']
         ]);
@@ -155,7 +158,7 @@ class AlumnosController extends Controller
                     'B1M1' => 'cursando'
                 ]);
             };
-            if ($data['nivel'] == 'B2M2') {
+            if ($data['nivel'] == 'B1M2') {
                 Historial::where('num_control',$data['numControl'])->update([
                     'A1M1' => 'aprobado',
                     'A2M1' => 'aprobado',
@@ -225,6 +228,7 @@ class AlumnosController extends Controller
             'numero' => 'required|numeric',
             'colonia' => 'required|alpha_spaces',
             'municipio' => 'required',
+            'cp' => 'required|numeric',
             'telefono' =>'required|numeric',
             'email' => array('required','email','regex:/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/'),
             'edad' =>'required|digits:2',
@@ -250,6 +254,7 @@ class AlumnosController extends Controller
             'numero' => $data['numero'],
             'colonia' => $data['colonia'],
             'municipio' => $data['municipio'],
+            'cp' => $data['cp'],
             'telefono' => $data['telefono'],
             'edad' => $data['edad'],
             'sexo' => $data['sexo']

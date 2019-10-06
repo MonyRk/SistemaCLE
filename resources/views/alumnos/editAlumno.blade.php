@@ -94,7 +94,7 @@
                         <label class="form-control-label" for="input-calle">{{ __('Dirección') }}</label>
                         <input type="text" name="calle" id="input-calle" class="form-control" placeholder="Calle" value="{{ old('calle', $datos_alumno[0]->calle) }}" required autofocus>
                     </div>
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md">
                             <label class="form-control-label" for="input-numero">{{ __('') }}</label>
                         <input type="text" name="numero" id="input-numero" class="form-control" placeholder="Número" value="{{ old('numero', $datos_alumno[0]->numero) }}" required autofocus>
                     </div>
@@ -115,7 +115,10 @@
                         
                         </select>                  
                     </div>
-
+                    <div class="form-group col-md">
+                        <label class="form-control-label" for="input-cp">{{ __(' ') }}</label>
+                    <input type="text" name="cp" id="input-cp" class="form-control" placeholder="C.P." value="{{ old('cp', $datos_alumno[0]->cp) }}" required autofocus>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md">

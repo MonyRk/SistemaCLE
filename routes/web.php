@@ -39,6 +39,7 @@ Route::any('/search/docente', 'DocentesController@search')->name('buscarDocente'
 Route::get('/grupos', 'GruposController@index')->name('verGrupos');
 Route::get('/grupos/{grupo}','GruposController@show')->name('verInfoGrupo');
 Route::get('/agregarGrupo', 'GruposController@create')->name('crearGrupo');
+Route::get('/agregarGrupos', 'GruposController@creat')->name('creaGrupo');
 Route::post('/guardarGrupo', 'GruposController@store')->name('agregarGrupo');
 Route::delete('/grupos/{grupo}','GruposController@destroy')->name('eliminarGrupo');
 Route::get('/grupos/{grupo}/editar','GruposController@edit')->name('editarGrupo');
@@ -78,7 +79,8 @@ Route::get('/boleta','BoletaController@index')->name('boletas');
 Route::get('/boletaGrupo/{grupo}','BoletaController@show')->name('verBoleta');
 Route::post('/boletaGrupo/calificar','BoletaController@update')->name('guardarCalificaciones');
 Route::get('/boletaGrupo', 'BoletaController@getGrupos');
-Route::post('unaprueba', 'BoletaController@pruebaDatos')->name('prueba');
+Route::get('/boleta/descargar/{grupo}/{alumno}', 'BoletaController@descargarBoleta')->name('boletaIndividual');
+Route::get('/boleta/actaCalificaciones/{grupo}','BoletaController@generarActa')->name('actaCalificaciones');
 
 Route::get('/cursos','InscripcionesController@getCursos')->name('cursos');
 Route::get('/cursos/avance','InscripcionesController@avance')->name('avance');
@@ -100,5 +102,10 @@ Route::get('/evaluacionDocente','EvaluacionDocenteController@index')->name('eval
 Route::get('/inscripciones/lista/{grupo}','InscripcionesController@getLista')->name('descargarLista');
 
 Route::get('/reportes',function () {return view('reportes.cardsreportes');})->name('reportes');
-Route::get('/reportes/datosEstadisticos','ReportesController@index')->name('estadisticas');
+Route::get('/reportes/datosEstadisticos','ReportesController@index')->name('indexestadisticas');
+Route::get('/reportes/datosEstadisticos/periodo','ReportesController@graficas')->name('estadisticas');
 
+Route::get('/reportes/liberaciones','ReportesController@liberaciones')->name('liberaciones');
+Route::get('/reportes/liberaciones/cle','ReportesController@liberacionCle')->name('generarLiberacionCle');
+Route::get('/reportes/liberaciones/toefl','ReportesController@liberacionToefl')->name('generarLiberacionToefl');
+Route::get('/reportes/liberaciones/4habilidades','ReportesController@liberacion4')->name('generarLiberacion4');

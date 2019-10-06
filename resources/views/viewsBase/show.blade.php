@@ -61,7 +61,7 @@
                 </div>
                 <div class="col-auto">
                     <div class="">  
-                        <p class="card-text font-weight-bold">{{ $datos[0]->calle }} {{ $datos[0]->numero }}, {{ $datos[0]->colonia }}, {{ $municipio[0] }}</p>
+                        <p class="card-text font-weight-bold">{{ $datos[0]->calle }} {{ $datos[0]->numero }}, {{ $datos[0]->colonia }}, {{ $municipio[0] }}, {{ $datos[0]->cp }}</p>
                     </div>
                 </div>
             </div>

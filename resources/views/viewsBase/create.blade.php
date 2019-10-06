@@ -99,7 +99,7 @@
                         <label class="form-control-label" for="input-calle">{{ __('Dirección') }}</label>
                         <input type="text" name="calle" id="input-calle" class="form-control" placeholder="Calle" value="{{ old('calle') }}" >
                     </div>
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md">
                             <label class="form-control-label" for="input-numero">{{ __('') }}</label>
                         <input type="text" name="numero" id="input-numero" class="form-control" placeholder="Número" value="{{ old('numero') }}" >
                     </div>
@@ -115,6 +115,10 @@
                                 <option value="{{ $mun->id }}">{{ $mun->nombre_municipio }}</option>                             
                                 @endforeach
                         </select>                  
+                    </div>
+                    <div class="form-group col-md">
+                            <label class="form-control-label" for="input-cp">{{ __(' ') }}</label>
+                        <input type="text" name="cp" id="input-cp" class="form-control" placeholder="C.P." value="{{ old('cp') }}" >
                     </div>
                 </div>
 <br>

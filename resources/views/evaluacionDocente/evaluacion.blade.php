@@ -33,8 +33,33 @@
         @csrf
         @method('post')
         <div class="pl-lg-4" id="preguntas">
+                
+            <div class="row">
+                <div class="input-daterange row align-items-center" >
+                    <div class="col">
+                        <div class="form-group">
+                            <div class="input-group datepicker input-group-alternative">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                </div>
+                                <input class="form-control" placeholder="Fecha de Inicio" type="text" value="06/18/2019">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <div class="input-group datepicker input-group-alternative">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                </div>
+                                <input class="form-control" placeholder="Fecha Final" type="text" >
+                            </div>
+                        </div>
+                    </div>
+                </div>
             <div class="col-md text-right">
                 <button type="button" id="agregar" class="btn btn-primary btn-sm mt-4" data-toggle="modal" data-target="#modal-form2">{{ __('Agregar Pregunta') }}</button>
+            </div>
             </div>
             <hr class="my-4" />
             
@@ -336,6 +361,7 @@
 
         @section('script')
         <script>
+            
          $('#modal-delete').on('show.bs.modal', function(event){
              var button = $(event.relatedTarget) //
              // console.log(button)
@@ -359,6 +385,8 @@
             modal.find('.modal-body #idpreg').val(idpregunta);
         })
 
+
+        
 
 </script>
 

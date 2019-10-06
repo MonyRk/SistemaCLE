@@ -23,6 +23,7 @@ class CreatePersonaTable extends Migration
             $table->string('colonia',90);
             $table->integer('municipio');
             $table->foreign('municipio')->references('id')->on('municipios')->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->integer('cp');
             $table->string('telefono',20);
             $table->smallinteger('edad');
             $table->enum('sexo', ['F','M']);

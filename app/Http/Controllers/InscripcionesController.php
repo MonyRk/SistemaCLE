@@ -340,7 +340,8 @@ class InscripcionesController extends Controller
             }
             
         }else{
-            return redirect()->route('inscribirEstudiantes',$data['grupo'])->with('error','La cantidad de estudiantes es mayor al cupo del grupo');
+            return back()->with('error','La cantidad de estudiantes es mayor al cupo del grupo');
+            // return redirect()->route('inscribirEstudiantes',$data['grupo'])
         }
 
         //se agregan los datos necesarios para la vista
@@ -367,7 +368,7 @@ class InscripcionesController extends Controller
         //                 ->with('p',$p)->with('grupos',$grupos)
         //                 ->with('niveles',$niveles)->with('aulas',$aulas)
         //                 ->with('success','¡Los estudiantes se agregaron al grupo correctamente!');
-        return view('inscripciones.inscripciones')->with('success','¡Los estudiantes se agregaron al grupo correctamente!')->with('p',$p)->with('grupos',$grupos)->with('niveles',$niveles)->with('aulas',$aulas);
+        return back()->with('success','¡Los estudiantes se agregaron al grupo correctamente!')->with('p',$p)->with('grupos',$grupos)->with('niveles',$niveles)->with('aulas',$aulas);
 
     }
 
@@ -563,12 +564,20 @@ class InscripcionesController extends Controller
         ->whereNull('alumno_inscrito.deleted_at')
         ->where('alumno_inscrito.id_grupo',$id)
         ->get();
-        // dd(strftime("%b%Y"));
+
+        $datosGrupo = Grupo::where('grupos.id_grupo',$id)
+                            ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
+                            ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
+                            ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
+                            ->leftjoin('docentes','docentes.id_docente','=','grupos.docente')
+                            ->leftjoin('personas','docentes.curp_docente','=','personas.curp')
+                            ->get();
+        // dd($datosGrupo);
         if($alumnos_en_el_grupo->isEmpty()){
             return back()->with('error','El grupo no tiene ningún estudiante inscrito.');
         }else{
             
-        $pdfLista = PDF::loadView('pdf.listaGrupo',compact('alumnos_en_el_grupo'));
+        $pdfLista =  PDF::setPaper('A4','landscape')->loadView('pdf.listaGrupo',compact('alumnos_en_el_grupo','datosGrupo'));
 
         return $pdfLista->download('ListaGrupo-'.$alumnos_en_el_grupo[0]->grupo.'-'.strftime("%b%Y").'.pdf');
         }

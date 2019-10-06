@@ -122,7 +122,11 @@
                             
                         @endforelse
                         
-                        </select>                  
+                        </select>
+                        <div class="form-group col-md">
+                            <label class="form-control-label" for="input-cp">{{ __(' ') }}</label>
+                            <input type="text" name="cp" id="input-cp" class="form-control" placeholder="C.P." value="{{ old('cp', $datos_alumno[0]->cp) }}" required autofocus>
+                        </div>                  
                     </div>
 
                 </div>

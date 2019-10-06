@@ -98,6 +98,7 @@ class AulaController extends Controller
                         ->leftJoin('horas_disponibles','aulas.hrdisponible','=','horas_disponibles.id_hora')
                         ->get();
         $horas = HorasDisponible::where('id_hora',$aula->hrdisponible)->get();
+        // dd($aula1);
         return view('catalogos.aulas.editAula',compact('aula1','horas'));
     }
 

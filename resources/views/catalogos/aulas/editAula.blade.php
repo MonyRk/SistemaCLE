@@ -44,7 +44,7 @@
                         <label class="form-control-label" name="hrdisp" id="horadis">{{ __('Horas Disponibles') }}</label>
                     </div>
                 </div>
-                <div class="row">       
+                <div class="row">
                     <div class="col">
                         <div class="custom-control custom-control-alternative custom-checkbox mb-3">
                             <input class="custom-control-input" id="07:00" name="horas[]" type="checkbox" value="07:00">

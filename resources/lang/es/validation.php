@@ -1,4 +1,5 @@
 <?php
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -10,6 +11,7 @@ return [
     | as the size rules. Feel free to tweak each of these messages.
     |
     */
+
     'accepted'             => ':attribute debe ser aceptado.',
     'active_url'           => ':attribute no es una URL válida.',
     'after'                => ':attribute debe ser una fecha posterior a :date.',
@@ -17,7 +19,6 @@ return [
     'alpha'                => ':attribute sólo debe contener letras.',
     'alpha_dash'           => ':attribute sólo debe contener letras, números y guiones.',
     'alpha_num'            => ':attribute sólo debe contener letras y números.',
-    'alpha_spaces'         => ':attribute sólo debe contener letras y espacios',
     'array'                => ':attribute debe ser un conjunto.',
     'before'               => ':attribute debe ser una fecha anterior a :date.',
     'before_or_equal'      => ':attribute debe ser una fecha anterior o igual a :date.',
@@ -38,6 +39,7 @@ return [
     'dimensions'           => 'Las dimensiones de la imagen :attribute no son válidas.',
     'distinct'             => 'El campo :attribute contiene un valor duplicado.',
     'email'                => ':attribute no es un correo válido',
+    'ends_with'            => 'The :attribute must end with one of the following: :values',
     'exists'               => ':attribute es inválido.',
     'file'                 => 'El campo :attribute debe ser un archivo.',
     'filled'               => 'El campo :attribute es obligatorio.',
@@ -113,6 +115,7 @@ return [
     'uploaded'             => 'Subir :attribute ha fallado.',
     'url'                  => 'El formato :attribute es inválido.',
     'uuid'                 => 'El campo :attribute debe ser un UUID válido.',
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
@@ -123,6 +126,7 @@ return [
     | specify a specific custom language line for a given attribute rule.
     |
     */
+
     'custom' => [
         'password' => [
             'min' => 'La :attribute debe contener más de :min caracteres',
@@ -131,6 +135,7 @@ return [
             'unique' => 'El :attribute ya ha sido registrado.',
         ],
     ],
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes
@@ -141,6 +146,7 @@ return [
     | of "email". This simply helps us make messages a little cleaner.
     |
     */
+
     'attributes' => [
         'name'                  => 'Nombre',
         'apPaterno'            => 'Apellido Paterno',
@@ -193,5 +199,6 @@ return [
         'time'                  => 'hora',
         'subject'               => 'asunto',
         'message'               => 'mensaje',
+        'price'                 => 'precio',
     ],
 ];

@@ -12,7 +12,7 @@ class Persona extends Model
     // protected $table = 'personas';
     protected $primaryKey = 'curp';
     protected $fillable = [
-        'curp','nombres','ap_paterno','ap_materno','calle','numero','colonia','municipio','telefono','edad','sexo'
+        'curp','nombres','ap_paterno','ap_materno','calle','numero','colonia','municipio','cp','telefono','edad','sexo'
         ];
         use SoftDeletes;
     protected $dates = ['deleted_at'];

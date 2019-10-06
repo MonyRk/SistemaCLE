@@ -35,6 +35,7 @@ class ValidarCrearAlumnoRequest extends FormRequest
             'numero' => 'required|numeric',
             'colonia' => 'required|alpha_spaces',
             'municipio' => 'required',
+            'cp' => 'required|numeric',
             'telefono' =>'required|numeric',
             'email' => array('required','email','regex:/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/','unique:users,email'),
             'edad' =>'required|digits:2',
