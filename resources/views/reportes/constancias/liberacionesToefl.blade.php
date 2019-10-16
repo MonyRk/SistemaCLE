@@ -44,8 +44,16 @@
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-plan">{{ __('Plan de Estudios') }}</label>
                         <select id="input-plan" class="form-control" name="plan">
-                            <option selected value=""></option>
-                            <option value="PLAN DE ESTUDIOS">Elegir Opcion</option>
+                            <option selected value="">Elegir Opcion</option>
+                            <option value="ICIV-2010-208">ICIV-2010-208</option>
+                            <option value="ISIC-2010-224">ISIC-2010-224</option>
+                            <option value="LADM-2010-234">LADM-2010-234</option>
+                            <option value="IELC-2010-211">IELC-2010-211</option>
+                            <option value="IMEC-2010-228">IMEC-2010-228</option>
+                            <option value="IQUI-2010-232">IQUI-2010-232</option>
+                            <option value="IIND-2010-227">IIND-2010-227</option>
+                            <option value="IGEM-2009-201">IGEM-2009-201</option>
+                            <option value="IELE-2010-209">IELE-2010-209</option>
                         </select>                  
                     </div>
                     <div class="form-group col-md">
@@ -55,8 +63,17 @@
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-nivel">{{ __('Nivel') }}</label>
                         <select id="input-nivel" class="form-control" name="nivel">
-                            <option selected value=""></option>
-                            <option value="Intermedio(B1)">Elegir Opcion</option>
+                            <option selected value="">Elegir Opcion</option>
+                            <option value="Pre-Intermedio(A2)">A2</option>
+                            <option value="Intermedio(B1)">B1</option>
+                        </select>   
+                    </div>
+                    <div class="form-group col-md">
+                        <label class="form-control-label" for="input-toefl">{{ __('Certificación TOEFL') }}</label>
+                        <select id="input-toefl" class="form-control" name="toefl">
+                            <option selected value="">Elegir Opcion</option>
+                            <option value="ITP">ITP</option>
+                            <option value="Cambridge PET">Cambridge PET</option>
                         </select>   
                     </div>
                     <div class="text-center">

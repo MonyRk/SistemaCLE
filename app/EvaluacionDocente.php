@@ -13,7 +13,7 @@ class EvaluacionDocente extends Model
     protected $primaryKey = 'num_evaluacion';
     protected $table = 'evaluacion';
     protected $fillable = [
-        'num_control','curp_docente','fecha'
+        'num_control','curp_docente','grupo','periodo'
     ];
 
     use SoftDeletes;

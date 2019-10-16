@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->foreign('curp_user')->references('curp')->on('personas')->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->string('email',200);
             $table->string('password');
+            $table->string('tipo');
             $table->unique([DB::raw('email(191)')]);
             $table->rememberToken();
             $table->softDeletes();

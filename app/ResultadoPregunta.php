@@ -3,10 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ResultadoPregunta extends Model
 {
-    // protected $table = 'personas';
+    protected $table = 'resultado_pregunta';
     protected $primaryKey = 'id_rp';
     protected $fillable = [
         'id_respuesta','num_evaluacion','id_pregunta'

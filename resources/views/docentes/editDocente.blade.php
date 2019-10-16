@@ -1,7 +1,14 @@
 @extends('layouts.app')
 
 @section('sidebar')
-    @include('layouts.navbars.sidebar')
+@php
+$usuarioactual = \Auth::user();
+@endphp
+@if ($usuarioactual->tipo == 'coordinador')
+@include('layouts.navbars.sidebar')
+@else
+@include('layouts.navbars.sidebarDocentes')
+@endif
 @endsection
 
 @section('content')
@@ -14,11 +21,14 @@
 
     <div class="container-fluid m--t">
             <div class="text-right">
-                    <a href="{{route('verDocentes')}}" class="btn btn-outline-primary btn-sm mt-4">
+                    <a href="{{ back() }}" class="btn btn-outline-primary btn-sm mt-4">
                         <span>
                             <i class="fas fa-reply"></i> &nbsp; Regresar
                         </span>
                     </a>
+                </div>
+                <div>
+                    @include('flash-message')
                 </div>
     <div class="card-body ">
 
@@ -76,7 +86,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-5">
                         <label class="form-control-label" for="input-curp">{{ __('CURP') }}</label>
-                        <input type="text" class="form-control" name="curp" id="input-curp" value="{{ old('curp', $docente[0]->curp) }}">
+                        <input type="text" class="form-control" name="curp" id="input-curp" value="{{ old('curp', $docente[0]->curp) }}" @if($usuarioactual->tipo != 'coordinador') readonly @endif>
                     </div>
                     <div class="form-group col-md-2">
                         <label class="form-control-label" for="input-edad">{{ __('Edad') }}</label>
@@ -101,7 +111,7 @@
                         <label class="form-control-label" for="input-calle">{{ __('Dirección') }}</label>
                         <input type="text" name="calle" id="input-calle" class="form-control" placeholder="Calle" value="{{ old('calle', $docente[0]->calle) }}" required autofocus>
                     </div>
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md">
                             <label class="form-control-label" for="input-numero">{{ __('') }}</label>
                         <input type="text" name="numero" id="input-numero" class="form-control" placeholder="Número" value="{{ old('numero', $docente[0]->numero) }}" required autofocus>
                     </div>
@@ -123,11 +133,12 @@
                         @endforelse
                         
                         </select>
-                        <div class="form-group col-md">
-                            <label class="form-control-label" for="input-cp">{{ __(' ') }}</label>
-                            <input type="text" name="cp" id="input-cp" class="form-control" placeholder="C.P." value="{{ old('cp', $datos_alumno[0]->cp) }}" required autofocus>
-                        </div>                  
+                                         
                     </div>
+                    <div class="form-group col-md">
+                            <label class="form-control-label" for="input-cp">{{ __(' ') }}</label>
+                            <input type="text" name="cp" id="input-cp" class="form-control" placeholder="C.P." value="{{ old('cp', $docente[0]->cp) }}" required autofocus>
+                        </div> 
 
                 </div>
                 <div class="row">
@@ -149,16 +160,17 @@
             
             <div class="pl-lg-4">
                     <div class="form-row">  
-                            <div class="form-group col-md">
+                            <div class="form-group col-md-6">
                                 <label class="form-control-label" for="input-estudios">{{ __('Grado de Estudios') }}</label>
-                                <select id="input-estudios" class="form-control" name="estudios">
+                                <input class="form-control" type="text" id="input-estudios" name="estudios" value="{{ old('estudios',$docente[0]->grado_estudios) }}">
+                                {{-- <select id="input-estudios" class="form-control" name="estudios">
                                 <option value="{{ old('estudios',$docente[0]->grado_estudios) }}"selected>{{ old('estudios',$docente[0]->grado_estudios) }}</option>
                                 <option value="Licenciatura">{{ __('Licenciatura') }}</option>
                                 <option value="Maestría">{{ __('Maestría') }}</option>
                                 <option value="Doctorado">{{ __('Doctorado') }}</option>
-                                </select>
+                                </select> --}}
                             </div>
-                            <div class="form-group col-md">
+                            <div class="form-group col-md" @if($usuarioactual->tipo != 'coordinador')style = "display:none;" @else style="display:block" @endif>
                                 <label class="form-control-label" for="input-estatus">{{ __('Estatus') }}</label>
                                 <select id="input-estatus" class="form-control" name="estatus">
                                 <option value="{{ old('estatus',$docente[0]->estatus) }}" selected>{{ old('estatus',$docente[0]->estatus) }}</option>
@@ -167,7 +179,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-row">
+                        <div class="form-row"  @if($usuarioactual->tipo != 'coordinador')style = "display:none;" @else style="display:block" @endif>
                             <div class="form-group col-md">
                                 <label class="form-control-label" for="input-rfc">{{ __('RFC') }}</label>
                                 <div class="form-group">
@@ -175,7 +187,7 @@
                                     </div>
                              </div>
                             </div>
-                             <div class="form-row">
+                             <div class="form-row"  @if($usuarioactual->tipo != 'coordinador')style = "display:none;" @else style="display:block" @endif>
                              <div class="form-group col-md">
                                 <label class="form-control-label" for="input-titulo">{{ __('Título') }}</label>
                                 <div class="form-group">
@@ -183,11 +195,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-row">
+                        <div class="form-row"  @if($usuarioactual->tipo != 'coordinador')style = "display:none;" @else style="display:block" @endif>
                             <div class="form-group col-md">
                                 <label class="form-control-label" for="input-cedula">{{ __('Cédula Profesional') }}</label>
                                 <div class="form-group">
-                                    <input type="file" class="form-control-file" id="input-cedula" name="cedula" value="{{ old('cedula',$docente[0]->ced_prof) }}">
+                                    <input type="file" class="form-control-file" id="input-cedula" name="cedula" value="{{ $docente[0]->ced_prof }}">
                                 </div>
                             </div>
                         </div>

@@ -17,9 +17,16 @@ use CreateAlumnosInscritosTable;
 class AlumnosController extends Controller
 {
     
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+        
+    // }
 
     public function index()
     {       
+        $this->middleware('auth');
+        $usuarioactual = \Auth::user();
             $datos_alumnos = DB::table('alumnos')
                         ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
                         ->where('tipo', 'like' , '%alumno%')
@@ -27,7 +34,7 @@ class AlumnosController extends Controller
                         ->orderBy('alumnos.num_control','ASC')
                         ->paginate(25);
     
-        return view('alumnos.alumnos',compact('datos_alumnos'));
+        return view('alumnos.alumnos',compact('datos_alumnos','usuarioactual'));
     }
 
     public function search(Request $request)
@@ -53,6 +60,8 @@ class AlumnosController extends Controller
 
     public function create()
     {
+        // $usuarioactual=\Auth::user(); 
+        // dd($usuarioactual);
         $nombres_municipios = Municipio::select('*')->get();
     
         $niveles = Nivel::select('*')->get();
@@ -105,7 +114,8 @@ class AlumnosController extends Controller
         ],[
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['curp'])
+            'password' => bcrypt($data['curp']),
+            'tipo' => 'alumno'
         ]);
 
         //se verifica si hay apellido materno para agregar el nombre completo a la tabla historial
@@ -169,8 +179,13 @@ class AlumnosController extends Controller
             };
         };
              
+        $usuarioactual=\Auth::user();
 
+       if($usuarioactual != null ){
         return redirect()->route('verEstudiantes')->with('success','Datos del estudiante agregados correctamente!');
+       }else{
+        return redirect()->route('login')->with('success','¡Tus datos se han agregado correctamente! Ahora puedes iniciar sesión con el correo registrado y tu CURP como contraseña');
+       }
     }
 
     /**
@@ -199,24 +214,50 @@ class AlumnosController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Alumno $alumno)
-    {
-        $datos_alumno = Alumno::leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
-                        ->select('personas.*','alumnos.*')
-                        ->where('alumnos.num_control', '=' , $alumno->num_control)
-                        ->get();
-                        // dd($datos_alumno);           
+    { 
+        // dd($alumno->num_control);
+        $usuarioactual= \Auth::user();
+        
+        if ($usuarioactual->tipo != 'coordinador') {
+            $sesion_actual = User::where('users.id',$usuarioactual->id)
+                            ->leftjoin('alumnos','users.curp_user','=','alumnos.curp_alumno')
+                            ->get();
+                            // dd($sesion_actual[0]->num_control);
+            if ($sesion_actual[0]->num_control == $alumno->num_control) {
+                $datos_alumno = Alumno::where('alumnos.num_control',$sesion_actual[0]->num_control)
+                            ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+                            ->get();
+                            // dd($sesion_actual[0]);
+                $email = $sesion_actual[0]->email;
+            } else {
+                return back()
+                ->with('error','Lo sentimos, no tienes acceso a esta sección. Comunícate con la coordinación si necesitas el acceso.');//view('alumnos.editAlumno',compact('datos_alumno','nombres_municipios','niveles','email'));
+            }
+        }else{
+            $datos_alumno = Alumno::where('alumnos.num_control',$alumno->num_control)
+            ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+            ->get();
+            $encontrar_email = User::select('email')->where('curp_user',$datos_alumno[0]->curp)->get();
+            $email = $encontrar_email[0]->email;
+        }        
+        
+        // dd($email);
+                                  
         $nombres_municipios = Municipio::select('nombre_municipio')->pluck('nombre_municipio');
         
         $niveles = Nivel::select('*')->get();
 
         
-       $email = User::where('curp_user',$datos_alumno[0]->curp)->get();
+       
         
-        return view('alumnos.editAlumno',compact('datos_alumno','nombres_municipios','niveles','email'));//,'email'));
+        return view('alumnos.editAlumno',compact('datos_alumno','nombres_municipios','niveles','email','usuarioactual'));//,'email'));
     }
 
     public function update(Alumno $alumno)
-    {                    
+    {                 
+        
+        $usuarioactual= \Auth::user();
+        
         $curp = $alumno->curp_alumno;//curp original
         $numControl = $alumno->num_control; //num de control original  
         $data = request()->validate([
@@ -238,14 +279,16 @@ class AlumnosController extends Controller
             'semestre' => 'required',
             
         ]); 
-        // // dd($data); 
-        // //obtener los datos de la misma persona en todas las tablas relacionadas
+
+        
+         
+        //obtener los datos de la misma persona en todas las tablas relacionadas
         $apm = request()->all();
         // dd($data,$apm);
             Persona::find($curp)->update([
             'ap_materno' => $apm['apMaterno']
             ]);
-
+            // dd($data,$apm);
         $persona = Persona::find($curp)->update([
             // 'curp' => $data['curp'],
             'nombres' => $data['name'],
@@ -301,7 +344,9 @@ class AlumnosController extends Controller
         {
 
             $historial[0]->num_control = $data['numControl'];
-            $historial[0]->nombre = $nombre;
+            $historial[0]->nombres = $data['name'];
+            $historial[0]->ap_paterno = $data['apPaterno'];
+            $historial[0]->ap_materno = $apm['apMaterno'];
             $historial[0]->carrera = $data['carrera'];
             $historial[0]->semestre = $data['semestre'];
             $historial[0]->save();
@@ -324,21 +369,26 @@ class AlumnosController extends Controller
                 Inscripcion::create([
                     'num_control' => $data['numControl'],
                     'folio_pago' => $apm['foliopago'],
-                    'monto' => $apm['monto'],
+                    'monto_pago' => $apm['monto'],
                     'fecha' => date("Y-m-d")
                 ]);
             }else{
                 $i[0]->num_control = $data['numControl'];
                 $i[0]->folio_pago = $apm['foliopago'];
-                $i[0]->monto = $apm['monto'];
+                $i[0]->monto_pago = $apm['monto'];
                 $i[0]->fecha = date("Y-m-d");
                 $i[0]->save();
             }          
 
         };
 
-
-        return redirect()->route('verEstudiantes')->with('success','¡Los datos se actualizaron correctamente!');
+        if ($usuarioactual->tipo!= 'coordinador') {
+            return back()->with('success','¡Los datos se actualizaron correctamente!');
+        } else {
+            return redirect()->route('verEstudiantes')->with('success','¡Los datos se actualizaron correctamente!');
+        }
+        
+        
     }
 
 

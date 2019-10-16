@@ -1,6 +1,17 @@
 @extends('layouts.app')
 @section('sidebar')
+@php
+$usuarioactual = \Auth::user();
+@endphp
+@if ($usuarioactual->tipo == 'coordinador')
 @include('layouts.navbars.sidebar')
+@endif
+@if ($usuarioactual->tipo == 'alumno')
+@include('layouts.navbars.sidebarEstudiantes')
+@endif
+@if ($usuarioactual->tipo == 'docente')
+@include('layouts.navbars.sidebarDocentes')
+@endif
 @endsection
 @section('content')
 
@@ -80,7 +91,10 @@
                                     <th scope="col">Aula</th>
                                     <th scope="col">Hora</th>
                                     <th scope="col">Docente</th>
-                                    <th scope="col">Inscribir</th>
+                                    @if($usuarioactual->tipo == 'coordinador') 
+                                        <th scope="col">Inscribir</th>
+                                    @endif
+                                    
                                     <th scope="col">Lista</th>
 
                                 </tr>
@@ -106,9 +120,11 @@
                                     <th>
                                         {{ $grupo->nombres }} {{ $grupo->ap_paterno }} {{ $grupo->ap_materno }}
                                     </th>
+                                    @if($usuarioactual->tipo == 'coordinador') 
                                     <td>
                                         <a href="{{ route('inscribirEstudiantes',$grupo->id_grupo) }}"><i class="far fa-list-alt"></i></a>
                                     </td>
+                                    @endif
                                     <td>
                                         <a href="{{ route('descargarLista',$grupo->id_grupo) }}"><i class="fas fa-file-download"></i></a>
                                     </td>

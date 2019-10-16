@@ -1,7 +1,13 @@
 @extends('layouts.app')
-
 @section('sidebar')
-    @include('layouts.navbars.sidebar')
+@php
+$usuarioactual = \Auth::user();
+@endphp
+@if ($usuarioactual->tipo == 'coordinador')
+@include('layouts.navbars.sidebar')
+@else
+@include('layouts.navbars.sidebarEstudiantes')
+@endif
 @endsection
 
 @section('content')
@@ -14,6 +20,9 @@
                     <i class="fas fa-reply"></i> &nbsp; Regresar
                 </span>
             </a>
+        </div>
+        <div>
+            @include('flash-message')
         </div>
     <div class="card-body ">
             @if ($errors->any())
@@ -69,7 +78,8 @@
                 <div class="form-row">
                     <div class="form-group col-md-5">
                         <label class="form-control-label" for="input-curp">{{ __('CURP') }}</label>
-                        <input type="text" class="form-control" name="curp" id="input-curp" value="{{ old('curp', $datos_alumno[0]->curp) }}" onkeyup="this.value = this.value.toUpperCase();">
+                        <input type="text" class="form-control" name="curp" id="input-curp" value="{{ old('curp', $datos_alumno[0]->curp) }}" onkeyup="this.value = this.value.toUpperCase();"
+                        @if ($usuarioactual->tipo != 'coordinador') readonly  @endif>
                     </div>
                     <div class="form-group col-md-2">
                         <label class="form-control-label" for="input-edad">{{ __('Edad') }}</label>
@@ -127,7 +137,7 @@
                     </div>
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-email">{{ __('Email') }}</label>
-                        <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder="" value="{{ old('email',$email[0]->email) }}" >
+                        <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder="" value="{{ old('email',$email) }}" >
                     </div>
                 </div>
         
@@ -141,7 +151,8 @@
             <div class="row">
                 <div class="form-group col-md-4">
                     <label class="form-control-label" for="input-numControl">{{ __('Número de Control') }}</label>
-                    <input type="text" name="numControl" id="input-numControl" class="form-control" placeholder="" value="{{ old('numControl', $datos_alumno[0]->num_control) }}">
+                    <input type="text" name="numControl" id="input-numControl" class="form-control" placeholder="" value="{{ old('numControl', $datos_alumno[0]->num_control) }}"
+                    @if ($usuarioactual->tipo != 'coordinador') readonly  @endif>
                 </div>
                 <div class="form-group col-md-6">
                     <label class="form-control-label" for="input-carrera">{{ __('Carrera') }}</label>

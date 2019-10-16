@@ -54,7 +54,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-6">
                     <div class="card card-stats mb-4 mb-xl-0">
-                        <a href="">
+                        <a href="{{ route('adendum') }}">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
@@ -70,24 +70,6 @@
                         </a>
                     </div>
                 </div>
-                {{-- <div class="col-xl-3 col-lg-6">
-                    <div class="card card-stats mb-4 mb-xl-0">
-                        <a href="{{ route('respuestas') }}">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col">
-                                        <span class=" font-weight-bold mb-0">{{ __('Respuestas Evaluacion') }}</span>
-                                    </div>
-                                    <div class="col-auto">
-                                        <div class="icon icon-shape bg-green text-white rounded-circle shadow">
-                                            <i class="far fa-check-square"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div> --}}
             </div>
             
         </div>

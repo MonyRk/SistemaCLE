@@ -9,7 +9,7 @@
         estudiante <strong> C. {{ $datosEstudiante[0]->ap_paterno }} @if ($datosEstudiante[0]->ap_materno!=null) {{ $datosEstudiante[0]->ap_materno }} @endif {{ $datosEstudiante[0]->nombres }}</strong>
         con n&uacute;mero de control <strong>{{ $datosEstudiante[0]->num_control }}</strong> de la carrera
         {{ $datosEstudiante[0]->carrera }} con clave del plan de estudios {{ $plan }} 
-    present&oacute; boleta de Examen TOEFL ITP de {{ $puntos }} puntos con lo cual acredita haber cubierto 
+    present&oacute; boleta de Examen TOEFL {{ $toefl }} de {{ $puntos }} puntos con lo cual acredita haber cubierto 
     el nivel {{ $nivel }}.
     
 </p>

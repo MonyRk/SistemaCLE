@@ -143,7 +143,7 @@
                 <th scope="col" class="col-17"><small>CARRERA</small></th>
                 <th scope="col"><small>REP.</small></th>
                 <th scope="col"><small>ORD.</small></th>
-                <th scope="col"><small>COMP.</small></th>
+                <th scope="col"><small>COM.</small></th>
                 <th scope="col"><small>ESP.</small></th>
             </tr>
         </thead>
@@ -177,7 +177,7 @@
 
                 </td>
                 <td scope="row"></td>
-                <td scope="row"></td>
+                <td scope="row">{{ $alumno->calif_f }}</td>
                 <td scope="row"></td>
                 <td scope="row"></td>
             </tr>

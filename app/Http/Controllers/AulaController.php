@@ -11,11 +11,11 @@ use Psy\Command\WhereamiCommand;
 
 class AulaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         $aulas = Aula::leftjoin('horas_disponibles','horas_disponibles.id_hora' ,'=','aulas.hrdisponible')

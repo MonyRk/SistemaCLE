@@ -29,7 +29,7 @@ class ValidarCrearGrupoRequest extends FormRequest
             'modalidad' => 'required',
             'aula' => 'required',
             'hora' => 'required',
-            'docente' => 'required',
+            // 'docente' => 'required',
             'periodo' => 'required',
             'cupo' => 'required|digits:2'
         ];

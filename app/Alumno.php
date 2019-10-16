@@ -15,7 +15,7 @@ class Alumno extends Model
         'num_control','curp_alumno','carrera', 'semestre', 'estatus' 
 
     ];
-
+    public $incrementing = false;
     use SoftDeletes;
     protected $table = 'alumnos';
     protected $dates = ['deleted_at'];

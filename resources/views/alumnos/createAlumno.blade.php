@@ -2,11 +2,14 @@
 @section('titlecreate')
     Agregar Estudiante
 @endsection
+@section('regresar')
+    {{ back() }}
+@endsection
 @section('action')
 {{ url("guardarEstudiante") }}
 @endsection
 
-@section('nombreTipodeInformacion')
+@section('nombreTipodeInformacion') 
     <h6 class="heading-small text-muted mb-4">{{ __('Información Escolar') }}</h6>
 @endsection
 

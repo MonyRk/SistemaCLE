@@ -33,7 +33,7 @@
             </span>
         </a>
     </div>
-    <form action="{{-- route('estadisticas') --}}" method="GET">
+    <form action="{{ route('estadisticas') }}" method="GET">
         <div class="row">
             <div class="col-lg-4"></div>
             <div class="col-lg-4 text-center">

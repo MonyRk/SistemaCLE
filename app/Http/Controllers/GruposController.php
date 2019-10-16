@@ -11,22 +11,31 @@ use App\Persona;
 use App\Periodo;
 use App\HorasDisponible;
 use App\Http\Requests\ValidarCrearGrupoRequest;
+use App\User;
 use Illuminate\Support\Facades\DB;
 
 class GruposController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     
     public function index()
     {
-        $grupos = DB::table('grupos')
-        ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
-        ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
-        ->leftjoin('docentes','docentes.id_docente','=','grupos.docente')
-        ->leftJoin('personas','personas.curp','=','docentes.curp_docente')
-        ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
-        ->whereNull('grupos.deleted_at')
-        ->orderBy('grupos.grupo','ASC')
-        ->paginate(25);
+        
+        // dd($usuario);
+            $grupos = DB::table('grupos')
+            ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
+            ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
+            ->leftjoin('docentes','docentes.id_docente','=','grupos.docente')
+            ->leftJoin('personas','personas.curp','=','docentes.curp_docente')
+            ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
+            ->whereNull('grupos.deleted_at')
+            ->orderBy('grupos.grupo','ASC')
+            ->paginate(25);
+        
+        
 
         $docentes = Persona::leftjoin('docentes','docentes.curp_docente','=','personas.curp')
         ->select('docentes.*','personas.*')
@@ -113,27 +122,31 @@ class GruposController extends Controller
             'modalidad' => 'required',
             'aula' => 'required',
             'hora' => 'required',
-            'docente' => 'required',
+            // 'docente' => 'required',
             'periodo' => 'required',
             'cupo' => 'required|digits:2'
         ]);
+        $docente = request('docente');
+// dd($docente);
         $columnaConLaHora = 'hora'.($data['hora'] + 1);
         $aulaSeleccionadaConHoras = HorasDisponible::leftjoin('aulas','horas_disponibles.id_hora','=','aulas.hrdisponible')
                             ->where('id_aula',$data['aula'])                    
                             ->get();
 
-        $maestrosEnGrupo = Grupo::select('*')
-                ->where('docente',$data['docente'])
-                ->get();
-
         $i = 0;
-        foreach ($maestrosEnGrupo as $maestro) {
-            
-            if ($maestro->hora == $aulaSeleccionadaConHoras[0]->$columnaConLaHora && $maestro->periodo == $data['periodo'] && $maestro->modalidad == $data['modalidad']) {
-                $i++;//si son a la misma hora, el mismo periodo y la misma modalidad
-            }else{
-                //si son diferentes de hora y de periodo y 
-                $i;
+        if ($docente != null) {
+            $maestrosEnGrupo = Grupo::select('*')
+                ->where('docente',$docente)
+                ->get();
+        
+            foreach ($maestrosEnGrupo as $maestro) {
+                
+                if ($maestro->hora == $aulaSeleccionadaConHoras[0]->$columnaConLaHora && $maestro->periodo == $data['periodo'] && $maestro->modalidad == $data['modalidad']) {
+                    $i++;//si son a la misma hora, el mismo periodo y la misma modalidad
+                }else{
+                    //si son diferentes de hora y de periodo y 
+                    $i;
+                }
             }
         }
 
@@ -146,7 +159,7 @@ class GruposController extends Controller
                 'nivel_id' => $data['nivel'],
                 'modalidad' => $data['modalidad'],
                 'aula' => $data['aula'],
-                'docente' => $data['docente'],
+                'docente' => $docente,
                 'periodo' => $data['periodo'],
                 'cupo' => $data['cupo'],
                 'hora' => $aulaSeleccionadaConHoras[0]->$columnaConLaHora
@@ -158,7 +171,7 @@ class GruposController extends Controller
 // dd($nuevo_grupo);
         DB::update('update grupos set cupo = ? where id_grupo = ?', [$data['cupo'],$nuevo_grupo->id_grupo]); //falta modificar el cupo del grupo
         
-        return redirect()->route('verGrupos')->with('success','!El nuevo grupo se ha creado correctamente!');
+        return redirect()->route('verGrupos')->with('success','¡El nuevo grupo se ha creado correctamente!');
     }
 
     public function show($id)
@@ -219,18 +232,18 @@ class GruposController extends Controller
             'modalidad' => 'required',
             'aula' => 'required',
             'hora' => 'required',
-            'docente' => 'required',
+            // 'docente' => 'required',
             'periodo' => 'required',
             'cupo' => 'required|numeric|between:15,50'
         ]);
-        // dd($data);
+        $docente = request('docente');
         $grupo = Grupo::find(request()->id_grupo)->update([
             'grupo' => $data['name'],
             'nivel_id' => $data['nivel'],
             'modalidad' => $data['modalidad'],
             'aula' => $data['aula'],
             'hora' => $data['hora'],
-            'docente' => $data['docente'],
+            'docente' => $docente,
             'periodo' => $data['periodo'],
             // 'cupo' => $data['cupo']
         ]);

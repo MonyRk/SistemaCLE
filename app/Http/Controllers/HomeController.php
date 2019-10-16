@@ -21,6 +21,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('dashboardCoordinador');
+        $usuarioactual = \Auth::user();        
+        return view('dashboardCoordinador',compact('usuarioactual'));
     }
 }

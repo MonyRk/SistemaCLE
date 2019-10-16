@@ -7,7 +7,7 @@
     
      <div class="container-fluid m--t">
             <div class="text-right">
-                    <a href=" {{ route('inicio') }} " class="btn btn-outline-primary btn-sm mt-4">
+                    <a href=" {{ back() }} " class="btn btn-outline-primary btn-sm mt-4">
                         <span>
                             <i class="fas fa-reply"></i> &nbsp; Regresar
                         </span>

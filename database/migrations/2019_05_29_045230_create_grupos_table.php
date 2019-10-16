@@ -21,7 +21,7 @@ class CreateGruposTable extends Migration
             $table->foreign('nivel_id')->references('id_nivel')->on('nivels')->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->unsignedInteger('aula');
             $table->foreign('aula')->references('id_aula')->on('aulas')->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->unsignedInteger('docente');
+            $table->unsignedInteger('docente')->nullable();
             $table->foreign('docente')->references('id_docente')->on('docentes')->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->unsignedInteger('periodo');
             $table->foreign('periodo')->references('id_periodo')->on('periodos')->onUpdate('CASCADE')->onDelete('CASCADE');

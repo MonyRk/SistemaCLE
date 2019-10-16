@@ -1,7 +1,18 @@
 @extends('layouts.app')
 
 @section('sidebar')
-    @include('layouts.navbars.sidebar')
+@php
+$usuarioactual = \Auth::user();
+@endphp
+@if ($usuarioactual->tipo == 'coordinador')
+@include('layouts.navbars.sidebar')
+@endif
+@if ($usuarioactual->tipo == 'alumno')
+@include('layouts.navbars.sidebarEstudiantes')
+@endif
+@if ($usuarioactual->tipo == 'docente')
+@include('layouts.navbars.sidebarDocentes')
+@endif
 @endsection
 
 @section('content')
@@ -12,7 +23,7 @@
         </div>
     </div>
     <div class="card-body">
-        {{-- @include('flash-message') --}}
+        @include('flash-message')
         @if ($errors->any())
         <div class="alert alert-danger alert-block">
             <button type="button" class="close" data-dismiss="alert">×</button>	
@@ -33,6 +44,7 @@
             </span>
         </a>
     </div>
+    
     <form action="{{ route('verBoleta','grupo') }}" method="GET">
         <div class="row">
             <div class="col-lg-4"></div>
@@ -41,14 +53,14 @@
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-periodo">{{ __('Periodo') }}</label>
                         <select  id="input-periodo" class="form-control" name="periodo">
-                            <option selected value="{{ old('periodo') }}">{{ old('periodo') }}</option>
+                            <option selected value="{{ old('periodo') }}"></option>
                             @foreach ($periodos as $periodo)
                                 <option value="{{ $periodo->id_periodo }}">{{ $periodo->descripcion }} {{ $periodo->anio }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" @if ($usuarioactual->tipo == 'alumno') style="display:none;" @else style="display:block;" @endif>
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-grupo">{{ __('Grupos') }}</label>
                         <select  id="input-grupo" class="form-control" name="grupo">
@@ -61,7 +73,7 @@
             </div>
             <div class="col-lg-4"></div>
         </div>
-        
+        {{-- <input type="hidden" name="usuarioactual" value="{{ \Auth::user() }}"> --}}
             
         <div class="text-center">
             <button type="submit" class="btn btn-primary btn-lg mt-4"><span><i class="fas fa-arrow-right"></i></span></button>
@@ -74,13 +86,23 @@
 
 
 @section('script')
+@if($usuarioactual->tipo == 'docente') 
+    {{ $query='boletaGrupos' }}
+{{-- @endif  --}}
+{{-- @if($usuarioactual->tipo == 'alumno') 
+    {{ $query='boletaAlumno' }} 
+@endif --}}
+{{-- @if($usuarioactual->tipo == 'coordinador') --}}
+@else
+   {{ $query='boletaGrupo' }} 
+@endif
 <script>
     var $jq = jQuery.noConflict();
     $jq(document).ready(function(){
         $jq('#input-periodo').on('change',function(){
             var id_periodo_seleccionado = $jq(this).val();
             if ($jq.trim(id_periodo_seleccionado) != ''){
-                $jq.get('boletaGrupo',{id_periodo: id_periodo_seleccionado},function(grupos){
+                $jq.get('<?php echo($query) ?>',{id_periodo: id_periodo_seleccionado},function(grupos){
                     $jq('#input-grupo').empty();
                     $jq('#input-grupo').append("<option value=''></option>");
                     $jq.each(grupos, function(index, value){ 

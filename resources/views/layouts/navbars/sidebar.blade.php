@@ -122,7 +122,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('evaluacion') }}">
+                    <a class="nav-link" href="{{ route('inicioEvaluacion') }}">
                         <i class="fas fa-question text-gray"></i> {{ __('Evaluación Docente') }}
                     </a>
                 </li>

@@ -5,31 +5,16 @@
 
     <div class="container mt--8 pb-5">
         <div class="row justify-content-center">
+            <div>
+                @include('flash-message')
+            </div>
             <div class="col-lg-5 col-md-7">
                 <div class="card bg-white shadow border-0">
                     <div class="card-header bg-transparent pb-5">
                         <div class="text-muted text-center mt-3 mb--3"><strong>{{ __('Ingresa tu usuario') }}</strong></div>
-                        {{-- <div class="btn-wrapper text-center"> --}}
-                            <!--a href="#" class="btn btn-neutral btn-icon">
-                                <span class="btn-inner--icon"><img src="{{ asset('argon') }}/img/icons/common/github.svg"></span>
-                                <span class="btn-inner--text">{{ __('Github') }}</span>
-                            </a>
-                            <a href="#" class="btn btn-neutral btn-icon">
-                                <span class="btn-inner--icon"><img src="{{ asset('argon') }}/img/icons/common/google.svg"></span>
-                                <span class="btn-inner--text">{{ __('Google') }}</span>
-                            </a-->
-                        {{-- </div> --}}
                     </div>
                     <div class="card-body px-lg-5 py-lg-5">
                         <div class="text-center text-muted mb-4">
-                            <!--small>
-                                <a href="{{ route('register') }}">{{ __('Crear nueva cuenta') }}</a> 
-                            </small>
-                            <br>
-                            <small>
-                                {{ __('Username') }} <strong>shadow</strong>
-                                {{ __('Password') }} <strong>secret</strong>
-                            </small-->
                         </div>
                         <form role="form" method="POST" action="{{ route('login') }}">
                             @csrf
@@ -73,15 +58,8 @@
                     </div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-6">
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-light">
-                                <small>{{ __('Olvidaste tu contraseña?') }}</small>
-                            </a>
-                        @endif
-                    </div>
                     <div class="col-6 text-right">
-                        <a href="{{ route('register') }}" class="text-light">
+                        <a href="{{ route('agregarEstudiante') }}" class="text-light">
                             <small>{{ __('Crear cuenta nueva') }}</small>
                         </a>
                     </div>

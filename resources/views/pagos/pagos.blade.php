@@ -5,6 +5,9 @@
 @endsection
 
 @section('content')
+@php
+    use Carbon\Carbon;
+@endphp
 <div class="container-fluid m--t">
     <div class="header pb-1 pt-4 pt-lg-7 d-flex align-items-center text-center" >
         <div class="col-lg col-md">
@@ -58,7 +61,7 @@
                                                 {{ $pago->monto_pago }}
                                             </td>
                                             <td>
-                                                {{ $pago->fecha }}
+                                                {{ date('d-m-Y', strtotime($pago->fecha)) }}
                                             </td>
                                             <td>
                                                 <div class="custom-control custom-control-alternative custom-checkbox mb-3">

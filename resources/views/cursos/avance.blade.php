@@ -1,7 +1,14 @@
 @extends('layouts.app')
 
 @section('sidebar')
-    @include('layouts.navbars.sidebar')
+@php
+$usuarioactual = \Auth::user();
+@endphp
+@if ($usuarioactual->tipo == 'coordinador')
+@include('layouts.navbars.sidebar')
+@else
+@include('layouts.navbars.sidebarEstudiantes')
+@endif
 @endsection
 
 @section('content')

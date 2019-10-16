@@ -7,28 +7,85 @@ use App\Inscripcion;
 use App\Periodo;
 use App\Historial;
 use App\Alumno;
+use App\Boleta;
+use App\Docente;
+use App\Nivel;
 use NumerosEnLetras;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
 
 class ReportesController extends Controller
-{
+{  
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(){
         $periodos = Periodo::get();
         return view('reportes.estadisticas.periodoEstadisticas',compact('periodos'));
     }
 
     public function graficas(){
-        // dd(request()->all());
-        $periodos = Periodo::get();
-        foreach ($periodos as $periodo ) {
-            $grupos[$periodo->id_periodo] = Grupo::where('periodo',$periodo->id_periodo)->count();
-            $alumnos[$periodo->id_periodo] = Inscripcion::leftjoin('grupos','alumno_inscrito.id_grupo','=','grupos.id_grupo')
-                                                            ->where('periodo',$periodo->id_periodo)->count();
+        $data= request()->all();
+        $periodo = Periodo::where('id_periodo',$data['periodo'])->get();
+
+        $carreras = array('Ingeniería Eléctrica','Ingeniería Electrónica','Ingeniería Civil','Ingeniería Mecánica',
+        'Ingeniería Industrial','Ingeniería Química','Ingeniería en Gestión Empresarial','Ingeniería en Sistemas Computacionales',
+        'Licenciatura en Administración');
+        for ($i=0; $i < count($carreras); $i++) { 
+            $carreras[$i] =count( Inscripcion::leftjoin('grupos','grupos.id_grupo','=','alumno_inscrito.id_grupo')
+            ->leftjoin('alumnos','alumnos.num_control','=','alumno_inscrito.num_control')
+            ->where('grupos.periodo',$data['periodo'])
+            ->whereNull('alumno_inscrito.deleted_at')
+            ->select('grupos.periodo','grupos.id_grupo','alumno_inscrito.*','alumnos.carrera')
+            ->where('alumnos.carrera',$carreras[$i])->get());
         }
-        
-        // dd($alumnos);
-        return view('reportes.estadisticas.estadisticas',compact('periodos','grupos','alumnos'));
+
+        $generos = array('F','M');
+        for ($i=0; $i < 2;  $i++) { 
+            $generos[$i] = count(Inscripcion::leftjoin('grupos','grupos.id_grupo','=','alumno_inscrito.id_grupo')
+            ->leftjoin('alumnos','alumnos.num_control','=','alumno_inscrito.num_control')
+            ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+            ->where('grupos.periodo',$data['periodo'])
+            ->whereNull('alumno_inscrito.deleted_at')
+            ->select('grupos.periodo','grupos.id_grupo','alumno_inscrito.*','personas.sexo')
+            ->where('personas.sexo',$generos[$i])->get());
+        }
+        $generos = $generos[0].','.$generos[1];
+
+        $niveles = array("A1","A2","A2","B1","B1");
+        $modulos = array("M1","M1","M2","M1","M2");
+        for ($i=0; $i < count($niveles); $i++) { 
+            $niveles[$i] = count(
+                Inscripcion::leftjoin('grupos','grupos.id_grupo','=','alumno_inscrito.id_grupo')            
+                ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
+                ->where('grupos.periodo',$data['periodo'])
+                ->select('grupos.periodo','grupos.id_grupo','alumno_inscrito.*','nivels.nivel','nivels.modulo')
+                ->where('nivels.nivel',$niveles[$i])
+                ->where('nivels.modulo',$modulos[$i])
+                ->get()
+            );
+        }
+
+         
+            $aprobados = count(
+                Boleta::leftjoin('grupos','grupos.id_grupo','=','boletas.id_grupo')
+                ->where('grupos.periodo',$data['periodo'])
+                ->where('boletas.calif_f','>',69)
+                ->get());
+            $reprobados = count(
+                Boleta::leftjoin('grupos','grupos.id_grupo','=','boletas.id_grupo')
+                ->where('grupos.periodo',$data['periodo'])
+                ->where('boletas.calif_f','<',70)
+                ->get());
+            
+        $ingresos = count(Inscripcion::leftjoin('grupos','grupos.id_grupo','=','alumno_inscrito.id_grupo')
+                        ->where('grupos.periodo',$data['periodo'])
+                        ->where('alumno_inscrito.pago_verificado',true)
+                        ->get());
+        // dd($aprobados,$reprobados);
+        return view('reportes.estadisticas.estadisticas',compact('periodo','data','carreras','generos','niveles','aprobados','reprobados','ingresos'));
     }
 
     public function liberaciones(){
@@ -84,6 +141,7 @@ class ReportesController extends Controller
     public function liberacionToefl(){
         $data = request()->validate([
             'numControl' => array('required','regex:/^[A-Z]{1}\d{8}|\d{8}$/'),
+            'toefl' => 'required',
             'puntos' => 'required|numeric',
             'plan' => 'required',
             'nivel' => 'required'
@@ -91,15 +149,15 @@ class ReportesController extends Controller
         $nivel = $data['nivel'];
         $puntos = $data['puntos'];
         $plan = $data['plan'];
-
+        $toefl = $data['toefl'];
         $datosEstudiante = Alumno::where('alumnos.num_control',$data['numControl'])                            
         ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
         ->get();
         if ($datosEstudiante->isEmpty()) {
-            return back()->with('error','No se encontraron datos del estudiante');
+            return back()->with('error','No se encontraron datos del estudiante, verifica los datos y vuelve a intentarlo');
         }
          else {
-            $pdfLista =  PDF::loadView('pdf.liberacionToeflPdf',compact('datosEstudiante','nivel','puntos','plan'));
+            $pdfLista =  PDF::loadView('pdf.liberacionToeflPdf',compact('datosEstudiante','nivel','puntos','plan','toefl'));
             return $pdfLista->download($datosEstudiante[0]->num_control.'-Liberacion-'.strftime("%b%Y").'.pdf');   
         }
     }
@@ -124,5 +182,36 @@ class ReportesController extends Controller
             $pdfLista =  PDF::loadView('pdf.liberacion4pdf',compact('datosEstudiante','nivel','plan'));
             return $pdfLista->download($datosEstudiante[0]->num_control.'-Liberacion-'.strftime("%b%Y").'.pdf');   
         }
+    }
+
+    public function docenteAdendum()
+    {
+        $docentes = Docente::leftjoin('personas','personas.curp','=','docentes.curp_docente')
+                            ->whereNull('personas.deleted_at')
+                            // ->where('docentes.estatus','Inactivo')
+                            ->get();
+        return view('reportes.acuerdosLaborales',compact('docentes'));
+    }
+
+    public function generarAdendum()
+    {
+        $data = request()->validate([
+            'docente' => 'required',
+            'idioma' => 'required|alpha_spaces',
+            'nivel' => 'required',
+            'rfc' => 'required|alpha_num',
+            'titulo' => 'required|alpha_spaces',
+            'importe' => 'required',
+            'inicio' => 'required',
+            'fin' => 'required',
+            'fecha_pago' => 'required'
+        ]);
+
+        $docente = Docente::where('docentes.id_docente',$data['docente'])
+                        ->leftjoin('personas','personas.curp','=','docentes.curp_docente')
+                        ->get();
+         return view('pdf.adendum',compact('docente','data'));
+         $pdfLista =  PDF::loadView('pdf.adendum',compact('docente','data'));
+         return $pdfLista->download($docente[0]->nombres.'-Adendum-'.strftime("%b%Y").'.pdf');   
     }
 }

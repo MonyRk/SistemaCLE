@@ -1,7 +1,18 @@
 @extends('layouts.app')
 
 @section('sidebar')
-    @include('layouts.navbars.sidebar')
+@php
+$usuarioactual = \Auth::user();
+@endphp
+@if ($usuarioactual->tipo == 'coordinador')
+@include('layouts.navbars.sidebar')
+@endif
+@if ($usuarioactual->tipo == 'alumno')
+@include('layouts.navbars.sidebarEstudiantes')
+@endif
+@if ($usuarioactual->tipo == 'docente')
+@include('layouts.navbars.sidebarDocentes')
+@endif
 @endsection
 
 @section('content')
@@ -10,8 +21,10 @@
    border: 0;
  }
 .ancho{
-    width: 100%
+    width: 100%;
+    height: 100%;
 }
+
 </style>
 
 <div class="container-fluid m--t">
@@ -32,7 +45,7 @@
             </span>
         </a>
     </div> 
-    <div class="mb-3">
+    <div class="mb-3" @if($usuarioactual->tipo=='alumno') style="display:none" @else style="display:block" @endif>
         <a href=" {{ route('actaCalificaciones',$infoGrupo[0]->id_grupo) }} " class="btn btn-outline-default btn-sm mt-3">
             <span>
                 <i class="far fa-file-alt"></i> &nbsp; Acta de Calificaciones
@@ -60,7 +73,9 @@
                                         <th class="text">Parcial 3</th>
                                         <th class="text">Faltas</th>
                                         <th class="text">Final</th>
+                                        @if($usuarioactual->tipo != 'docente')
                                         <th class="text">Boleta</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody> @php $i=0 @endphp
@@ -70,21 +85,31 @@
                                             <input type="hidden" name="calif{{ $i }}[]" value="{{ $alumno->num_control }}">
                                             <th class="pt-3-half">{{ $alumno->ap_paterno }} {{ $alumno->ap_materno }} {{ $alumno->nombres }} </th>
                                             <td class="calif1 pt-3-half ">
-                                                <input type="text" name="calif{{ $i }}[]" class="sinborde ancho"  @if($alumno->calif1==null) value="0" @else value="{{ $alumno->calif1 }}"@endif>
+                                                <input type="text" name="calif{{ $i }}[]" class="sinborde ancho"  @if($alumno->calif1==null) value="0" @else value="{{ $alumno->calif1 }}"@endif
+                                                @if($usuarioactual->tipo=='docente') @if($alumno->calif1!=null && $alumno->calif1>0) readonly @endif @endif 
+                                                @if($usuarioactual->tipo=='alumno') readonly @endif>
                                             </td>
                                             <td class="calif2 pt-3-half">
-                                                <input type="text" name="calif{{ $i }}[]" class="sinborde ancho" @if($alumno->calif2==null) value="0" @else value="{{ $alumno->calif2 }}"@endif>
+                                                <input type="text" name="calif{{ $i }}[]" class="sinborde ancho" @if($alumno->calif2==null) value="0" @else value="{{ $alumno->calif2 }}"@endif
+                                                @if($usuarioactual->tipo=='docente') @if($alumno->calif2!=null && $alumno->calif2>0) readonly @endif @endif 
+                                                @if($usuarioactual->tipo=='alumno') readonly @endif>
                                             </td>
                                             <td class="calif3 pt-3-half">
-                                                <input type="text" name="calif{{ $i }}[]" class="sinborde ancho" @if($alumno->calif3==null) value="0" @else value="{{ $alumno->calif3 }}"@endif>
+                                                <input type="text" name="calif{{ $i }}[]" class="sinborde ancho" @if($alumno->calif3==null) value="0" @else value="{{ $alumno->calif3 }}"@endif
+                                                @if($usuarioactual->tipo=='docente') @if($alumno->calif3!=null && $alumno->calif3>0) readonly @endif @endif 
+                                                @if($usuarioactual->tipo=='alumno') readonly @endif>
                                             </td>
                                             <td class="faltas pt-3-half">
-                                                <input type="text" name="calif{{ $i }}[]" class="sinborde ancho" @if($alumno->faltas==null) value="0" @else value="{{ $alumno->faltas }}"@endif>
+                                                <input type="text" name="calif{{ $i }}[]" class="sinborde ancho" @if($alumno->faltas==null) value="0" @else value="{{ $alumno->faltas }}"@endif
+                                                @if($usuarioactual->tipo=='docente') @if($alumno->faltas!=null) readonly @endif @endif 
+                                                @if($usuarioactual->tipo=='alumno') readonly @endif>
                                             </td>
                                             <th class="pt-3-half">{{ $alumno->calif_f }}</th>
+                                            @if($usuarioactual->tipo != 'docente')
                                             <td>
                                                 <a href="{{ route('boletaIndividual',[$infoGrupo[0]->id_grupo,$alumno->num_control]) }}"><i class="fas fa-file-download"></i></a>
                                             </td>
+                                            @endif
                                         </tr>
                                         @php $i++ @endphp
                                     @endforeach
@@ -95,7 +120,7 @@
                 </div>
             </div>
         </div>
-        <div class="text-center">
+        <div class="text-center" @if($usuarioactual->tipo=='alumno') style="display:none" @else style="display:block" @endif>
             <button type="submit" id="guardar" class="btn btn-primary mt-4">Guardar</button>
         </div>
     </form>

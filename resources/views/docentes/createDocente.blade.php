@@ -17,12 +17,13 @@
 <div class="form-row">  
         <div class="form-group col-md">
             <label class="form-control-label" for="input-estudios">{{ __('Grado de Estudios') }}</label>
-            <select id="input-estudios" class="form-control" name="estudios">
+            <input type="text" class="form-control" id="input-estudios" name="estudios" value="{{ old('estudios') }}">
+            {{-- <select id="input-estudios" class="form-control" name="estudios">
             <option selected></option>
             <option value="Licenciatura">{{ __('Licenciatura') }}</option>
             <option value="Maestría">{{ __('Maestría') }}</option>
             <option value="Doctorado">{{ __('Doctorado') }}</option>
-            </select>
+            </select> --}}
         </div>
         <div class="form-group col-md">
             <label class="form-control-label" for="input-estatus">{{ __('Estatus') }}</label>
@@ -37,7 +38,7 @@
         <div class="form-group col-md">
             <label class="form-control-label" for="input-rfc">{{ __('RFC') }}</label>
             <div class="form-group">
-                <input type="file" class="form-control-file" id="input-rfc" name="rfc">
+                <input type="file" class="form-control-file" id="input-rfc" name="rfc" value="{{ old('rfc') }}">
                 </div>
          </div>
         </div>
@@ -45,7 +46,7 @@
          <div class="form-group col-md">
             <label class="form-control-label" for="input-titulo">{{ __('Título') }}</label>
             <div class="form-group">
-                <input type="file" class="form-control-file" id="input-titulo" name="titulo">
+                <input type="file" class="form-control-file" id="input-titulo" name="titulo" value="{{ old('titulo') }}">
             </div>
         </div>
     </div>
@@ -53,7 +54,7 @@
         <div class="form-group col-md">
             <label class="form-control-label" for="input-cedula">{{ __('Cédula Profesional') }}</label>
             <div class="form-group">
-                <input type="file" class="form-control-file" id="input-cedula" name="cedula">
+                <input type="file" class="form-control-file" id="input-cedula" name="cedula" value="{{ old('cedula') }}">
             </div>
         </div>
     </div>

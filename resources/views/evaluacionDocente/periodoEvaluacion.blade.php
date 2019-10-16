@@ -1,24 +1,22 @@
 @extends('layouts.app')
 
 @section('sidebar')
+@php
+$usuarioactual = \Auth::user();
+@endphp
 @if ($usuarioactual->tipo == 'coordinador')
 @include('layouts.navbars.sidebar')
 @endif
-@if ($usuarioactual->tipo == 'docente')
-@include('layouts.navbars.sidebarDocentes')
-@endif
 @if ($usuarioactual->tipo == 'alumno')
 @include('layouts.navbars.sidebarEstudiantes')
+@endif
+@if ($usuarioactual->tipo == 'docente')
+@include('layouts.navbars.sidebarDocentes')
 @endif
 @endsection
 
 @section('content')
 <div class="container-fluid m--t">
-    <div class="header pb-1 pt-4 pt-lg-7 d-flex align-items-center text-center" >
-        <div class="col-lg col-md">
-            <h4 class="text-dark">Periodo</h4>
-        </div>
-    </div>
     <div class="card-body">
         @include('flash-message')
         @if ($errors->any())
@@ -42,12 +40,12 @@
         </a>
     </div>
     @php 
-        $estudiante = App\User::where('users.id',$usuarioactual->id)
-                ->leftjoin('personas','personas.curp','=','users.curp_user')
-                ->leftjoin('alumnos','personas.curp','=','alumnos.curp_alumno')
-                ->get() 
+        // $estudiante = App\User::where('users.id',$usuarioactual->id)
+        //         ->leftjoin('personas','personas.curp','=','users.curp_user')
+        //         ->leftjoin('alumnos','personas.curp','=','alumnos.curp_alumno')
+        //         ->get() 
     @endphp   
-    <form @if($usuarioactual->tipo == 'estudiante') action="{{ route('inscribirAlumno',$estudiante[0]->num_control) }}" @else action="{{ route('inscripciones') }}" @endif method="GET">
+    <form action="{{ route('evaluacion') }}" method="GET">
         <div class="row">
             <div class="col-lg-4"></div>
             <div class="col-lg-4 text-center">
@@ -67,7 +65,7 @@
         </div>
     
             <div class="text-center">
-                <button type="submit" class="btn btn-primary btn-lg mt-4"><i class="fas fa-arrow-right"></i></button>
+                <button type="submit" class="btn btn-lg btn-primary mt-4"><i class="fas fa-arrow-right"></i></button>
             </div>
             
         </form>

@@ -48,8 +48,7 @@
     <div align="center">
         <img src="{{ asset('argon') }}/img/brand/cabeceraSM.png" alt="cabecera" title="cabecera">
     </div>
-    <br><br><br>
-    {{-- <h4>Grupo: {{ $alumnos_en_el_grupo[0]->grupo }}</h4> --}}
+    <br><br>
 
     <table style="width:100%">
         <thead>
@@ -73,7 +72,7 @@
             </tr>
             <tr>
                 <th scope="col" class="alto-30" align="center"><small>Modalidad:</small> {{ $datosGrupo[0]->modalidad }}</th>
-                <th scope="col" class="alto-30" align="center"><small>Periodo:</small> {{ $datosGrupo[0]->periodo }} {{ $datosGrupo[0]->anio }}</th>
+                <th scope="col" class="alto-30" align="center"><small>Periodo:</small> {{ $datosGrupo[0]->descripcion }} {{ $datosGrupo[0]->anio }}</th>
 
                 <th scope="col" colspan="3" class="alto-30" align="center"><small>Docente:</small> {{ $datosGrupo[0]->nombres }} {{ $datosGrupo[0]->ap_paterno }} @if ($datosGrupo[0]->ap_materno!=null){{ $datosGrupo[0]->ap_materno }} @endif</th>
 
@@ -102,7 +101,7 @@
 <br><br><br>
 
 <p align="center">Vo. Bo.</p>
-<br><br><br><br><br>
+<br><br><br><br>
 <div id="caja">
     <div id="texto-uno">
         {{ $datosGrupo[0]->nombres }} {{ $datosGrupo[0]->ap_paterno }} @if ($datosGrupo[0]->ap_materno!=null){{ $datosGrupo[0]->ap_materno }} @endif

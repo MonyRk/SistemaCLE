@@ -9,9 +9,21 @@ use App\Municipio;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use App\Http\Requests\ValidarCrearDocenteRequest;
+use App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class DocentesController extends Controller
 {
+    protected $usuarioactual;
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $usuarioactual = \Auth::user();
+    }
+
     public function index()
     {
         $datos_docentes = DB::table('docentes')
@@ -103,7 +115,8 @@ class DocentesController extends Controller
         ],[
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => bcrypt($data['curp'])
+            'password' => bcrypt($data['curp']),
+            'tipo' => $data['tipo']
         ]);
 
         return redirect()->route('verDocentes')->with('success','Datos del docente correctamente guardados');
@@ -124,7 +137,22 @@ class DocentesController extends Controller
     }
 
     public function edit($id){
-
+        $usuarioactual = \Auth::user();
+       
+        if ($usuarioactual->tipo != 'coordinador') {
+            $ddocente = User::where('users.id',$usuarioactual->id)
+                        ->leftjoin('docentes','users.curp_user','=','docentes.curp_docente')
+                        ->get();
+            if ($ddocente[0]->id_docente == $id) {
+                $docente = Docente::leftjoin('personas','personas.curp','=','docentes.curp_docente')
+                        ->select('personas.*','docentes.*')
+                        ->where('docentes.id_docente', '=' , $id)
+                        ->get();
+            } else {
+                return back()
+                ->with('error','Lo sentimos, no tienes acceso a esta sección. Comunícate con la coordinación si necesitas el acceso.');//view('alumnos.editAlumno',compact('datos_alumno','nombres_municipios','niveles','email'));
+            }
+        }
         $docente = Docente::leftjoin('personas','personas.curp','=','docentes.curp_docente')
                         ->select('personas.*','docentes.*')
                         ->where('docentes.id_docente', '=' , $id)
@@ -134,11 +162,12 @@ class DocentesController extends Controller
 
         $email = User::where('curp_user',$docente[0]->curp)->get();
         
-        return view('docentes.editDocente',compact('docente','nombres_municipios','email'));
+        return view('docentes.editDocente',compact('docente','nombres_municipios','email','usuarioactual'));
     }
 
     public function update(Docente $docente)
-    {                      
+    {            
+        $usuarioactual = \Auth::user();          
          $curp= $docente->curp_docente;//curp original
         
         //obtener los datos de la misma persona en todas las tablas relacionadas
@@ -147,31 +176,55 @@ class DocentesController extends Controller
         $user = User::where('curp_user',$curp)->first();    
         // dd($infoDocente);
         //validacion de los datos
-        $data = request()->validate([
-            'name' => 'required|alpha_spaces',
-            'curp' => array('required','alpha_num','regex:/^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0\d|1[0-2])(?:[0-2]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/'),
-            'apPaterno' => 'required|alpha_spaces',
-            // 'apMaterno' =>'alpha_spaces',
-            'calle' => array('required','regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ,.]*$/'),
-            'numero' => 'required|numeric',
-            'colonia' => 'required|alpha_spaces',
-            'municipio' => 'required',
-            'cp' => 'required|numeric',
-            'telefono' =>'required|numeric',
-            'email' => array('required','email','regex:/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/'),
-            'edad' =>'required|digits:2',
-            'sexo' => 'required',
-            'rfc' => 'required',
-            'estudios' => 'required',
-            'titulo' => 'required',
-            'cedula' => 'required',
-            'estatus' => 'required'
-        ]);
-        // dd($persona->curp,$data['curp']);
+        if ($usuarioactual->tipo == 'docente') {
+            $data = request()->validate([
+                'name' => 'required|alpha_spaces',
+                'curp' => array('required','alpha_num','regex:/^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0\d|1[0-2])(?:[0-2]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/'),
+                'apPaterno' => 'required|alpha_spaces',
+                // 'apMaterno' =>'alpha_spaces',
+                'calle' => array('required','regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ,.]*$/'),
+                'numero' => 'required|numeric',
+                'colonia' => 'required|alpha_spaces',
+                'municipio' => 'required',
+                'cp' => 'required|numeric',
+                'telefono' =>'required|numeric',
+                'email' => array('required','email','regex:/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/'),
+                'edad' =>'required|digits:2',
+                'sexo' => 'required'
+            ]);
+        }else{
+            $data = request()->validate([
+                'name' => 'required|alpha_spaces',
+                'curp' => array('required','alpha_num','regex:/^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0\d|1[0-2])(?:[0-2]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/'),
+                'apPaterno' => 'required|alpha_spaces',
+                // 'apMaterno' =>'alpha_spaces',
+                'calle' => array('required','regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ,.]*$/'),
+                'numero' => 'required|numeric',
+                'colonia' => 'required|alpha_spaces',
+                'municipio' => 'required',
+                'cp' => 'required|numeric',
+                'telefono' =>'required|numeric',
+                'email' => array('required','email','regex:/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/'),
+                'edad' =>'required|digits:2',
+                'sexo' => 'required',
+                'rfc' => 'required',
+                'estudios' => 'required',
+                'titulo' => 'required',
+                'cedula' => 'required',
+                'estatus' => 'required'
+            ]);
+            $infoDocente->rfc = $data['rfc'];
+        $infoDocente->grado_estudios = $data['estudios'];
+        $infoDocente->ced_prof = $data['cedula'];
+        $infoDocente->titulo = $data['titulo'];
+        $infoDocente->estatus = $data['estatus'];
+        $infoDocente->save();
+        }
+        // dd(request()->apMaterno);
         // $persona->curp = $data['curp'];
         $persona->nombres = $data['name'];
         $persona->ap_paterno = $data['apPaterno'];
-        $persona->ap_materno = $data['apMaterno'];
+        $persona->ap_materno = request()->apMaterno;
         $persona->calle = $data['calle'];
         $persona->numero = $data['numero'];
         $persona->colonia = $data['colonia'];
@@ -182,12 +235,7 @@ class DocentesController extends Controller
         $persona->sexo = $data['sexo'];
         $persona->save();
 
-        $infoDocente->rfc = $data['rfc'];
-        $infoDocente->grado_estudios = $data['estudios'];
-        $infoDocente->ced_prof = $data['cedula'];
-        $infoDocente->titulo = $data['titulo'];
-        $infoDocente->estatus = $data['estatus'];
-        $infoDocente->save();
+        
 
         $user->name = $data['name'];
         // $user->curp_user = $data['curp'];
@@ -196,7 +244,12 @@ class DocentesController extends Controller
 
         DB::update('update personas set curp = ? where curp = ?', [$data['curp'],$curp]);
 
-        return redirect()->route('verDocentes')->with('success','!Los datos de actualizaron correctamente!');
+        if($usuarioactual->tipo = 'docente'){
+            return back()->with('success','¡Tus datos se actualizaron correctamente!');
+        }else{
+            return redirect()->route('verDocentes')->with('success','¡Los datos se actualizaron correctamente!');
+        }
+        
     }
 
     public function destroy(Request $request)
@@ -215,4 +268,12 @@ class DocentesController extends Controller
         // $persona->delete();
         return redirect()->route('verDocentes')->with('warning','Los datos se eliminaron');
     }
+
+
+
+    //FUNCIONES PARA USUARIO DOCENTE 
+
+    // public function indexDocente(){
+       
+    // }
 }

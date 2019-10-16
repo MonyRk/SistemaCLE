@@ -195,7 +195,7 @@ return [
         'body'                  => 'contenido',
         'description'           => 'descripción',
         'excerpt'               => 'extracto',
-        'date'                  => 'fecha',
+        'date'                  => 'Fecha',
         'time'                  => 'hora',
         'subject'               => 'asunto',
         'message'               => 'mensaje',

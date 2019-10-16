@@ -19,7 +19,9 @@ class CreateEvaluacionTable extends Migration
             $table->foreign('num_control')->references('num_control')->on('alumnos')->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->string('curp_docente');
             $table->foreign('curp_docente')->references('curp_docente')->on('docentes')->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->date('fecha');
+            $table->unsignedInteger('grupo');
+            $table->unsignedInteger('periodo');
+            $table->foreign('periodo')->references('id_periodo')->on('periodos')->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->softDeletes();
             $table->timestamps();
         });
