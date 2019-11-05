@@ -17,6 +17,7 @@ class CreatePeriodosTable extends Migration
             $table->increments('id_periodo');
             $table->string('descripcion');
             $table->integer('anio');
+            $table->boolean('actual')->nullable()->default(NULL);
             $table->softDeletes();
         });
     }

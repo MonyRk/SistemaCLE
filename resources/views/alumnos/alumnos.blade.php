@@ -77,13 +77,13 @@
                                             {{ $alumno->num_control }}
                                         </th>
                                         <th scope="row">
-                                            <a href="{{ route('verInfoEstudiante',$alumno->num_control )}}">{{ $alumno->nombres }} {{ $alumno->ap_paterno }} {{ $alumno->ap_materno }}</a>
+                                            <a href="{{ route('verInfoEstudiante',$alumno->num_control )}}" class="text-dark">{{ $alumno->nombres }} {{ $alumno->ap_paterno }} {{ $alumno->ap_materno }}</a>
                                         </th>
                                         <td scope="row">{{ $alumno->estatus }}</td>
-                                        <td scope="row"> <a href="{{ route('editarEstudiante',$alumno->num_control) }}"><i class="fas fa-edit"></i></a>
+                                        <td scope="row"> <a href="{{ route('editarEstudiante',$alumno->num_control) }}" class="text-primary"><i class="fas fa-edit"></i></a>
                                         </td>
                                         <td scope="row">
-                                            <a href="" id="alumnoid" data-alumnoid="{{ $alumno->num_control }}" data-toggle="modal" data-target="#modal-notification" ><i class="far fa-trash-alt"></i></a>{{-- alumnos/{{ $alumno->num_control }}/eliminar --}}
+                                            <a href="" id="alumnoid" data-alumnoid="{{ $alumno->num_control }}" class="text-danger" data-toggle="modal" data-target="#modal-notification" ><i class="far fa-trash-alt"></i></a>{{-- alumnos/{{ $alumno->num_control }}/eliminar --}}
                                         </td>
                                     </tr>
                                     @endforeach
@@ -120,14 +120,16 @@
                         <div class="py-3 text-center">
                                 <i class="fas fa-times fa-3x" style="color:#CD5C5C;"></i>
                             <h4 class="heading mt-4">¡Da tu confirmaci&oacute;n para Eliminar!</h4>
-                            <p>¿Realmente deseas eliminar los datos del estudiante?</p>
+                            <p>¿Realmente deseas eliminar los datos del estudiante?<br>
+                                Al hacer esto se perder&aacute; toda la informaci&oacute;n del estudiante y se ver&aacute;n 
+                                afectadas todas las secciones donde se utilizen dichos datos.</p>
                             <input type="hidden" name="alumno_id" id="alumno_id" value="">
                         </div>
                         
                     </div>
                     
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-danger">S&iacute;, Eliminar</button>
+                        <button type="submit" class="btn btn-outline-danger">S&iacute;, Eliminar</button>
                         <button type="button" class="btn btn-link text-gray ml-auto" data-dismiss="modal">No, Cambi&eacute; de opinion</button> 
                     </div>
                     </form>

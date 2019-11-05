@@ -6,12 +6,15 @@
                 <div class="row">
                     <div class="col-xl-3 col-lg-6">
                         <div class="card card-stats mb-4 mb-xl-0">
-                            @php $docente = App\User::where('users.id',$usuarioactual->id)->leftjoin('personas','personas.curp','=','users.curp_user')->leftjoin('docentes','personas.curp','=','docentes.curp_docente')->get() @endphp                          
+                            @php 
+                            $docente = App\User::where('users.id',$usuarioactual->id)->leftjoin('personas','personas.curp','=','users.curp_user')->leftjoin('docentes','personas.curp','=','docentes.curp_docente')->get(); 
+                            $periodo_actual = App\Periodo::where('actual',true)->get();
+                            @endphp                          
                             <a  href="{{ route('editarDocente',$docente[0]->id_docente) }}">
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col">
-                                            <span class=" font-weight-bold mb-0">Actualizar Informaci&oacute;n Personal</span>
+                                            <span class=" font-weight-bold mb-0">Ver o Actualizar Informaci&oacute;n</span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="icon icon-shape bg-orange text-white rounded-circle shadow">
@@ -26,7 +29,7 @@
                         <div class="col-xl-3 col-lg-6">
                             <div class="card card-stats mb-4 mb-xl-0">
                                 <div class="card-body">
-                                    <a href="{{ route('periodoinscripciones') }}">
+                                    <a href="{{ route('inscripciones').'?periodo='.$periodo_actual[0]->id_periodo }}">
                                         <div class="row">
                                             <div class="col">
                                                 <span class=" font-weight-bold mb-0">Grupos</span>

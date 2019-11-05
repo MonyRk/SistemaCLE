@@ -45,9 +45,10 @@
         $estudiante = App\User::where('users.id',$usuarioactual->id)
                 ->leftjoin('personas','personas.curp','=','users.curp_user')
                 ->leftjoin('alumnos','personas.curp','=','alumnos.curp_alumno')
-                ->get() 
+                ->get();
+        $periodo_actual = App\Periodo::where('actual',true)->get(); 
     @endphp   
-    <form @if($usuarioactual->tipo == 'estudiante') action="{{ route('inscribirAlumno',$estudiante[0]->num_control) }}" @else action="{{ route('inscripciones') }}" @endif method="GET">
+    <form @if($usuarioactual->tipo == 'alumno') action="{{ route('inscribirAlumno',$estudiante[0]->num_control) }}" @else action="{{ route('inscripciones') }}" @endif method="GET">
         <div class="row">
             <div class="col-lg-4"></div>
             <div class="col-lg-4 text-center">
@@ -55,9 +56,9 @@
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-periodo">{{ __('Selecciona un Periodo') }}</label>
                         <select id="input-periodo" class="form-control" name="periodo">
-                            <option selected value=""></option>
+                            {{-- <option selected value=""></option> --}}
                             @foreach ($periodos as $periodo)
-                                <option value="{{ $periodo->id_periodo }}">{{ $periodo->descripcion }} {{ $periodo->anio }}</option>
+                                <option value="{{ $periodo->id_periodo }}" @if($periodo->id_periodo == $periodo_actual[0]->id_periodo) selected @endif>{{ $periodo->descripcion }} {{ $periodo->anio }}</option>
                             @endforeach
                         </select>                  
                     </div>
@@ -67,7 +68,7 @@
         </div>
     
             <div class="text-center">
-                <button type="submit" class="btn btn-primary btn-lg mt-4"><i class="fas fa-arrow-right"></i></button>
+                <button type="submit" class="btn btn-primary mt-4"><i class="fas fa-arrow-right"></i></button>
             </div>
             
         </form>

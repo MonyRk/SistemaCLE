@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+
 <div class="container-fluid m--t">
     <div class="header pb-1 pt-4 pt-lg-7 d-flex align-items-center text-center" >
         <div class="col-lg col-md">
@@ -13,6 +14,19 @@
     </div>
     <div class="card-body">
         @include('flash-message')
+        {{-- <div class="card-body "> --}}
+            @if ($errors->any())
+            <div class="alert alert-danger alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>	
+                {{-- <strong>No pudimos agregar los datos, <br> por favor, verifica la información</strong> --}}
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li> {{ $error }}</li>
+                    @endforeach
+                </ul>  
+            </div>   
+        @endif
+    {{-- </div> --}}
     </div>
 
     <div class="text-right">
@@ -30,7 +44,7 @@
                 <div class="row">
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-numero">{{ __('Número de Control') }}</label>
-                        <input  id="input-numero" class="form-control" name="numero">
+                        <input  id="input-numero" class="form-control" name="numControl">
 
                     </div>
                 </div>

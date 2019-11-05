@@ -81,7 +81,8 @@
                     $alumno = App\User::where('users.id',$usuarioactual->id)
                             ->leftjoin('personas','personas.curp','=','users.curp_user')
                             ->leftjoin('alumnos','personas.curp','=','alumnos.curp_alumno')
-                            ->get() 
+                            ->get();
+                    $periodo_actual = App\Periodo::where('actual',true)->first();
                 @endphp
                 <!-- Navigation -->
                 <ul class="navbar-nav">
@@ -92,13 +93,16 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('editarEstudiante',$alumno[0]->num_control) }}" >
-                            <i class="fas fa-users text-danger" style= "color: danger"></i>{{ __('Información Personal') }}</span>
+                            <i class="fas fa-users text-danger" style= "color: danger"></i>{{ __('Información') }}</span>
                         </a>
-    
-                        
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('periodoinscripciones') }}">
+                        <a class="nav-link" href="{{ route('indexpagos') }}">
+                            <i class="fas fa-receipt text-dark"></i>{{ __('Pagos') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('inscribirAlumno',$alumno[0]->num_control) }}" >{{-- route('periodoinscripciones') --}}
                             <i class="fas fa-user-edit text-green"></i> {{ __('Inscripciones') }}
                         </a>
                     </li>
@@ -113,7 +117,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('periodoEvaluacion') }}">
+                        <a class="nav-link" href="{{ route('evaluacion').'?periodo='.$periodo_actual->id_periodo }}">{{-- route('periodoEvaluacion') --}}
                             <i class="fas fa-question text-gray"></i> {{ __('Evaluación Docente') }}
                         </a>
                     </li>                

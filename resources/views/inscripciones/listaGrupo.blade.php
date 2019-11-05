@@ -9,6 +9,7 @@
     <div class="col-lg col-md">
         <h4 class="text-dark">Grupo {{ $grupo[0]->grupo }} {{ $grupo[0]->nivel }}{{ $grupo[0]->modulo }}</h4>
         <h6 class="text-dark">{{ $grupo[0]->edificio }}{{ $grupo[0]->aula }} {{ $grupo[0]->hora }}</h6>
+        <h6 class="text-dark">{{ $periodo_actual[0]->descripcion }} {{ $periodo_actual[0]->anio }}</h6>   
     </div>
 </div>
     <div class="container-fluid m--t"> 

@@ -44,7 +44,7 @@ $usuarioactual = \Auth::user();
             </span>
         </a>
     </div>
-    
+
     <form action="{{ route('verBoleta','grupo') }}" method="GET">
         <div class="row">
             <div class="col-lg-4"></div>
@@ -53,9 +53,9 @@ $usuarioactual = \Auth::user();
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-periodo">{{ __('Periodo') }}</label>
                         <select  id="input-periodo" class="form-control" name="periodo">
-                            <option selected value="{{ old('periodo') }}"></option>
+                           @if($usuarioactual->tipo != 'alumno')<option selected value="{{ old('periodo') }}"></option> @endif
                             @foreach ($periodos as $periodo)
-                                <option value="{{ $periodo->id_periodo }}">{{ $periodo->descripcion }} {{ $periodo->anio }}</option>
+                                <option value="{{ $periodo->id_periodo }}" @if($usuarioactual->tipo == 'alumno' && $periodo->actual == true) selected @endif>{{ $periodo->descripcion }} {{ $periodo->anio }}</option>
                             @endforeach
                         </select>
                     </div>

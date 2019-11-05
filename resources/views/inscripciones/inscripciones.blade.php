@@ -17,26 +17,7 @@ $usuarioactual = \Auth::user();
 
 <div class="container-fluid m--t">
     <div class="col-md mt-4">
-        @include('flash-message')
-        @if ($errors->any())
-        <div class="alert alert-danger alert-block">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>No pudimos agregar los datos, <br> por favor, verifica la información</strong>
-            <ul>
-                @foreach($errors->all() as $error)
-                <li> {{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-
-        @else
-        @if(session()->has('message'))
-        <div class="alert alert-success">
-            {{ session()->get('message') }}
-        </div>
-        @endif
-        @endif
-    </div>
+    
     <div class="row">
         <div class="col-md">
             <div class="text-right">
@@ -66,10 +47,50 @@ $usuarioactual = \Auth::user();
                 </form>
             </div>
         </div>
-    </div>
-    
+    </div><br>
+    @include('flash-message')
+        @if ($errors->any())
+        <div class="alert alert-danger alert-block">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            {{-- <strong>No pudimos agregar los datos, <br> por favor, verifica la información</strong> --}}
+            <ul>
+                @foreach($errors->all() as $error)
+                <li> {{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>        
+        @endif
     <br>
-    <!-- header de la tabla-->
+    <form method="post" action="{{ route('fechaInscripciones') }}" autocomplete="off">
+            @csrf
+            @method('post')
+            
+        <div class="row" @if($usuarioactual->tipo != 'coordinador') style="display:none;" @endif>
+            @php
+                if ($fecha_inscripciones == null) {
+                    $inicio = '';
+                    $fin = '';
+                } else {
+                   $inicio = date('d-m-Y', strtotime($fecha_inscripciones->fecha_inicio));
+                   $fin = date('d-m-Y', strtotime($fecha_inscripciones->fecha_fin));
+                }
+                
+            @endphp
+            <strong>Duraci&oacute;n de Inscripciones: </strong> <br>
+            <div class="form-group col-md-2">
+                <label class="form-control-label" for="fecha-inicio">{{ __('Fecha de Inicio') }}</label>
+                <input type="text" class="form-control" name="inicio" id="fecha-inicio" placeholder="dd-mm-aaaa" value="{{ old('inicio', $inicio) }}">
+            </div>
+            <div class="form-group col-md-2">
+                <label class="form-control-label" for="fecha-fin">{{ __('Fecha Final') }}</label>
+                <input type="text" class="form-control" name="fin" id="fecha-fin" placeholder="dd-mm-aaaa" value="{{ old('fin',$fin) }}">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary mt-4">{{ __('Guardar') }}</button>
+            </div>
+        </div>
+    </form>
+
     <div class="row">
         <div class="col-xl">
             <div class="col-xl">
@@ -90,8 +111,8 @@ $usuarioactual = \Auth::user();
                                     <th scope="col">Idioma</th>
                                     <th scope="col">Aula</th>
                                     <th scope="col">Hora</th>
-                                    <th scope="col">Docente</th>
-                                    @if($usuarioactual->tipo == 'coordinador') 
+                                    @if($usuarioactual->tipo == 'coordinador')
+                                        <th scope="col">Docente</th>                                     
                                         <th scope="col">Inscribir</th>
                                     @endif
                                     
@@ -117,10 +138,10 @@ $usuarioactual = \Auth::user();
                                     <th>
                                         {{ $grupo->hora }}
                                     </th>
+                                    @if($usuarioactual->tipo == 'coordinador')
                                     <th>
                                         {{ $grupo->nombres }} {{ $grupo->ap_paterno }} {{ $grupo->ap_materno }}
-                                    </th>
-                                    @if($usuarioactual->tipo == 'coordinador') 
+                                    </th> 
                                     <td>
                                         <a href="{{ route('inscribirEstudiantes',$grupo->id_grupo) }}"><i class="far fa-list-alt"></i></a>
                                     </td>
@@ -138,6 +159,7 @@ $usuarioactual = \Auth::user();
             </div>
         </div>
     </div>
+</div>
     <br><br>
     @include('layouts.footers.nav')
 </div>

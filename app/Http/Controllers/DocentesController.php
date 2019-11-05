@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Docente;
+use App\Grupo;
 use App\Persona;
 use App\Municipio;
 use Illuminate\Support\Facades\DB;
@@ -26,19 +27,21 @@ class DocentesController extends Controller
 
     public function index()
     {
-        $datos_docentes = DB::table('docentes')
+
+        $docentes = DB::table('docentes')
                         ->leftjoin('personas','personas.curp','=','docentes.curp_docente')
                         ->where('tipo', 'like' , '%docente%')
+                        // ->whereIn('id_docente',$docentes_en_grupo)
                         ->whereNull('personas.deleted_at')
                         ->orderBy('docentes.id_docente','ASC')
                         ->paginate(25);
-
-        return view('docentes.docentes',compact('datos_docentes'));
+    
+        return view('docentes.docentes',compact('docentes'));
     }
 
     public function search(Request $request)
     {
-        $search = $request->all();
+        $search = $request->all(); 
         
         $datos_docentes = DB::table('docentes')
                 ->leftjoin('personas','personas.curp','=','docentes.curp_docente')
@@ -161,7 +164,7 @@ class DocentesController extends Controller
         $nombres_municipios = Municipio::select('nombre_municipio')->pluck('nombre_municipio');
 
         $email = User::where('curp_user',$docente[0]->curp)->get();
-        
+        // dd($docente);
         return view('docentes.editDocente',compact('docente','nombres_municipios','email','usuarioactual'));
     }
 
@@ -214,11 +217,11 @@ class DocentesController extends Controller
                 'estatus' => 'required'
             ]);
             $infoDocente->rfc = $data['rfc'];
-        $infoDocente->grado_estudios = $data['estudios'];
-        $infoDocente->ced_prof = $data['cedula'];
-        $infoDocente->titulo = $data['titulo'];
-        $infoDocente->estatus = $data['estatus'];
-        $infoDocente->save();
+            $infoDocente->grado_estudios = $data['estudios'];
+            $infoDocente->ced_prof = $data['cedula'];
+            $infoDocente->titulo = $data['titulo'];
+            $infoDocente->estatus = $data['estatus'];
+            $infoDocente->save();
         }
         // dd(request()->apMaterno);
         // $persona->curp = $data['curp'];
@@ -239,6 +242,23 @@ class DocentesController extends Controller
 
         $user->name = $data['name'];
         // $user->curp_user = $data['curp'];
+        $user->email = $data['email'];
+        $user->save();
+
+        $password = request()->all();
+        if ($password['password']!= null) {
+            $contrasenia = request()->validate([
+                'password' => ['required', 'min:6', 'confirmed'],
+                'password_confirmation' => ['required', 'min:6']
+            ]);
+            $user = User::where('curp_user',$curp)->first();
+            $user->password = bcrypt($password['password']);
+            $user->save();
+        };
+        
+        $user = User::where('curp_user',$curp)->first();
+
+        $user->name = $data['name'];
         $user->email = $data['email'];
         $user->save();
 
@@ -269,11 +289,21 @@ class DocentesController extends Controller
         return redirect()->route('verDocentes')->with('warning','Los datos se eliminaron');
     }
 
+    public function titulo($titulo){
+        //se cambiara la ruta de los archivos
+        $p = 'C:\Users\Mony\Downloads/'.$titulo;
+        return response()->file($p);
+    }
 
+    public function rfc($rfc){
+        //se cambiara la ruta de los archivos
+        $p = 'C:\Users\Mony\Downloads/'.$rfc;
+        return response()->file($p);
+    }
 
-    //FUNCIONES PARA USUARIO DOCENTE 
-
-    // public function indexDocente(){
-       
-    // }
+    public function cedula($cedula){
+        //se cambiara la ruta de los archivos
+        $p = 'C:\Users\Mony\Downloads/'.$cedula;
+        return response()->file($p);
+    }
 }

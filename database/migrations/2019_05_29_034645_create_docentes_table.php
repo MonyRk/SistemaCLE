@@ -21,7 +21,7 @@ class CreateDocentesTable extends Migration
             $table->string('grado_estudios');
             $table->string('titulo');
             $table->string('ced_prof');
-            $table->enum('estatus',['Activo','Inactivo'])->default('Inactivo');
+            $table->enum('estatus',['Activo','Inactivo'])->default('Activo');
             $table->softDeletes();
             $table->timestamps();
         });

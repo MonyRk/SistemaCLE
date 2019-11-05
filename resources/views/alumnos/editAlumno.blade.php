@@ -28,7 +28,7 @@ $usuarioactual = \Auth::user();
             @if ($errors->any())
             <div class="alert alert-danger alert-block">
                     <button type="button" class="close" data-dismiss="alert">×</button>	
-                    <strong>No pudimos agregar los datos, <br> por favor, verifica la información</strong>
+                    {{-- <strong>No pudimos agregar los datos, <br> por favor, verifica la información</strong> --}}
                     <ul>
                         @foreach($errors->all() as $error)
                             <li> {{ $error }}</li>
@@ -179,35 +179,76 @@ $usuarioactual = \Auth::user();
                         </select>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-group col-md-3" id="folio" {{--style="display:none"--}}>
+            <div class="form-row" @if($usuarioactual->tipo == 'alumno') style="display:none;" @endif>
+                <div class="form-group col-md-3">
+                    <label class="form-control-label" for="examen">{{ __('Examen de Ubicación') }}</label>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="examen" name="examen" onchange="comprobar(this);" value="true" class="custom-control-input" @if($datos_alumno[0]->nivel_inicial) checked @endif>
+                        <label class="custom-control-label" for="examen">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Realiz&oacute; examen</label>
+                    </div>
+                </div>
+                <div class="form-group col-md-3" id="inicial" @if($datos_alumno[0]->nivel_inicial == null) style="display:none" @endif>
+                    <label class="form-control-label" for="input-nivel">{{ __('Nivel Donde Inicia') }}</label>
+                    <select id="input-nivel" class="form-control" name="nivel">
+                        <option selected value="{{ $datos_alumno[0]->nivel_inicial }}">{{ $datos_alumno[0]->nivel_inicial }}</option>
+                            @foreach ($niveles as $nivel)
+                                <option value="{{ $nivel->nivel }}{{ $nivel->modulo }}">{{ $nivel->nivel }}{{ $nivel->modulo }}&nbsp;-&nbsp; {{ $nivel->idioma }}</option>                             
+                            @endforeach
+                    </select>                  
+                </div> 
+            </div> 
+            {{-- <div class="form-row">
+                <div class="form-group col-md-3" id="folio" {{ style="display:none" }}>
                     <label for="foliopago" class="form-control-label"> {{ __('Folio de Pago') }}</label>
                     <input type="text" name="foliopago" id="foliopago" class="form-control" placeholder=""  value="{{ old('foliopago') }}">
                 </div>
-                <div class="form-group col-md-3" id="monto" {{--style="display:none"--}}>
+                <div class="form-group col-md-3" id="monto" {{ style="display:none" }}>
                     <label for="foliopago" class="form-control-label"> {{ __('Monto de Pago') }}</label>
                     <input type="text" name="monto" id="monto" class="form-control" placeholder=""  value="{{ old('monto') }}">
                 </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-3">
-                    <label class="form-control-label" for="input-password">{{ __('Reestablecer Contraseña') }}</label>
-                    <input type="password" name="password" id="input-password" class="form-control">
+            </div> --}}
+            <hr class="my-4" />
+            <h6 class="heading-small text-muted mb-4">{{ __('Información de Usuario') }}</h6>
+            <div class="form-group col-md-3">
+                <label class="form-control-label" for="input-contrasenia">{{ __('Reestablecer Contraseña?*') }}</label>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" id="input-contrasenia" name="contrasenia" onchange="comprobar2(this);" value="true" class="custom-control-input">
+                    <label class="custom-control-label" for="input-contrasenia">o</label>
                 </div>
             </div>
+            <div id="reestablecer-contrasenia" style="display:none;">
+                
+                <div class="form-group col-xl-4">
+                    <label class="form-control-label" for="input-password">{{ __('Nueva Contraseña') }}</label>
+                    <input type="password" name="password" id="input-password" class="form-control form-control-alternative" value="" >
+                </div>
+                <div class="form-group col-xl-4">
+                    <label class="form-control-label" for="input-password-confirmation">{{ __('Confirmar Nueva Contraseña') }}</label>
+                    <input type="password" name="password_confirmation" id="input-password-confirmation" class="form-control form-control-alternative" value="" >
+                </div>
+            </div>
+            <p class="text-muted">*El reestablecimiento de la contraseña no es obligatorio al ver o actualizar otro dato</p>          
         </div>
     </div>
         <script>
             function comprobar(obj)
             {   
                 if (obj.checked){
-                
-            document.getElementById('folio').style.display = "";
-            } else{
-                
-            document.getElementById('folio').style.display = "none";
-            }     
+                    document.getElementById('inicial').style.display = "";
+                } else{
+                    document.getElementById('inicial').style.display = "none";
+                }     
             }
+
+            function comprobar2(obj)
+            {   
+                if (obj.checked){
+                    document.getElementById('reestablecer-contrasenia').style.display = "";
+                } else{
+                    document.getElementById('reestablecer-contrasenia').style.display = "none";
+                }     
+            }
+
         </script>
 
         <div class="text-center">

@@ -1,7 +1,14 @@
 @extends('layouts.app')
 
 @section('sidebar')
-    @include('layouts.navbars.sidebar')
+@php
+$usuarioactual = \Auth::user();
+@endphp
+@if ($usuarioactual->tipo == 'coordinador')
+@include('layouts.navbars.sidebar')
+@else
+@include('layouts.navbars.sidebarEstudiantes')
+@endif
 @endsection
 
 @section('content')
@@ -48,7 +55,11 @@
                                         <th scope="col">Folio de Pago</th>
                                         <th scope="col">Monto de Pago</th>
                                         <th scope="col">Fecha</th>
-                                        <th scope="col">Verificar</th>
+                                        @if ($usuarioactual->tipo == 'coordinador')
+                                            <th scope="col">Verificar</th>
+                                        @else
+                                            <th scope="col">Estatus</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -64,10 +75,22 @@
                                                 {{ date('d-m-Y', strtotime($pago->fecha)) }}
                                             </td>
                                             <td>
-                                                <div class="custom-control custom-control-alternative custom-checkbox mb-3">
-                                                    <input class="custom-control-input" id="{{ $pago->folio_pago }}" name="verificado[]" type="checkbox" value="{{ $pago->num_inscripcion }}">
-                                                    <label class="custom-control-label" for="{{ $pago->folio_pago }}"></label>
-                                                </div>
+                                                @if ($usuarioactual->tipo == 'coordinador')
+                                                    @if ($pago->pago_verificado == true)
+                                                    <p class="text-success"><i class="fas fa-check"></i> Verificado</p>
+                                                    @else
+                                                        <div class="custom-control custom-control-alternative custom-checkbox">
+                                                            <input class="custom-control-input" id="{{ $pago->folio_pago }}" name="verificado[]" type="checkbox" value="{{ $pago->num_inscripcion }}">
+                                                            <label class="custom-control-label" for="{{ $pago->folio_pago }}">o</label>
+                                                        </div>
+                                                    @endif
+                                                @else
+                                                    @if ($pago->pago_verificado == true)
+                                                        <p class="text-success"><i class="fas fa-check"></i> Verificado</p>
+                                                    @else
+                                                        <p class="text-danger"><i class="fas fa-times"></i> No Verificado</p>
+                                                    @endif
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach
@@ -78,7 +101,7 @@
                 </div>
             </div>
         </div>
-        <div class="text-center">
+        <div class="text-center" @if ($usuarioactual->tipo != 'coordinador') style = "display:none;" @endif>
             <button type="sumbit" class="btn btn-primary my-4">{{ __('Guardar') }}</button>
         </div>
     </form>

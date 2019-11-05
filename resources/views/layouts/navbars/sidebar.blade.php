@@ -102,10 +102,10 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                        <a class="nav-link" href="{{ route('indexpagos') }}">
-                            <i class="fas fa-receipt text-dark"></i>{{ __('Pagos') }}
-                        </a>
-                    </li>
+                    <a class="nav-link" href="{{ route('indexpagos') }}">
+                        <i class="fas fa-receipt text-dark"></i>{{ __('Pagos') }}
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('periodoinscripciones') }}">
                         <i class="fas fa-user-edit text-green"></i> {{ __('Inscripciones') }}

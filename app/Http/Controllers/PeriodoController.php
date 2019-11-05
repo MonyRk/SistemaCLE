@@ -20,22 +20,7 @@ class PeriodoController extends Controller
         return view('catalogos.periodos.periodos', compact('periodos'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(Request $request)
     {
         $data = request()->validate([
@@ -57,9 +42,18 @@ class PeriodoController extends Controller
      * @param  \App\Periodo  $periodo
      * @return \Illuminate\Http\Response
      */
-    public function show(Periodo $periodo)
+    public function actualizar()
     {
-        //
+        $data = request('periodo_id');
+    //   dd($data);
+        Periodo::where('actual',true)->update([
+            'actual' => NULL
+        ]);
+        Periodo::where('id_periodo',$data)->update([
+            'actual' => true
+        ]);
+        
+        return back()->with('success','¡El periodo se ha actualizado correctamente!');
     }
 
     /**

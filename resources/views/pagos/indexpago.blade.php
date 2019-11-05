@@ -1,7 +1,14 @@
 @extends('layouts.app')
 
 @section('sidebar')
+@php
+$usuarioactual = \Auth::user();
+@endphp
+@if ($usuarioactual->tipo == 'coordinador')
 @include('layouts.navbars.sidebar')
+@else
+@include('layouts.navbars.sidebarEstudiantes')
+@endif
 @endsection
 
 @section('content')
@@ -37,13 +44,15 @@
             <div class="col-md-2 text-center">
                 <a href="" data-toggle="modal" data-target="#modal-form">
                     <i class="fas fa-money-check-alt fa-5x text-dark"></i>
+                   <h5 class="text-dark">Agregar Pago</h5>
                 </a>
-                <h5>Agregar Pago</h5>
             </div>
             <div class="col-md-2"></div>
             <div class="col-md-2 text-center">
-                <a href="{{ route('verificarPagos') }}"><i class="fas fa-search-dollar fa-5x text-dark"></i></a>
-                <h5>Verificar Pagos</h5>
+                <a @if($usuarioactual->tipo == 'coordinador') href="{{ route('verificarPagos') }}" @else href="{{ route('buscarPago') }}" @endif>
+                    <i class="fas fa-search-dollar fa-5x text-dark"></i>
+                    <h5 class="text-dark">@if($usuarioactual->tipo == 'coordinador') Verificar Pagos @else Ver Historial de Pagos @endif</h5>
+                </a>
             </div>
         </div>
         <br><br><br><br><br>
@@ -64,14 +73,22 @@
                                     <form role="form" method="post" action="{{ route('agregarPago') }}" autocomplete="off">
                                         @csrf
                                         @method('post')
-                                        <div class="form-group mb-3">
-                                            <div class="input-group input-group-alternative">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                        @if ($usuarioactual->tipo == 'coordinador')
+                                            <div class="form-group mb-3">
+                                                <div class="input-group input-group-alternative">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
+                                                    </div>
+                                                    <input class="form-control" name="numControl" placeholder="N&uacute;mero de Control" type="text" value="{{ old('numControl') }}">
                                                 </div>
-                                                <input class="form-control" name="numControl" placeholder="N&uacute;mero de Control" type="text" value="{{ old('numControl') }}">
                                             </div>
-                                        </div>
+                                        @else
+                                        @php
+                                            $num_control = App\Alumno::where('curp_alumno',$usuarioactual->curp_user)->select('num_control')->get();
+                                        @endphp
+                                            <input class="form-control" name="numControl" placeholder="N&uacute;mero de Control" type="hidden" value="{{ $num_control[0]->num_control }}">
+                                        @endif
+                            
                                         <div class="form-group mb-3">
                                             <div class="input-group input-group-alternative">
                                                 <div class="input-group-prepend">
@@ -93,7 +110,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                                 </div>
-                                                <input class="form-control" name="date" placeholder="Fecha" type="text" value="{{ old('date') }}">
+                                                <input class="form-control" name="date" placeholder="Fecha (dd/mm/aaaa)" type="text" value="{{ old('date') }}">
                                             </div>
                                         </div>
                                         <div class="text-center">

@@ -74,11 +74,21 @@
                                </select>
                             </th>
                             <td>
-                                <a href="{{ route('editarAula',$aula->id_aula) }}" ><i class="fas fa-edit"></i></a>
+                                <a href="{{ route('editarAula',$aula->id_aula) }}" class="text-primary" ><i class="fas fa-edit"></i></a>
                             </td>
-                            <td>
-                                <a href="" id="aulaid" data-aulaid="{{ $aula->id_aula }}" data-toggle="modal" data-target="#modal-notification" ><i class="far fa-trash-alt"></i></a>
-                            </td>
+                            @php
+                                $aula_de_grupos = App\Grupo::where('aula',$aula->id_aula)->get();
+                            @endphp
+                            @if($aula_de_grupos->isEmpty())
+                                <td>
+                                    <a href="" id="aulaid" data-aulaid="{{ $aula->id_aula }}" class="text-danger" data-toggle="modal" data-target="#modal-notification" ><i class="far fa-trash-alt"></i></a>
+                                </td>
+                            @else
+                                <td class="text-center" >
+                                    <a href="" class="text-primary" data-toggle="modal" data-target="#modal-notification2" ><i class="far fa-question-circle"></i></a>
+                                </td>
+                            @endif
+                            
                         </tr>
                         @endforeach
                     </tbody>
@@ -261,7 +271,7 @@
                 </div>
                 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-white">S&iacute;, Eliminar</button>
+                    <button type="submit" class="btn btn-outline-danger">S&iacute;, Eliminar</button>
                     <button type="button" class="btn btn-link text-gray ml-auto" data-dismiss="modal">No, Cambi&eacute; de opinion</button> 
                 </div>
                 </form>
@@ -269,6 +279,44 @@
         </div>
     </div>
 </div>
+
+
+
+  {{-- modal para informar que ya no se puede hacer nada --}}
+  <div class="col-md-4">
+        <div class="modal fade" id="modal-notification2" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-" role="document">
+                <div class="modal-content">
+                    
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="modal-title-notification">¡Información!</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        
+                    </div>
+                   
+                    <div class="modal-body">
+                        
+                        <div class="py-3 text-center">
+                                <i class="fas fa-exclamation fa-3x text-warning" style=""></i>
+                <h4 class="heading mt-4">Los datos de esta aula no se puede Eliminar</h4>
+                <p>Los datos que contiene estan asociados a otros, si se elimina podr&iacute;a perderse informaci&oacute;n importante adem&aacute;s de generar inconsistencia de datos.</p>
+                            <input type="hidden" name="grupo_id" id="grupo_id" value="">
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="modal-footer">
+                        {{-- <button type="submit" class="btn btn-outline-warning">Entendido</button> --}}
+                        <button type="button" class="btn btn-outline-warning ml-auto" data-dismiss="modal">Entendido</button> 
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            </div>
+
 
 @section('script')
 <script>

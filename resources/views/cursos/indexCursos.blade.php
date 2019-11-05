@@ -8,7 +8,7 @@
     <div class="container-fluid m--t">
         <div class="header pb-1 pt-4 pt-lg-7 d-flex align-items-center text-center">
             <div class="col-lg col-md">
-                <h4 class="text-dark">Evaluaci&oacute;n Docente</h4>
+                <h4 class="text-dark">Cursos</h4>
             </div>
         </div>
         <div class="card-body">
@@ -35,16 +35,15 @@
         <div class="row mt-5">
             <div class="col-md-3"></div>
             <div class="col-md-2 text-center">
-                <a href="{{ route('evaluacion') }}" >
-                    <i class="fas fa-tasks fa-5x text-dark"></i>
-                    <h5 class="text-dark">Ver Evaluacion Docente</h5>
+                <a href="{{ route('mostrarExamen') }}" >
+                    <i class="fas fa-clipboard-check fa-5x text-dark"></i>
+                    <h5 class="text-dark">Verificar Examenes de Ubicaci&oacute;n</h5>
                 </a>
             </div>
             <div class="col-md-2"></div>
             <div class="col-md-2 text-center">
-                <a href="{{ route('periodoResultados') }}">
-                    <i class="fas fa-user-check fa-5x text-dark"></i>
-                    <h5 class="text-dark">Ver Resultados</h5>
+                <a href="{{ route('buscarCurso') }}"><i class="fas fa-sort-amount-up fa-5x text-dark"></i>
+                <h5 class="text-dark">Ver Avance</h5>
                 </a>
             </div>
         </div>

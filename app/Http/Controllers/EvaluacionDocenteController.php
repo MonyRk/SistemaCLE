@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Alumno;
 use App\Docente;
 use App\EvaluacionDocente;
+use App\Fechas;
 use App\Grupo;
 use App\GrupoRespuesta;
+use App\Inscripcion;
 use App\Periodo;
 use App\Pregunta;
 use App\Respuesta;
 use App\ResultadoPregunta;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 // use Illum
@@ -29,9 +33,45 @@ class EvaluacionDocenteController extends Controller
     }
     public function show()
     { 
-        
         $usuarioactual = \Auth::user();
+
         $periodo = request('periodo');
+        $estatus_evaluacion = Fechas::where('proceso','evaluacion')->first();
+        
+        if ($usuarioactual->tipo == 'coordinador') {
+            return $this->preguntasEvaluacion();
+        }else{
+            if($estatus_evaluacion !=null && Carbon::now() >= $estatus_evaluacion->fecha_inicio && Carbon::now() <= $estatus_evaluacion->fecha_fin)
+            {
+                return $this->preguntasEvaluacion();
+            }else{
+                return redirect()->route('sinAcceso')->with('info','El proceso de Evaluación Docente aún no esta disponible. Consulta las fechas en la Coordinación de Lenguas Extranjeras.');
+            }
+        }
+    }
+ 
+
+    public function preguntasEvaluacion (){
+        $usuarioactual = \Auth::user();
+
+        $periodo = request('periodo');
+        if($usuarioactual->tipo == 'alumno'){
+            $alumno = Alumno::where('curp_alumno',$usuarioactual->curp_user)->first();
+            $buscar_inscripcion = Inscripcion::where('num_control',$alumno->num_control)
+                                        ->where('periodo_pago',$periodo)
+                                        ->whereNotNull('id_grupo')
+                                        ->orderByDesc('updated_at')
+                                        ->get();
+                                        // dd($buscar_inscripcion);
+            if($buscar_inscripcion->isEmpty()){
+                return back()->with('warning','No puedes realizar la evaluación, no estas inscrito en algun grupo. Verifica tu información en la Coordinación.');
+            }
+            
+        }
+        $fecha_evaluacion = Fechas::where('proceso','evaluacion')->first();
+
+        
+        
         $grupoRs = GrupoRespuesta::select('*')->distinct()->get();
         $tipoPregunta = Pregunta::select('tipo')->distinct()->get();
         $enfoque = Pregunta::where('tipo','Enfoque de Enseñanza')
@@ -43,9 +83,8 @@ class EvaluacionDocenteController extends Controller
         $retroalimentacion = Pregunta::where('tipo','Estrategias de Retroalimentacion')
                                     ->where('vigencia','>=',date("Y"))->get();
 
-        return view('evaluacionDocente.evaluacion',compact('usuarioactual','clima','enfoque','enseñanzas','tipoPregunta','retroalimentacion','grupoRs','periodo'));
+        return view('evaluacionDocente.evaluacion',compact('usuarioactual','clima','enfoque','enseñanzas','tipoPregunta','retroalimentacion','grupoRs','periodo','fecha_evaluacion'));
     }
-
     /**
      * Guardar evaluaciones realizadas
      */
@@ -102,138 +141,96 @@ class EvaluacionDocenteController extends Controller
     public function resultados()    
     {
         $usuarioactual = \Auth::user();
-        $preguntas = Pregunta::whereNull('deleted_at')->get();
-        $respuestas = Respuesta::get(); 
-        $total_preguntas = count(Pregunta::whereNull('deleted_at')->get()); 
-        $total_respuestas = count(Respuesta::get());
         if ($usuarioactual->tipo != 'coordinador') {
             $data = request()->validate([
                 'periodo' => 'required'
             ]);
-// dd($usuarioactual->curp_user);
-            $usuario= Docente::where('docentes.curp_docente',$usuarioactual->curp_user)
-                                    ->leftjoin('users','users.curp_user','=','docentes.curp_docente')
-                                    ->get(); 
-            $resultados_evaluacion = ResultadoPregunta::leftjoin('evaluacion','evaluacion.num_evaluacion','=','resultado_pregunta.num_evaluacion')
-                                    ->leftjoin('docentes','docentes.curp_docente','=','evaluacion.curp_docente')
-                                    ->leftjoin('personas','personas.curp','=','docentes.curp_docente')
-                                    ->leftjoin('periodos','periodos.id_periodo','=','evaluacion.periodo')
-                                    ->leftjoin('respuestas','respuestas.id_respuesta','=','resultado_pregunta.id_respuesta')
-                                    ->leftjoin('preguntas','preguntas.id_pregunta','=','resultado_pregunta.id_pregunta')
+            // dd($usuarioactual);
+            $existeEvaluacion = EvaluacionDocente::where('periodo',$data['periodo'])
+                        ->where('curp_docente',$usuarioactual->curp_user)->get();
+            
+            if ($existeEvaluacion->isEmpty()) {
+                return back()->with('error','No hay resultados de la Evaluación Docente del periodo seleccionado.');
+            } else {
+                $docente = Docente::where('curp_docente',$usuarioactual->curp_user)
+                             ->leftjoin('personas','personas.curp','=','docentes.curp_docente')->get();
+                $datos_pregunta = Pregunta::get();
+                $datos_respuesta = Respuesta::get();
+                $periodo = Periodo::where('id_periodo',$data['periodo'])->get();
+
+                $preguntas = Pregunta::pluck('id_pregunta');
+                $respuestas =Respuesta::pluck('id_respuesta');
+                $k = 0; 
+                //  $resultados="";
+                for ($i=0; $i < count($preguntas); $i++) { 
+                    for ($j=0; $j < count($respuestas); $j++) { 
+                        $resultados[$k] = count(ResultadoPregunta::leftjoin('evaluacion','evaluacion.num_evaluacion','=','resultado_pregunta.num_evaluacion')
                                     ->where('evaluacion.periodo',$data['periodo'])
-                                    ->where('docentes.id_docente',$usuario[0]->id_docente)
-                                    ->select('evaluacion.*','resultado_pregunta.*','preguntas.*','docentes.curp_docente','docentes.id_docente',
-                                            'personas.nombres','personas.ap_paterno','personas.ap_materno','periodos.*','respuestas.*')
-                                    // ->groupBy('preguntas.id_pregunta')
-                                         ->get();
-          
-            $datos_pregunta[] = "";          
-            foreach ($preguntas as $pregunta) {
-                for ($i=0; $i < $total_respuestas; $i++) {
-                    $id_respuesta = $respuestas[$i]->id_respuesta; //echo('respuesta:'.$id_respuesta.'pregunta'.$pregunta->id_pregunta.',');
-                    $pregunta_respuesta = EvaluacionDocente::where('evaluacion.periodo',$data['periodo'])
-                        ->where('evaluacion.curp_docente',$usuarioactual->curp_user)
-                        ->leftjoin('resultado_pregunta','resultado_pregunta.num_evaluacion','=','evaluacion.num_evaluacion')
-                        ->where('resultado_pregunta.id_pregunta',$pregunta->id_pregunta)
-                        ->where('resultado_pregunta.id_respuesta',$id_respuesta)
-                        ->get();
-                        // dd($id_respuesta, count($pregunta_respuesta));
-                    $datos_pregunta[$pregunta->id_pregunta] = [$id_respuesta,count($pregunta_respuesta)];
-                    print_r($datos_pregunta);
-                    echo(' - ') ;
-                }
-                // echo('pregutna');
-            }
-           dd('fin');           
+                                    ->where('id_respuesta',$respuestas[$j])
+                                    ->where('id_pregunta',$preguntas[$i]) 
+                                    ->get());
+                                    $k++;
+                    }
+
+                }       
+                return view('evaluacionDocente.resultados',compact('periodo','resultados','docente','datos_pregunta','datos_respuesta'));
+            }           
         } else {
             $data = request()->validate([
                 'periodo' => 'required',
                 'docente' => 'required'
             ]);
 
-            $resultadoss = ResultadoPregunta::leftjoin('evaluacion','evaluacion.num_evaluacion','=','resultado_pregunta.num_evaluacion')
-                                    // ->leftjoin('docentes','docentes.curp_docente','=','evaluacion.curp_docente')
-                                    // ->leftjoin('personas','personas.curp','=','evaluacion.curp_docente')
-                                    // ->leftjoin('periodos','periodos.id_periodo','=','evaluacion.periodo')
-                                    ->leftjoin('respuestas','respuestas.id_respuesta','=','resultado_pregunta.id_respuesta')
-                                    ->leftjoin('preguntas','preguntas.id_pregunta','=','resultado_pregunta.id_pregunta')
-                                    ->where('evaluacion.periodo',$data['periodo'])
-                                    // ->where('evaluacion.curp_docente',$data['docente'])
-                                    // ->where('docentes.id_docente',$data['docente'])
-                                    ->select('evaluacion.*','resultado_pregunta.id_pregunta','resultado_pregunta.id_respuesta','resultado_pregunta.id_rp','preguntas.pregunta',
-                                            'preguntas.vigencia','preguntas.tipo',//'docentes.curp_docente','docentes.id_docente',
-                                            'respuestas.respuesta','respuestas.grupo_respuesta');
-                                    // ->groupBy('preguntas.id_pregunta')
-                                    // ->get();
+            $existeEvaluacion = EvaluacionDocente::where('periodo',$data['periodo'])
+                                                ->where('curp_docente',$data['docente'])->get();
+                                                // dd($existeEvaluacion);
+            if ($existeEvaluacion->isEmpty()) {
+                return back()->with('error','No hay resultados de la Evaluación Docente del periodo seleccionado.');
+            } else {
+                $docente = Docente::where('curp_docente',$data['docente'])
+                            ->leftjoin('personas','personas.curp','=','docentes.curp_docente')->get();
+                $datos_pregunta = Pregunta::get();
+                $datos_respuesta = Respuesta::get();
+                $periodo = Periodo::where('id_periodo',$data['periodo'])->get();
 
-            //CUENTA CUANTAS VECES RESPONDIERON CON UNA RESPUESTA CADA PREGUNTA
-            //FUNCIONA
-            /*$preguntas = Pregunta::pluck('id_pregunta');
-            $respuestas =Respuesta::pluck('id_respuesta');
-             $k = 0; 
-            for ($i=0; $i < count($preguntas); $i++) { 
-                for ($j=0; $j < count($respuestas); $j++) { 
-                    $resultados[$k] = count(ResultadoPregunta::where('id_respuesta',$respuestas[$j])
-                                                    ->where('id_pregunta',$preguntas[$i]) 
-                                                    ->get());
-                    $k++;
-                }
-            }*/
-            $docente = Docente::where('curp_docente',$data['docente'])
-                        ->leftjoin('personas','personas.curp','=','docentes.curp_docente')->get();
-            $datos_pregunta = Pregunta::get();
-            $datos_respuesta = Respuesta::get();
-            $periodo = Periodo::where('id_periodo',$data['periodo'])->get();
-
-            $preguntas = Pregunta::pluck('id_pregunta');
-            $respuestas =Respuesta::pluck('id_respuesta');
-             $k = 0; 
-            //  $resultados="";
-            for ($i=0; $i < count($preguntas); $i++) { 
-                for ($j=0; $j < count($respuestas); $j++) { 
-                    $resultados[$k] = count(ResultadoPregunta::leftjoin('evaluacion','evaluacion.num_evaluacion','=','resultado_pregunta.num_evaluacion')
-                                                    ->where('evaluacion.periodo',$data['periodo'])
-                                                    ->where('id_respuesta',$respuestas[$j])
-                                                    ->where('id_pregunta',$preguntas[$i]) 
-                                                    ->get());
-                                                    $k++;
-                }
-                
+                $preguntas = Pregunta::pluck('id_pregunta');
+                $respuestas =Respuesta::pluck('id_respuesta');
+                $k = 0; 
+                //  $resultados="";
+                for ($i=0; $i < count($preguntas); $i++) { 
+                    for ($j=0; $j < count($respuestas); $j++) { 
+                        $resultados[$k] = count(ResultadoPregunta::leftjoin('evaluacion','evaluacion.num_evaluacion','=','resultado_pregunta.num_evaluacion')
+                                                        ->where('evaluacion.periodo',$data['periodo'])
+                                                        ->where('id_respuesta',$respuestas[$j])
+                                                        ->where('id_pregunta',$preguntas[$i]) 
+                                                        ->get());
+                                                        $k++;
+                    }
+                    
+                }       
+                return view('evaluacionDocente.resultados',compact('periodo','resultados','docente','datos_pregunta','datos_respuesta'));
             }
-            //   dd($resultados);
-           
+        }                           
+    }
 
-                // foreach ($resultados as $resultado) {
-                //     $pregunta.$resultado->id_pregunta = 
-                //     DB::table(DB::raw("({$resultados->toSql() }) as resultados"))
-                //                     ->mergeBindings($resultados->getQuery()) 
-                //                     ->where('resultados.id_pregunta',$resultado->id_pregunta)
-                //                     ->select(DB::raw('count(*) as total'),'resultados.id_respuesta')
-                //                     ->groupBy('resultados.id_respuesta')
-                //                     ->get();
-                //                     dd($pregunta.$resultado->id_pregunta);                }
-                
-// dd($resultados);
-        // cuenta cuantas veces se repite la respuesta (si se agrupa por pregunta cuenta cuantas veces se repiten las preguntas)
-            // $resultados_evaluacion = DB::table(DB::raw("({$resultados->toSql() }) as resultados"))
-            //                         ->mergeBindings($resultados->getQuery()) 
-            //                         ->select('resultados.pregunta',DB::raw('count(*) as total'),'resultados.id_respuesta')
-            //                         ->groupBy('resultados.id_respuesta')
-            //                         ->get();       
-        }
-
-        // $user_info = DB::table('usermetas')
-        //          ->select('browser', DB::raw('count(*) as total'))
-        //          ->groupBy('browser')
-        //          ->get();
+    public function fechas(){
+        $data = request()->validate([
+            'inicio' => 'required|date_format:d-m-Y|date_after',
+            'fin' => 'required|date_format:d-m-Y|after_or_equal:inicio',
+        ]);
+        $periodo_actual = Periodo::where('actual',true)->get();
+        
+        $fechas = Fechas::updateOrCreate([
+            'proceso' => 'evaluacion'
+        ],[
+            'fecha_inicio' => $data['inicio'],
+            'fecha_fin' => $data['fin'],
+            'periodo' => $periodo_actual[0]->id_periodo
+        ]);
         
 
-        if (sizeof($resultados) == 0) {
-            return back()->with('error','No hay resultados de la Evaluación Docente del periodo seleccionado.');
-        } else {
-            // dd($resultados_evaluacion);
-            return view('evaluacionDocente.resultados',compact('periodo','resultados','docente','datos_pregunta','datos_respuesta'));
-        }
-                                    
+        return back()->with('success','¡Las fechas para la Evaluación Docente se guardaron correctamente!');
+    
     }
+    
 }

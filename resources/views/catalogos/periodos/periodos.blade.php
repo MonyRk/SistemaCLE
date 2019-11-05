@@ -18,6 +18,7 @@
             </span>
         </a>
     </div>
+{{-- <form action="{{ route('actualizarPeriodo') }}" method="get"> --}}
 <div class="row">
     <div class="col-xl">
         <div class="card shadow ">
@@ -39,6 +40,7 @@
                             <th></th>
                             <th scope="col">Periodo</th>
                             <th scope="col">Año</th>
+                            <th scope="col">Actual</th>
 
                         </tr>
                     </thead>
@@ -51,6 +53,12 @@
                             </th>
                             <th scope="row">
                                 {{ $periodo->anio }}
+                            </th>
+                            <th scope="row">
+                                <div class="custom-control custom-radio mb-0">
+                                    <input name="periodo" class="custom-control-input" id="periodo{{ $periodo->id_periodo }}" type="radio" value="{{ $periodo->id_periodo }}" @if($periodo->actual) checked @endif>
+                                    <label class="custom-control-label" for="periodo{{ $periodo->id_periodo }}">O</label>
+                                </div>
                             </th> 
                         </tr>
                         @endforeach
@@ -61,6 +69,10 @@
         </div>
     </div>
 </div>
+{{-- <div class="text-center">
+    <button type="button" class="btn btn-primary mt-4">{{ __('Actualizar') }}</button>
+</div> --}}
+{{-- </form> --}}
 <br><br>
 @include('layouts.footers.nav')
 </div>
@@ -115,6 +127,59 @@
         </div>
 </div>
 
+{{-- modal para actualizar --}}
+
+<div class="col-md-4">
+        <div class="modal fade" id="modal-actualizar" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-" role="document">
+                <div class="modal-content bg-gradient-white">
+                    
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="modal-title-notification">¡Espera!</h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                        
+                    </div>
+                    <form action="{{ route('actualizarPeriodo') }}" method="POST" class="delete" id="deleteForm">
+                    @csrf
+                    @method('post')
+                    <div class="modal-body">
+                        
+                        <div class="py-3 text-center">
+                                <i class="fas fa-exclamation fa-3x text-warning" style=""></i>
+                            <h4 class="heading mt-4">¿Estas seguro de querer actualizar el periodo?</h4>
+                            <p>Algunos datos mostrados cambiarán, y no solo para la Coordinación, tambien para los Estudiantes y los Docentes.</p>
+                            <input type="hidden" name="periodo_id" id="periodo_id" value="">
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-warning">S&iacute;, ACTUALIZAR</button>
+                        <button type="button" class="btn btn-link text-gray ml-auto" data-dismiss="modal">No, Cambi&eacute; de opinion</button> 
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section('script')
+    <script>
+        $(document).ready(function() {
+            $("input[name$='periodo']").click(function() {
+                var radio_value = $(this).val();
+                $('#modal-actualizar').modal('show');
+                var modal = $(this)
+                $('#periodo_id').val(radio_value);
+                // console.log(radio_value);
+                // console.log($('#periodo_id').val(radio_value));
+            });
+        });
+    </script>
+    @endsection
+    
 
 @endsection
 

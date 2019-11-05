@@ -29,5 +29,10 @@ class CustomValidationRulesProvider extends ServiceProvider
         {
             return preg_match('/^[\pL\s]+$/u', $value);
         });
+
+        Validator::extend('date_after', function($attribute, $value)
+        {
+            return $value >= date('d-m-Y');
+        });
     }
 }

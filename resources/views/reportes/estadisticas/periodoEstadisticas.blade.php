@@ -41,9 +41,8 @@
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-periodo">{{ __('Selecciona un Periodo') }}</label>
                         <select id="input-periodo" class="form-control" name="periodo">
-                            <option selected value=""></option>
                             @foreach ($periodos as $periodo)
-                                <option value="{{ $periodo->id_periodo }}">{{ $periodo->descripcion }} {{ $periodo->anio }}</option>
+                                <option value="{{ $periodo->id_periodo }}" @if($periodo->actual== true) selected @endif>{{ $periodo->descripcion }} {{ $periodo->anio }}</option>
                             @endforeach
                         </select>                  
                     </div>
@@ -53,7 +52,7 @@
         </div>
     
             <div class="text-center">
-                <button type="submit" class="btn btn-primary mt-4">{{ __('Ir') }}</button>
+                <button type="submit" class="btn btn-primary mt-4"><i class="fas fa-arrow-right"></i></button>
             </div>
             
         </form>

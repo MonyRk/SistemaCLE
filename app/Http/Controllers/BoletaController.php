@@ -24,14 +24,16 @@ class BoletaController extends Controller
     {
         $usuarioactual = \Auth::user();
        
-        $periodos = DB::table('periodos')->orderBy('anio','DESC')->orderBy('descripcion','ASC')->get();
+        if($usuarioactual->tipo != 'docente'){
+            $periodos = DB::table('periodos')->orderBy('actual','DESC')->orderBy('anio','DESC')->orderBy('descripcion','ASC')->get();
+        }else{
+            $periodos = DB::table('periodos')->where('actual',true)->get();
+        }
+
         $grupos = DB::table('grupos')->orderBy('grupo','ASC')->get();
 
         return view('boletas.boletas',compact('periodos','grupos','usuarioactual'));
     }
-
-    
-
 
     public function show($grupo_periodo)
     {
@@ -235,6 +237,10 @@ class BoletaController extends Controller
                                         ->whereNull('boletas.deleted_at')
                                         ->orderBy('personas.ap_paterno','ASC')  
                                         ->get();
+                                        
+        foreach ($alumnos_inscritos as $alumno) {
+            Alumno::find($alumno->num_control)->update(['estatus' => 'No Inscrito']);
+        }
                                         
         // return view('pdf.actaCalificaciones',compact('infoGrupo','alumnos_inscritos'));                          
         $pdfBoleta =  PDF::loadView('pdf.actaCalificaciones',compact('infoGrupo','alumnos_inscritos'));

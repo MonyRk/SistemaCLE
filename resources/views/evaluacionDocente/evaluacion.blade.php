@@ -40,6 +40,38 @@ $usuarioactual = \Auth::user();
             </span>
         </a>
     </div>
+
+    <form method="post" action="{{ route('fechasEvaluacion') }}" autocomplete="off">
+        @csrf
+        @method('post')
+        
+        <div class="row" @if($usuarioactual->tipo != 'coordinador') style="display:none;" @endif>
+            @php
+                if ($fecha_evaluacion == null) {
+                    $inicio = '';
+                    $fin = '';
+                } else {
+                $inicio = date('d-m-Y', strtotime($fecha_evaluacion->fecha_inicio));
+                $fin = date('d-m-Y', strtotime($fecha_evaluacion->fecha_fin));
+                }
+                
+            @endphp
+            <strong>Duraci&oacute;n de la Evaluaci&oacute;n: </strong> <br>
+            <div class="form-group col-md-2">
+                <label class="form-control-label" for="fecha-inicio">{{ __('Fecha de Inicio') }}</label>
+                <input type="text" class="form-control" name="inicio" id="fecha-inicio" placeholder="dd-mm-aaaa" value="{{ old('inicio', $inicio) }}">
+            </div>
+            <div class="form-group col-md-2">
+                <label class="form-control-label" for="fecha-fin">{{ __('Fecha Final') }}</label>
+                <input type="text" class="form-control" name="fin" id="fecha-fin" placeholder="dd-mm-aaaa" value="{{ old('fin',$fin) }}">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary mt-4">{{ __('Guardar') }}</button>
+            </div>
+        </div>
+    </form>
+
+
     <form role="form" method="post" action="{{ route('guardarEvaluacion') }}" autocomplete="off">
         @csrf
         @method('post')
@@ -72,7 +104,10 @@ $usuarioactual = \Auth::user();
                     Evaluaci&oacute;n docente a: &nbsp; <h5 class=" mb-1">{{ $docente_a_evaluar->nombres }} {{ $docente_a_evaluar->ap_paterno }} @if($docente_a_evaluar->ap_materno) {{ $docente_a_evaluar->ap_materno }} @endif
                 </div>
                 </h5>
+    
+
             @endif
+
             <hr class="my-4" />
             <h6 class="heading-small text-muted mb-4">Enfoque de Enseñanza</h6>
             @php $i=0 @endphp
@@ -219,7 +254,7 @@ $usuarioactual = \Auth::user();
                                     </div>
                                 </div>
                                 <label class="form-control-label" for="input-respuestas">{{ __('Grupos de Respuestas') }}</label>
-                                <div class="form-group mb-3">
+                                {{-- <div class="form-group mb-3">
                                     <div class="input-group input-group-alternative">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
@@ -231,7 +266,7 @@ $usuarioactual = \Auth::user();
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <label class="form-control-label" for="input-vigencia">{{ __('Año de Vigencia') }}</label>
                                 <div class="form-group mb-3">
                                     <div class="input-group input-group-alternative">
@@ -289,7 +324,7 @@ $usuarioactual = \Auth::user();
                 </div>
                 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-white">S&iacute;, Eliminar</button>
+                    <button type="submit" class="btn btn-outline-danger">S&iacute;, Eliminar</button>
                     <button type="button" class="btn btn-link text-gray ml-auto" data-dismiss="modal">No, Cambi&eacute; de opinion</button> 
                 </div>
                 </form>

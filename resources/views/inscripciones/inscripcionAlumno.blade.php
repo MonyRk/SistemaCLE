@@ -56,7 +56,7 @@ $usuarioactual = \Auth::user();
                     <div class="card-header border-3">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h4 class="mb-0">{{ __('Grupos Disponibles') }}</h4>
+                                <h4 class="mb-0">{{ __('Grupos Disponibles Periodo ') }}{{ $grupos[0]->descripcion }} {{ $grupos[0]->anio }}</h4>
                             </div>
                         </div>
                     </div>

@@ -31,9 +31,14 @@ Route::group(['middleware' => 'auth'], function () {
 
 	Route::get('/periodoinscripciones','InscripcionesController@index')->name('periodoinscripciones');
 		
-	Route::get('/evaluacionDocente/periodos', 'EvaluacionDocenteController@index')->name('periodoEvaluacion');
+	// Route::get('/evaluacionDocente/periodos', 'EvaluacionDocenteController@index')->name('periodoEvaluacion');
 	Route::get('/evaluacionDocente','EvaluacionDocenteController@show')->name('evaluacion');
 	Route::post('/evaluacionDocente', 'EvaluacionDocenteController@store')->name('guardarEvaluacion');
+
+	Route::get('/pagos','InscripcionesController@indexPago')->name('indexpagos');
+	Route::post('/agregarPago', 'InscripcionesController@agregarPago')->name('agregarPago');
+	// Route::get('/verificarpagos', function(){return view('pagos.verificarpagos');})->name('verificarPagos');
+	Route::get('/verificar', 'InscripcionesController@buscarPago')->name('buscarPago');
 
 	//rutas compartidas para DOCENTES Y COORDINADOR
 	Route::get('/docentes/{docente}/editar','DocentesController@edit')->name('editarDocente');
@@ -60,6 +65,8 @@ Route::group(['middleware' => ['usuarioEstudiante']], function () {
 	// Route::get('/inscripciones/estudiante/','InscripcionesController@periodoAlumno')->name('periodoAlumno');
 	Route::get('/inscripciones/estudiante/{alumno}', 'InscripcionesController@inscripcionAlumno')->name('inscribirAlumno');
 	Route::post('/inscripciones/estudiante/agregar', 'InscripcionesController@agregarAlumno')->name('inscribirEnGrupo');
+
+	// Route::get('/pagos/{alumno}',function(){return view('pagos.indexpagoEstudiantea');})->name('indexpagosEstudiantes');
 });
 
 Route::group(['middleware' => ['usuarioCoordinador']], function () {
@@ -74,6 +81,9 @@ Route::group(['middleware' => ['usuarioCoordinador']], function () {
 	Route::post('/guardarDocente', 'DocentesController@store');
 	Route::delete('/docentes/{docente}','DocentesController@destroy')->name('eliminarDocente');
 	Route::any('/search/docente', 'DocentesController@search')->name('buscarDocente');
+	Route::get('/docente/titulo/{titulo}', 'DocentesController@titulo')->name('verTitulo');
+	Route::get('/docente/cedula/{cedula}', 'DocentesController@cedula')->name('verCedula');
+	Route::get('/docente/rfc/{rfc}', 'DocentesController@rfc')->name('verRfc');
 
 	Route::get('/evaluacionDocente/inicio', function(){return view('evaluacionDocente.inicioEvaluacion');})->name('inicioEvaluacion');
 
@@ -88,10 +98,10 @@ Route::group(['middleware' => ['usuarioCoordinador']], function () {
 	Route::get('/aulas', 'GruposController@getaulas');
 	Route::any('/search/grupo', 'GruposController@search')->name('buscarGrupo');
 
-	Route::get('/pagos','InscripcionesController@indexPago')->name('indexpagos');
-	Route::post('/agregarPago', 'InscripcionesController@agregarPago')->name('agregarPago');
+	// Route::get('/pagos','InscripcionesController@indexPago')->name('indexpagos');
+	// Route::post('/agregarPago', 'InscripcionesController@agregarPago')->name('agregarPago');
 	Route::get('/verificarpagos', function(){return view('pagos.verificarpagos');})->name('verificarPagos');
-	Route::get('/verificar', 'InscripcionesController@buscarPago')->name('buscarPago');
+	// Route::get('/verificar', 'InscripcionesController@buscarPago')->name('buscarPago');
 	Route::post('/guardarVerificados', 'InscripcionesController@guardarVerificados')->name('guardarVerificados');
 	
 
@@ -109,15 +119,19 @@ Route::group(['middleware' => ['usuarioCoordinador']], function () {
 
 	Route::get('/catalogos/periodos','PeriodoController@index')->name('periodos');
 	Route::post('/catalogos/periodos/agregarPeriodo','PeriodoController@store')->name('agregarPeriodo');
-
+	Route::post('/catalogos/periodos/actualizarPeriodo', 'PeriodoController@actualizar')->name('actualizarPeriodo');
 	
+	Route::post('/inscripciones/guardarFechas','InscripcionesController@fechas')->name('fechaInscripciones');
 	Route::get('/inscripciones/grupo/{grupo}','InscripcionesController@create')->name('inscribirEstudiantes');
 	Route::post('/inscripciones/grupo','InscripcionesController@store')->name('guardarLista');
 	Route::any('/search/grupos', 'InscripcionesController@search')->name('buscarGrupoInscripcion');
 	Route::any('/search/estudiantes', 'InscripcionesController@searchE')->name('buscarAlumnoInscribir');
 	// Route::get('/inscripciones','InscripcionesController@show')->name('inscripciones');
 
-	Route::get('/cursos','InscripcionesController@getCursos')->name('cursos');
+	Route::get('/cursos',function () {return view('cursos.indexCursos');})->name('cursos');
+	Route::get('/cursos/estudiante','InscripcionesController@getCursos')->name('buscarCurso');
+	Route::get('/cursos/verificarExamen', 'InscripcionesController@mostrarExamenes')->name('mostrarExamen');
+	Route::post('/cursos/guardarExamenesVerificados', 'InscripcionesController@verificarExamenes')->name('verificarExamenes');
 
 	Route::get('/catalogos/respuestas','RespuestaController@index')->name('respuestas');
 	Route::post('/catalogos/respuestas/agregar','RespuestaController@store')->name('agregarRespuesta');
@@ -134,6 +148,7 @@ Route::group(['middleware' => ['usuarioCoordinador']], function () {
 	Route::get('/reportes',function () {return view('reportes.cardsreportes');})->name('reportes');
 	Route::get('/reportes/datosEstadisticos','ReportesController@index')->name('indexestadisticas');
 	Route::get('/reportes/datosEstadisticos/periodo','ReportesController@graficas')->name('estadisticas');
+	Route::get('/reportes/datosEstadisticos/generar', 'ReportesController@generarEstadisticas')->name('descargarEstadisticas');
 
 	Route::get('/reportes/liberaciones','ReportesController@liberaciones')->name('liberaciones');
 	Route::get('/reportes/liberaciones/cle','ReportesController@liberacionCle')->name('generarLiberacionCle');
@@ -143,6 +158,8 @@ Route::group(['middleware' => ['usuarioCoordinador']], function () {
 	Route::get('/reportes/adendum', 'ReportesController@docenteAdendum')->name('adendum');
 	Route::get('/reportes/adendum/generar', 'ReportesController@generarAdendum')->name('contratos');
 
+	Route::post('/evaluacionDocente/guardarFechas','EvaluacionDocenteController@fechas')->name('fechasEvaluacion');
+	Route::get('/evaluacionDocente/periodos', 'EvaluacionDocenteController@index')->name('periodoEvaluacion');
 });
 
 

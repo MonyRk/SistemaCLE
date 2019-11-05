@@ -61,7 +61,9 @@
                 </form>
                 @php 
                 $usuarioactual = \Auth::user();
-                $docente = App\User::where('users.id',$usuarioactual->id)->leftjoin('personas','personas.curp','=','users.curp_user')->leftjoin('docentes','personas.curp','=','docentes.curp_docente')->get() @endphp
+                $docente = App\User::where('users.id',$usuarioactual->id)->leftjoin('personas','personas.curp','=','users.curp_user')->leftjoin('docentes','personas.curp','=','docentes.curp_docente')->get();
+                $periodo_actual = App\Periodo::where('actual',true)->get();
+                @endphp
                 <!-- Navigation -->
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -71,13 +73,11 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('editarDocente',$docente[0]->id_docente) }}" >
-                            <i class="fas fa-users text-danger" style= "color: danger"></i>{{ __('Información Personal') }}</span>
+                            <i class="fas fa-users text-danger" style= "color: danger"></i>{{ __('Información') }}</span>
                         </a>
-    
-                        
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('periodoinscripciones') }}">
+                        <a class="nav-link" href="{{ route('inscripciones').'?periodo='.$periodo_actual[0]->id_periodo }}">
                             <i class="fas fa-user-edit text-green"></i> {{ __('Grupos') }}
                         </a>
                     </li>

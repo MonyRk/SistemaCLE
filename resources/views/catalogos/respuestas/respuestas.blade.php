@@ -213,7 +213,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-white">S&iacute;, Eliminar</button>
+                        <button type="submit" class="btn btn-outline-danger">S&iacute;, Eliminar</button>
                         <button type="button" class="btn btn-link text-gray ml-auto" data-dismiss="modal">No, Cambi&eacute; de opinion</button>
                     </div>
                 </form>

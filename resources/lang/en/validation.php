@@ -32,6 +32,7 @@ return [
     'date'                 => ':attribute no es una fecha válida.',
     'date_equals'          => ':attribute debe ser una fecha igual a :date.',
     'date_format'          => ':attribute no corresponde al formato :format.',
+    'date_after'           => 'La :attribute no puede ser anterior a la actual',
     'different'            => ':attribute y :other deben ser diferentes.',
     'digits'               => ':attribute debe tener :digits dígitos.',
     'digits_between'       => ':attribute debe tener entre :min y :max dígitos.',
@@ -130,6 +131,7 @@ return [
         'email'    => [
             'unique' => 'El :attribute ya ha sido registrado.',
         ],
+       
     ],
     /*
     |--------------------------------------------------------------------------
@@ -178,6 +180,11 @@ return [
         'monto'                 => 'Monto de Pago',
         'grupoR'                => 'Grupo de Respuestas',
         'plan'                  => 'Plan de Estudios',
+        'toefl'                 => 'Certificación TOEFL',
+        'puntos'                => 'Puntos Obtenidos',
+        'inicio'                => 'Fecha de Inicio',
+        'fin'                   => 'Fecha Final',
+        'today'                 => 'Hoy',
         'year'                  => 'año',
         'month'                 => 'mes',
         'day'                   => 'día',

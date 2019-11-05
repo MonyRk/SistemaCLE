@@ -35,7 +35,7 @@
                             </div>
                             <div class="col-auto">
                                 <div class="">
-                                    <p class="card-text font-weight-bold">{{ $datos[0]->rfc }}<p>
+                                    <a href= "{{ route('verRfc',$datos[0]->rfc) }}" target="_blank" class="card-text font-weight-bold">{{ $datos[0]->rfc }}</a>
                                 </div>
                             </div>
                         </div>
@@ -53,7 +53,7 @@
                             </div>
                             <div class="col-auto">
                                 <div class="">
-                                    <p class="card-text font-weight-bold">{{ $datos[0]->titulo }}</p>
+                                    <a href= "{{ route('verTitulo',$datos[0]->titulo) }}" target="_blank" class="card-text font-weight-bold">{{ $datos[0]->titulo }}</a>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +69,7 @@
                             </div>
                             <div class="col-auto">
                                 <div class="">
-                                    <p class="card-text font-weight-bold">{{ $datos[0]->ced_prof }}</p>
+                                    <a href= "{{ route('verCedula',$datos[0]->ced_prof) }}" target="_blank" class="card-text font-weight-bold">{{ $datos[0]->ced_prof }}</a>
                                 </div>
                             </div>
                         </div>

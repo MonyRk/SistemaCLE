@@ -113,7 +113,18 @@
             </div>
         </div>
     </div>
-    
+    <div class="text-right">
+        {{-- <a href="{{ route('descargarEstadisticas') }}" class="btn btn-outline-info btn-sm mt-4"> --}}
+            <form action="{{ route('descargarEstadisticas') }}" method="get">
+                <button type="submit"  class="btn btn-outline-info btn-sm mt-4">
+                    <span>
+                        <i class="fas fa-file-download"></i> &nbsp; Descargar Datos
+                    </span>
+                    <input type="hidden" name="periodo" value="{{ $periodo[0]->id_periodo }}">
+                </button>
+            </form>
+        {{-- </a> --}}
+    </div>
     <br><br>
 @include('layouts.footers.nav')
 </div>

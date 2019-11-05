@@ -32,15 +32,13 @@ class GruposController extends Controller
             ->leftJoin('personas','personas.curp','=','docentes.curp_docente')
             ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
             ->whereNull('grupos.deleted_at')
+            ->orderByDesc('periodos.actual')
+            ->orderByDesc('periodos.anio')
+            ->orderBy('periodos.descripcion')
             ->orderBy('grupos.grupo','ASC')
             ->paginate(25);
         
-        
-
-        $docentes = Persona::leftjoin('docentes','docentes.curp_docente','=','personas.curp')
-        ->select('docentes.*','personas.*')
-        ->get();
-
+// dd($)
         $niveles = Nivel::select('*')
         ->get();
 
@@ -50,7 +48,7 @@ class GruposController extends Controller
         $aulas = Aula::leftjoin('horas_disponibles','horas_disponibles.id_hora','=','aulas.hrdisponible')
         ->select('aulas.*','horas_disponibles.*')
         ->get();
-        return view('grupos.grupos',compact('grupos','niveles','aulas','periodos','docentes'));
+        return view('grupos.grupos',compact('grupos','niveles','aulas','periodos'));
     }
 
 
@@ -63,6 +61,7 @@ class GruposController extends Controller
                 ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
                 ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
                 ->leftjoin('docentes','docentes.id_docente','=','grupos.docente')
+                ->leftJoin('personas','docentes.curp_docente','=','personas.curp')
                 ->whereNull('grupos.deleted_at')
                 ->where('grupos.grupo','like','%'.$search['buscar'].'%')
                 ->orWhere('nivels.nivel','like','%'.$search['buscar'].'%')
@@ -75,10 +74,6 @@ class GruposController extends Controller
                 ->paginate(25)
                 ->appends('buscar',$search['buscar']);
 
-                $docentes = Persona::leftjoin('docentes','docentes.curp_docente','=','personas.curp')
-                ->select('docentes.*','personas.*')
-                ->get();
-
                 $niveles = Nivel::select('*')
                 ->get();
 
@@ -88,25 +83,26 @@ class GruposController extends Controller
                 $aulas = Aula::leftjoin('horas_disponibles','horas_disponibles.id_hora','=','aulas.hrdisponible')
                 ->select('aulas.*','horas_disponibles.*')
                 ->get();
-                        
-        return view ('grupos.grupos',compact('grupos','niveles','aulas','periodos','docentes'));
+                //    dd($grupos);     
+        return view ('grupos.grupos',compact('grupos','niveles','aulas','periodos'));
     }
   
     public function create()
     {
         $niveles = Nivel::select('*')->get();
 
-        $maestros = Docente::join('personas','docentes.curp_docente','=','personas.curp')
-        ->select('personas.*','docentes.*')
+        $maestros = Docente::leftjoin('personas','docentes.curp_docente','=','personas.curp')
+        ->where('docentes.estatus','Activo')
+        ->whereNull('personas.deleted_at')
         ->get();
-
+// dd($maestros);
         $periodos = Periodo::select('*')
         ->get();
 
         $aulas = Aula::select('*')
         ->get();
 
-        $horasaula = Aula::join('horas_disponibles','horas_disponibles.id_hora' ,'=','aulas.hrdisponible')
+        $horasaula = Aula::leftjoin('horas_disponibles','horas_disponibles.id_hora' ,'=','aulas.hrdisponible')
                 ->select('aulas.*','horas_disponibles.*')
                 ->get();
 
@@ -208,6 +204,7 @@ class GruposController extends Controller
         $maestros = Persona::rightjoin('docentes','docentes.curp_docente','=','personas.curp')
         // ->select('docentes.*','personas.*')
         ->whereNull('personas.deleted_at')
+        ->where('docentes.estatus','Activo')
         ->get();
         // dd($maestros);
         $aulas = Aula::leftjoin('horas_disponibles','horas_disponibles.id_hora','=','aulas.hrdisponible')

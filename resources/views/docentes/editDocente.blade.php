@@ -52,7 +52,7 @@ $usuarioactual = \Auth::user();
             @endif                           
             @endif
 
-        <form method="post" action="{{ url("docentes/{$docente[0]->id_docente}") }}" autocomplete="off">
+        <form method="post" action="{{ url("docentes/{$docente[0]->id_docente}") }}" autocomplete="off" enctype="multipart/form-data">
             @csrf
             @method('put')
 
@@ -144,11 +144,11 @@ $usuarioactual = \Auth::user();
                 <div class="row">
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-telefono">{{ __('Teléfono') }}</label>
-                        <input type="text" name="telefono" id="input-telefono" class="form-control" placeholder="" value="{{ old('telefono', $docente[0]->telefono) }}" required autofocus>
+                        <input type="text" name="telefono" id="input-telefono" class="form-control" placeholder="" value="{{ old('telefono', $docente[0]->telefono) }}"  >
                     </div>
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-email">{{ __('Email') }}</label>
-                        <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder=""value="{{ old('email',$email[0]->email) }}"  required>
+                        <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder=""value="{{ old('email',$email[0]->email) }}"  >
                     </div>
                 </div>
         
@@ -198,17 +198,58 @@ $usuarioactual = \Auth::user();
                         <div class="form-row"  @if($usuarioactual->tipo != 'coordinador')style = "display:none;" @else style="display:block" @endif>
                             <div class="form-group col-md">
                                 <label class="form-control-label" for="input-cedula">{{ __('Cédula Profesional') }}</label>
+                                {{-- <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="input-cedula" lang="es-ES">
+                                    <label class="custom-file-label" for="input-cedula">{{ $docente[0]->ced_prof }}</label>
+                                </div> --}}
                                 <div class="form-group">
-                                    <input type="file" class="form-control-file" id="input-cedula" name="cedula" value="{{ $docente[0]->ced_prof }}">
+                                    <input type="file" class="form-control-file" id="input-cedula" name="cedula" placeholder="{{ $docente[0]->ced_prof }}" value="{{ $docente[0]->ced_prof }}">
                                 </div>
                             </div>
+                            
                         </div>
+                        <hr class="my-4" />
+            <h6 class="heading-small text-muted mb-4">{{ __('Información de Usuario') }}</h6>
+            <div class="form-group col-md-3">
+                <label class="form-control-label" for="input-contrasenia">{{ __('Reestablecer Contraseña?*') }}</label>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" id="input-contrasenia" name="contrasenia" onchange="comprobar2(this);" value="true" class="custom-control-input">
+                    <label class="custom-control-label" for="input-contrasenia">o</label>
+                </div>
+            </div>
+            <div id="reestablecer-contrasenia" style="display:none;">
+                
+                <div class="form-group col-xl-4">
+                    <label class="form-control-label" for="input-password">{{ __('Nueva Contraseña') }}</label>
+                    <input type="password" name="password" id="input-password" class="form-control form-control-alternative" value="" >
+                </div>
+                <div class="form-group col-xl-4">
+                    <label class="form-control-label" for="input-password-confirmation">{{ __('Confirmar Nueva Contraseña') }}</label>
+                    <input type="password" name="password_confirmation" id="input-password-confirmation" class="form-control form-control-alternative" value="" >
+                </div>
+            </div>
+            <p class="text-muted">*El reestablecimiento de la contraseña no es obligatorio al ver o actualizar otro dato</p>          
+        </div>
+    </div>
 
             <div class="text-center">
                 <button type="submit" class="btn btn-primary mt-4">{{ __('Actualizar') }}</button>
             </div>
         </form>
     </div>
+
+    <script>
+            function comprobar2(obj)
+            {   
+                if (obj.checked){
+                    document.getElementById('reestablecer-contrasenia').style.display = "";
+                } else{
+                    document.getElementById('reestablecer-contrasenia').style.display = "none";
+                }     
+            }
+
+        </script>
+
     <br><br>
            @include('layouts.footers.nav')
 </div>

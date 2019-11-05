@@ -68,31 +68,42 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($datos_docentes as $docente)
+                                    @php
+                                        $docentes_en_grupo = App\Grupo::whereNotNull('docente')->distinct()->pluck('docente');
+                                    @endphp
+                                    @foreach ($docentes as $docente)
                                     <tr>
                                         <th scope="row">
                                             {{ $docente->id_docente }}
                                         </th>
                                         <th>
-                                            <a href="{{ route('verInfoDocente',$docente->id_docente) }}">{{ $docente->nombres }} {{ $docente->ap_paterno }} {{ $docente->ap_materno }}</a>
+                                            <a href="{{ route('verInfoDocente',$docente->id_docente) }}" class="text-dark">{{ $docente->nombres }} {{ $docente->ap_paterno }} {{ $docente->ap_materno }}</a>
                                         </th>                                      
                                         <td name="">{{ $docente->grado_estudios }}</td>
                                         <td>
                                             {{ $docente->estatus }}
                                         </td>
-                                        <td> <a href="docentes/{{ $docente->id_docente }}/editar"><i class="fas fa-edit"></i></a>
-                                        </td>
-                                        <td>
-                                            <a href="" id="docenteid" data-docenteid="{{ $docente->id_docente }}" data-toggle="modal" data-target="#modal-notification" ><i class="far fa-trash-alt"></i></a>
-                                        </td>
+                                        @php
+                                            $docente_en_grupo = App\Grupo::where('docente',$docente->id_docente)->get();
+                                        @endphp
+                                        @if($docente_en_grupo->isEmpty())
+                                            <td class="text-center"> 
+                                                <a href="docentes/{{ $docente->id_docente }}/editar" class="text-primary"><i class="fas fa-edit"></i></a>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="" id="docenteid" class="text-danger" data-docenteid="{{ $docente->id_docente }}" data-toggle="modal" data-target="#modal-notification" ><i class="far fa-trash-alt"></i></a>
+                                            </td>
+                                        @else
+                                            <td colspan="2" class="text-center">
+                                                <a href="" class="text-primary" data-toggle="modal" data-target="#modal-notification2" ><i class="far fa-question-circle"></i></a>
+                                            </td>
+                                        @endif
                                     </tr>
-                                    @empty
-                                        
-                                    @endforelse
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
-                        {{ $datos_docentes->links() }}
+                        {{ $docentes->links() }}
                     </div>
                 </div>
             </div>
@@ -126,7 +137,7 @@
                         </div>
                         
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-white">S&iacute;, Eliminar</button>
+                            <button type="submit" class="btn btn-outline-danger">S&iacute;, Eliminar</button>
                             <button type="button" class="btn btn-link text-gray ml-auto" data-dismiss="modal">No, Cambi&eacute; de opinion</button> 
                         </div>
                         </form>
@@ -135,6 +146,43 @@
             </div>
                 </div>
     
+
+
+
+                 {{-- modal para informar que ya no se puede hacer nada --}}
+            <div class="col-md-4">
+                    <div class="modal fade" id="modal-notification2" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-" role="document">
+                            <div class="modal-content">
+                                
+                                <div class="modal-header">
+                                    <h6 class="modal-title" id="modal-title-notification">¡Espera!</h6>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">×</span>
+                                    </button>
+                                    
+                                </div>
+                               
+                                <div class="modal-body">
+                                    
+                                    <div class="py-3 text-center">
+                                            <i class="fas fa-exclamation fa-3x text-warning" style=""></i>
+                            <h4 class="heading mt-4">Los datos de este docente no se puede Eliminar y/o Editar</h4>
+                            <p>Los datos que contiene estan asociados a otros, si se elimina o se edita podr&iacute;a perderse informaci&oacute;n importante adem&aacute;s de generar inconsistencia de datos.</p>
+                                        <input type="hidden" name="grupo_id" id="grupo_id" value="">
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="modal-footer">
+                                    {{-- <button type="submit" class="btn btn-outline-warning">Entendido</button> --}}
+                                    <button type="button" class="btn btn-outline-warning ml-auto" data-dismiss="modal">Entendido</button> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            
+                        </div>
     
                @section('script')
                <script>

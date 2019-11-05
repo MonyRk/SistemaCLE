@@ -12,7 +12,7 @@ class Alumno extends Model
 
     protected $primaryKey = 'num_control';
     protected $fillable = [
-        'num_control','curp_alumno','carrera', 'semestre', 'estatus' 
+        'num_control','curp_alumno','carrera', 'semestre', 'estatus','nivel_inicial','periodo_examen'
 
     ];
     public $incrementing = false;
@@ -30,6 +30,10 @@ class Alumno extends Model
 
     public function evaluacion(){
         return $this->belongsToMany(EvaluacionDocente::class,'num_evaluacion');
+    }
+
+    public function examen(){
+        return $this->belongsTo(Periodo::class,'id_periodo');
     }
 
     

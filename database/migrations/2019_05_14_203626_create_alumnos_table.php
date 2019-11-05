@@ -29,6 +29,9 @@ class CreateAlumnosTable extends Migration
             $table->enum('semestre',['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16']);
             $table->enum('estatus',['Inscrito','No Inscrito']);
             $table->string('nivel_inicial')->nullable();
+            $table->unsignedInteger('periodo_examen')->nullable();
+            $table->foreign('periodo_examen')->references('id_periodo')->on('periodos')->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->boolean('examen_verificado')->nullable()->default(NULL);
             $table->softDeletes();
             $table->timestamps();
             

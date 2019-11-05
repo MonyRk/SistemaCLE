@@ -23,7 +23,7 @@ class CreateAlumnosInscritosTable extends Migration
             $table->integer('monto_pago')->nullable();
             $table->date('fecha')->nullable();
             $table->boolean('pago_verificado')->nullable();
-            $table->boolean('examen_ubicacion')->nullable();
+            $table->integer('periodo_pago')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

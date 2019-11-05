@@ -38,7 +38,7 @@
                     <div class="row">
                         <div class="form-group col-md">
                             <label class="form-control-label" for="numControl">{{ __('Número de Control') }}</label>
-                            <input id="numControl" class="form-control" name="numControl">
+                            <input id="numControl" class="form-control" name="numControl" value="{{ old('numControl') }}">
                         </div>
                     </div>
                     <div class="form-group col-md">
@@ -58,7 +58,7 @@
                     </div>
                     <div class="form-group col-md">
                             <label class="form-control-label" for="input-plan">{{ __('Puntos Obtenidos') }}</label>
-                            <input id="puntos" class="form-control" name="puntos">                
+                            <input id="puntos" class="form-control" name="puntos" value="{{ old('puntos') }}">                
                         </div>
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-nivel">{{ __('Nivel') }}</label>
@@ -70,11 +70,12 @@
                     </div>
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-toefl">{{ __('Certificación TOEFL') }}</label>
-                        <select id="input-toefl" class="form-control" name="toefl">
+                        <input id="input-toefl" class="form-control" name="toefl" value="{{ old('toefl') }}" onkeyup="this.value = this.value.toUpperCase();">
+                        {{-- <select id="input-toefl" class="form-control" name="toefl">
                             <option selected value="">Elegir Opcion</option>
                             <option value="ITP">ITP</option>
                             <option value="Cambridge PET">Cambridge PET</option>
-                        </select>   
+                        </select>    --}}
                     </div>
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary btn-lg mt-4"><span><i class="fas fa-arrow-right"></i></span></button>
