@@ -55,7 +55,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::get('/boleta/actaCalificaciones/{grupo}','BoletaController@generarActa')->name('actaCalificaciones');
 	Route::get('/boleta/descargar/{grupo}/{alumno}', 'BoletaController@descargarBoleta')->name('boletaIndividual');
 
-	
+	Route::get('/evaluacionDocente/descargarResultados','EvaluacionDocenteController@descargarResultados')->name('descargarResultados');
+
 	Route::get('/evaluacionDocente/periodo', 'EvaluacionDocenteController@periodoResultados')->name('periodoResultados');
 	Route::get('/evaluacionDocente/resultados', 'EvaluacionDocenteController@resultados')->name('verResultados');
 });
@@ -74,7 +75,9 @@ Route::group(['middleware' => ['usuarioCoordinador']], function () {
 	Route::get('estudiantes/{estudiante}','AlumnosController@show')->name('verInfoEstudiante');
 	Route::delete('/estudiantes/{estudiante}','AlumnosController@destroy')->name('eliminarEstudiante');
 	Route::any('/search/estudiante', 'AlumnosController@search')->name('buscarEstudiante');
-	
+	Route::get('/estudiantes/recuperar/deshabilitados','AlumnosController@recuperarEstudiantes')->name('recuperarEstudiantes');
+	Route::get('/estudiantes/recuperar/{estudiante}','AlumnosController@recuperar')->name('recuperar');
+
 	Route::get('/docentes', 'DocentesController@index')->name('verDocentes');
 	Route::get('docentes/{docente}','DocentesController@show')->name('verInfoDocente');
 	Route::get('/agregarDocente', 'DocentesController@create')->name('agregarDocente');
@@ -133,13 +136,13 @@ Route::group(['middleware' => ['usuarioCoordinador']], function () {
 	Route::get('/cursos/verificarExamen', 'InscripcionesController@mostrarExamenes')->name('mostrarExamen');
 	Route::post('/cursos/guardarExamenesVerificados', 'InscripcionesController@verificarExamenes')->name('verificarExamenes');
 
-	Route::get('/catalogos/respuestas','RespuestaController@index')->name('respuestas');
-	Route::post('/catalogos/respuestas/agregar','RespuestaController@store')->name('agregarRespuesta');
-	Route::get('/catalogos/respuestas/editar/{respuesta}','RespuestaController@edit')->name('editarRespuesta');
-	Route::patch('/catalogos/respuestas/{respuesta}','RespuestaController@update')->name('guardarRespuesta');
-	Route::delete('/catalogos/respuestas/eliminar/{respuesta}','RespuestaController@destroy')->name('eliminarRespuesta');
+	Route::get('/catalogos/clasificacion','ClasificacionesController@index')->name('clasificacion');
+	Route::post('/catalogos/clasificacion/agregar','ClasificacionesController@store')->name('agregarClasificacion');
+	// Route::get('/catalogos/clasificacion/editar/{clasificacion}','ClasificacionesController@edit')->name('editarClasificacion');
+	Route::patch('/catalogos/clasificacion/{clasificacion}','ClasificacionesController@update')->name('guardarClasificacion');
+	Route::delete('/catalogos/clasificacion/eliminar/{clasificacion}','clasificacionController@destroy')->name('eliminarClasificacion');
 
-	Route::post('/catalogos/respuestas/grupo_respuestas/agregar','GrupoRespuestaController@store')->name('agregargrupoR');
+	Route::post('/catalogos/clasificacion/grupo_respuestas/agregar','GrupoRespuestaController@store')->name('agregargrupoR');
 
 	Route::post('/pregunta/agregar','PreguntaController@store')->name('agregarPregunta');
 	Route::patch('pregunta/guardar/{pregunta}','PreguntaController@update')->name('guardarPregunta');

@@ -185,6 +185,7 @@ return [
         'inicio'                => 'Fecha de Inicio',
         'fin'                   => 'Fecha Final',
         'today'                 => 'Hoy',
+        'curp_user'             => 'CURP',
         'year'                  => 'año',
         'month'                 => 'mes',
         'day'                   => 'día',

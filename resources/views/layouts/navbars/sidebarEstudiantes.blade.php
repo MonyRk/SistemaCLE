@@ -107,7 +107,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('avance').'?numero='.$alumno[0]->num_control }}">
+                        <a class="nav-link" href="{{ route('avance').'?numControl='.$alumno[0]->num_control }}">
                             <i class="fas fa-layer-group text-purple"></i> {{ __('Cursos') }}
                         </a>
                     </li>

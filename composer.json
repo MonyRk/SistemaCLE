@@ -20,6 +20,8 @@
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.8",
+        "spatie/db-dumper": "^2.14",
+        "spatie/laravel-backup": "^5.12",
         "villca/numeros-en-letras": "^1.2",
         "wemersonjanuario/wkhtmltopdf-windows": "0.12.2.3"
     },

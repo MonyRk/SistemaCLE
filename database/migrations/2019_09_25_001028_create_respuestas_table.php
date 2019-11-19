@@ -16,8 +16,7 @@ class CreateRespuestasTable extends Migration
         Schema::create('respuestas', function (Blueprint $table) {
             $table->increments('id_respuesta');
             $table->string('respuesta');
-            $table->unsignedInteger('grupo_respuesta');
-            $table->foreign('id_grupoRespuesta')->references('id_grupoRespuesta')->on('grupo_respuesta')->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->integer('valor');
             $table->timestamps();
         });
     }

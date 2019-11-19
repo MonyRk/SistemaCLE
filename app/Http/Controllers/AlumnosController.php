@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Alumno;
+use App\Boleta;
+use App\EvaluacionDocente;
 use App\Historial;
 use App\Persona;
 use App\Nivel;
@@ -13,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ValidarCrearAlumnoRequest;
 use App\Inscripcion;
 use App\Periodo;
+use App\ResultadoPregunta;
 use CreateAlumnosInscritosTable;
 
 class AlumnosController extends Controller
@@ -28,12 +31,13 @@ class AlumnosController extends Controller
     {       
         $this->middleware('auth');
         $usuarioactual = \Auth::user();
-            $datos_alumnos = DB::table('alumnos')
-                        ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
-                        ->where('tipo', 'like' , '%alumno%')
-                        ->whereNull('personas.deleted_at')
-                        ->orderBy('alumnos.num_control','ASC')
-                        ->paginate(25);
+        $datos_alumnos = DB::table('alumnos')
+                    ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+                    ->where('personas.tipo', 'like' , '%alumno%')
+                    ->whereNull('personas.deleted_at')
+                    ->orderBy('alumnos.num_control','ASC')
+                    ->paginate(25);
+        // $alumnos_sin_actividad = Alumno::where
     
         return view('alumnos.alumnos',compact('datos_alumnos','usuarioactual'));
     }
@@ -110,15 +114,19 @@ class AlumnosController extends Controller
         ]);
 
         //se crea el usuario para accesar
-        User::firstOrCreate([
+        $usuario = User::firstOrCreate([
             'curp_user' => $data['curp']
         ],[
             'name' => $data['name'],
-            'email' => $data['email'],
             'password' => bcrypt($data['curp']),
             'tipo' => 'alumno'
         ]);
 
+        if ($data['email'] != null) {
+            $usuario->update([
+                'email' => $data['email']
+            ]);
+        };
         //se verifica si hay apellido materno para agregar el nombre completo a la tabla historial
         // if ($data['apMaterno'] != null) {
         //     $nombre = $data['name'].' '.$data['apPaterno'].' '.$data['apMaterno'];
@@ -204,9 +212,9 @@ class AlumnosController extends Controller
         ->select('personas.*','alumnos.*')
         ->where('num_control',$id)
         ->get();
-
+// dd($id);
         $municipio = Municipio::select('nombre_municipio')->where('id',$datos[0]->municipio)->pluck('nombre_municipio');//dd($nombres_municipios);//pluck('nombre_municipio');
-        //dd($municipio);
+        // dd($id);
         return view('alumnos.showEstudiante',compact('datos','municipio'));
 
     }
@@ -418,13 +426,73 @@ class AlumnosController extends Controller
         $user = User::where('curp_user',$alumno[0]->curp_alumno)->get();
 
         $historial = Historial::where('num_control',$request->alumno_id)->get();
+
+        $inscripciones = Inscripcion::where('num_control',$request->alumno_id)->get();
+
+        $boletas = Boleta::where('num_control',$request->alumno_id)->get();
         // dd($alumno,$persona,$user);
-        $historial[0]->delete();
-        $user[0]->delete();
-        $alumno[0]->delete();
-        $persona[0]->delete();
+        if($historial->isNotEmpty()){
+            $historial[0]->delete();
+        }
+        if($user->isNotEmpty()){
+            $user[0]->delete();
+        }
+        if($alumno->isNotEmpty()){
+            $alumno[0]->delete();
+        }
+        if($persona->isNotEmpty()){
+            $persona[0]->delete();
+        }
+        if($inscripciones->isNotEmpty()){
+            foreach ($inscripciones as $inscripcion) {
+                $inscripcion->delete();
+            }
+        }
+        if($boletas->isNotEmpty()){
+            foreach ($boletas as $boleta) {
+                $boleta->delete();
+            }
+        }
         
         return redirect()->route('verEstudiantes')->with('warning','Los datos se eliminaron');
+    }
+
+    public function recuperarEstudiantes(){
+        
+        // $this->middleware('auth');
+        $usuarioactual = \Auth::user();
+        $datos_alumnos = DB::table('alumnos')
+                    ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+                    ->where('tipo', 'like' , '%alumno%')
+                    ->whereNotNull('alumnos.deleted_at')
+                    ->orderBy('alumnos.num_control','ASC')
+                    // ->onlyTrashed()
+                    ->paginate(25);
+    // dd($datos_alumnos);
+        return view('alumnos.eliminados',compact('datos_alumnos','usuarioactual'));
+    }
+
+    public function recuperar($dato){
+        $data = request()->all();
+
+        $persona = Persona::withTrashed()->where('curp',$data['alumno_id'])->restore();
+        $alumno = Alumno::withTrashed()->where('curp_alumno',$data['alumno_id'])->restore();
+        $usuario = User::withTrashed()->where('curp_user',$data['alumno_id'])->restore();
+        $num_control = Alumno::where('curp_alumno',$data['alumno_id'])->first();
+        $historial = Historial::withTrashed()->where('num_control',$num_control->num_control)->restore();
+        $boletas = Boleta::withTrashed()->where('num_control',$num_control->num_control)->get();
+        foreach ($boletas as $boleta ) {
+            Boleta::withTrashed()->where('num_control',$boleta->num_control)->restore();
+        }
+        $inscripciones = Inscripcion::withTrashed()->where('num_control',$num_control->num_control)->get();
+        foreach ($inscripciones as $inscripcion ) {
+            Inscripcion::withTrashed()->where('num_control',$inscripcion->num_control)->restore();
+        }
+        $evaluaciones = EvaluacionDocente::withTrashed()->where('num_control',$num_control->num_control)->get();
+        foreach ($evaluaciones as $evaluacion) {
+            ResultadoPregunta::withTrashed()->where('num_evaluacion',$evaluacion->num_evaluacion)->restore();
+        }
+        return back()->with('success','Los datos del estudiante se recuperaron');
     }
 
     

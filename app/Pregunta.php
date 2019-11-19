@@ -4,25 +4,26 @@ namespace App;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
-use App\Respuesta;
+// use App\Respuesta;
 
 class Pregunta extends Model
 {
     protected $primaryKey = 'id_pregunta';
     protected $table = 'preguntas';
     protected $fillable = [
-        'pregunta','tipo','vigencia','id_respuesta'
+        'pregunta','id_clasificacion','vigencia'
     ];
 
     use SoftDeletes;
     protected $dates = ['deleted_at'];
 
-    //una pregunta tiene varias posibles respuestas
-    public function respuestas(){
-        return $this->hasMany(GrupoRespuesta::class,'id_grupoRespuestas','id_pregunta');
-    }
-
+    //una pregunta pertenece a varias evaluaciones
     public function preguntas(){
         return $this->belongsToMany(EvaluacionDocente::class,'num_evaluacion');
+    }
+
+    //pregunta tiene una clasificacion
+    public function clasificacion(){
+        return $this->hasOne(ClasificacionPreguntas::class,'id_clasificacion','id_pregunta');
     }
 }

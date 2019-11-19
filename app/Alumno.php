@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 //use Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Historial;
  
     
 class Alumno extends Model
@@ -35,6 +36,15 @@ class Alumno extends Model
     public function examen(){
         return $this->belongsTo(Periodo::class,'id_periodo');
     }
+
+    public function historial(){
+        return $this->hasOne(Historial::class,'num_control','num_control');
+    }
+
+    public function inscripcion(){
+        return $this->hasMany(Inscripcion::class,'num_control','num_control');
+    }
+
 
     
 }

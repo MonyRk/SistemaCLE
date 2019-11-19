@@ -1,4 +1,4 @@
-<div> @include('flash-message') </div>
+<div class="mt-4"> @include('flash-message') </div>
 {{-- ESTUDIANTE --}}
 <div class="header bg-gradient-lighter pb-3 pt-5 pt-md-8" @if($usuarioactual->tipo == 'alumno')style = "display:block;" @else style="display:none" @endif>
         <div class="container-fluid">
@@ -91,7 +91,7 @@
                     <div class="col-xl-4 col-lg-6">
                         <div class="card card-stats mb-4 mb-xl-0">
                             <div class="card-body">
-                                <a href="{{ route('avance').'?numero='.$alumno[0]->num_control }}">
+                                <a href="{{ route('avance').'?numControl='.$alumno[0]->num_control }}">
                                     <div class="row">
                                         <div class="col">
                                             <span class=" font-weight-bold mb-0">Cursos</span>

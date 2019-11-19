@@ -19,55 +19,23 @@ class PreguntaController extends Controller
         $data = request()->validate([
             'pregunta' => 'required',
             'tipo' => 'required',
-            'respuestas' => 'required',
             'vigencia' => 'required'
         ]);
 
         Pregunta::firstOrCreate([
             'pregunta' => $data['pregunta'],
-            'tipo' => $data['tipo'],
-            'id_respuesta' => $data['respuestas'],
+            'id_clasificacion' => $data['tipo'],
             'vigencia' => $data['vigencia']
         ]);
 
         return redirect()->route('evaluacion')->with('success','¡La pregunta se agregó correctamente!');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Pregunta  $pregunta
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Pregunta $pregunta)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Pregunta  $pregunta
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Pregunta $pregunta)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Pregunta  $pregunta
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request)
     {
         // dd($request->idpreg);
         $data = request()->validate([
             'pregunta' => 'required',
-            'respuestas' => 'required',
             'tipo' => 'required',
             'vigencia' => 'required'
         ]);
@@ -75,8 +43,7 @@ class PreguntaController extends Controller
         $respuesta = Pregunta::find($request->idpreg)
                                 ->update([
                                     'pregunta' => $data['pregunta'],
-                                    'tipo' => $data['tipo'],
-                                    'id_respuesta' => $data['respuestas'],
+                                    'id_clasificacion' => $data['tipo'],
                                     'vigencia' => $data['vigencia']
                                 ]);
 

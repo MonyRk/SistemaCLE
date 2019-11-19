@@ -29,19 +29,19 @@
         </a>
     </div>
 
-    <div class="col text-right mt-3">
+    {{-- <div class="col text-right mt-3">
         <button type="button" class="btn btn-sm btn-white" data-toggle="modal" data-target="#modal-form">{{ __('Crear Grupo de Respuestas') }}<i class="fas fa-plus-circle"></i></button>
-    </div>
+    </div> --}}
     <div class="row mt-3">
         <div class="col-xl">
             <div class="card shadow ">
                 <div class="card-header border-3">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h4 class="mb-0">{{ __('Respuestas para la Evaluación Docente') }}</h4>
+                            <h5 class="mb-0">{{ __('Clasificación de Preguntas para la Evaluación Docente') }}</h5>
                         </div>
                         <div class="col text-right">
-                            <button type="button" class="btn btn-sm btn-white" data-toggle="modal" data-target="#modal-form2">{{ __('Agregar Respuesta ') }}<i class="fas fa-plus-circle"></i></button>
+                            <button type="button" class="btn btn-sm btn-white" data-toggle="modal" data-target="#modal-form2">{{ __('Agregar Clasificación ') }}<i class="fas fa-plus-circle"></i></button>
                         </div>
                     </div>
                 </div>
@@ -51,29 +51,29 @@
                         <thead class="thead-light">
                             <tr>
                                 <th></th>
-                                <th scope="col">Respuesta</th>
-                                <th scope="col">Clasificaci&oacute;n de Respuesta</th>
+                                <th scope="col">Clasificaci&oacute;n</th>
+                                {{-- <th scope="col">Clasificaci&oacute;n de Respuesta</th> --}}
                                 <th scope="col">Editar</th>
-                                <th scope="col">Eliminar</th>
+                                {{-- <th scope="col">Eliminar</th> --}}
 
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($respuestas as $respuesta)
+                            @foreach ($respuestas as $clasificacion)
                             <tr>
                                 <th></th>
                                 <th scope="row">
-                                    {{ $respuesta->respuesta }}
+                                    {{ $clasificacion->clasificacion }}
                                 </th>
-                                <td>
+                                {{-- <td>
                                     {{ $respuesta->grupoRespuesta }}
-                                </td>
+                                </td> --}}
                                 <td>
-                                    <a href="" data-idrespuesta="{{ $respuesta->id_respuesta }}" data-respuesta="{{ $respuesta->respuesta }}" data-toggle="modal" data-target="#modal-form3"><i class="fas fa-edit"></i></a>
+                                    <a href="" class="text-primary" data-idclasificacion="{{ $clasificacion->id_clasificacion }}" data-clasificacion="{{ $clasificacion->clasificacion }}" data-toggle="modal" data-target="#modal-form3"><i class="fas fa-edit"></i></a>
                                 </td>
-                                <td>
-                                    <a href="" id="respid" data-respuid="{{ $respuesta->id_respuesta }}" data-toggle="modal" data-target="#modal-notification"><i class="far fa-trash-alt"></i></a>
-                                </td>
+                                {{-- <td>
+                                    <a href="" class="text-danger" id="respid" data-respuid="{{ $clasificacion->id_clasificacion }}" data-toggle="modal" data-target="#modal-notification"><i class="far fa-trash-alt"></i></a>
+                                </td> --}}
                             </tr>
                             @endforeach
                         </tbody>
@@ -86,7 +86,7 @@
 <br><br>
 @include('layouts.footers.nav')
 </div>
-{{-- modal para crear respuestas --}}
+{{-- modal para crear clasificacion --}}
 
 <div class="col-md-4">
 
@@ -97,10 +97,10 @@
                     <div class="card bg-lighter shadow border-0">
                         <div class="card-body px-lg-5 py-lg-5">
                             <div class="text-center text-muted mb-4">
-                                <strong>{{ __('Nueva Respuesta') }}</strong>
+                                <strong>{{ __('Nueva Clasificación') }}</strong>
                             </div>
 
-                            <form role="form" method="post" action="{{  route('agregarRespuesta') }}" autocomplete="off">
+                            <form role="form" method="post" action="{{  route('agregarClasificacion') }}" autocomplete="off">
                                 @csrf
                                 @method('post')
                                 <div class="form-group mb-3">
@@ -108,20 +108,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                        <input class="form-control" name="respuesta" placeholder="Respuesta" type="text" value="{{ old('respuesta') }}">
-                                    </div>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <div class="input-group input-group-alternative">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
-                                        </div>
-                                        <select id="input-tipo" class="form-control" name="tipo">
-                                            <option selected value="">Clasificaci&oacute;n de Respuestas</option>
-                                            @foreach ($grupoRespuesta as $gr)
-                                            <option value="{{ $gr->id_grupoRespuestas }}">{{ $gr->grupoRespuesta }}</option>
-                                            @endforeach
-                                        </select>
+                                        <input class="form-control" name="clasificacion" placeholder="Clasificación" type="text" value="{{ old('clasificacion') }}">
                                     </div>
                                 </div>
                                 <div class="text-center">
@@ -145,10 +132,10 @@
                     <div class="card bg-lighter shadow border-0">
                         <div class="card-body px-lg-5 py-lg-5">
                             <div class="text-center text-muted mb-4">
-                                <strong>{{ __('Editar Respuesta') }}</strong>
+                                <strong>{{ __('Editar clasificacion') }}</strong>
                             </div>
 
-                            <form role="form" method="post" action="{{  route('guardarRespuesta','test') }}" autocomplete="off">
+                            <form role="form" method="post" action="{{  route('guardarClasificacion','test') }}" autocomplete="off">
                                 @csrf
                                 @method('patch')
                                 <div class="form-group mb-3">
@@ -156,23 +143,10 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
                                         </div>
-                                        <input class="form-control" id="respuestan" name="respuesta" placeholder="Respuesta" type="text" value="{{ old('respuesta') }}">
-                                        <input type="hidden" name="id_respuesta" id="id_respuesta" value="">
+                                        <input class="form-control" id="clasificacionn" name="clasificacion" placeholder="Clasificación" type="text" value="{{ old('clasificacion') }}">
+                                        <input type="hidden" name="id_clasificacion" id="id_clasificacion" value="">
                                     </div>
                                 </div>
-                                <div class="form-group mb-3">
-                                    <div class="input-group input-group-alternative">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
-                                            </div>
-                                            <select id="input-tipo" class="form-control" name="tipo">
-                                                    <option selected value="">Clasificaci&oacute;n de Respuestas</option>
-                                                    @foreach ($grupoRespuesta as $gr)
-                                                    <option value="{{ $gr->id_grupoRespuestas }}">{{ $gr->grupoRespuesta }}</option>
-                                                    @endforeach
-                                                </select>
-                                        </div>
-                                    </div>
                                 <div class="text-center">
                                     <button type="sumbit" class="btn btn-primary my-4">{{ __('Actualizar') }}</button>
                                 </div>
@@ -198,7 +172,7 @@
                     </button>
 
                 </div>
-                <form action="{{ route('eliminarRespuesta','test') }}" method="POST" class="delete" id="deleteForm">
+                <form action="{{ route('eliminarClasificacion','test') }}" method="POST" class="delete" id="deleteForm">
                     @csrf
                     @method('delete')
                     <div class="modal-body">
@@ -279,11 +253,11 @@
     // para editar
     $('#modal-form3').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget)
-        var id_respuesta = button.attr('data-idrespuesta')
-        var respuesta = button.attr('data-respuesta')
+        var id_clasificacion = button.attr('data-idclasificacion')
+        var clasificacion = button.attr('data-clasificacion')
         var modal = $(this)
-        modal.find('.modal-body #respuestan').val(respuesta);
-        modal.find('.modal-body #id_respuesta').val(id_respuesta);
+        modal.find('.modal-body #clasificacionn').val(clasificacion);
+        modal.find('.modal-body #id_clasificacion').val(id_clasificacion);
     })
 </script>
 @endsection

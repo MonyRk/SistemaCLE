@@ -17,9 +17,8 @@ class CreatePreguntasTable extends Migration
             $table->increments('id_pregunta');
             $table->string('pregunta');
             $table->string('vigencia');
-            $table->enum('tipo',array('Enfoque de Enseñanza','Clima Afectivo','Proceso de Enseñanza','Estrategias de Retroalimentación'));
-            $table->unsignedInteger('id_grupoRespuesta');
-            $table->foreign('id_grupoRespuesta')->references('id_grupoRespuesta')->on('grupo_respuesta')->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->unsignedInteger('id_clasificacion');
+            $table->foreign('id_clasificacion')->references('id_clasificacion')->on('clasificacion_preguntas')->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->softDeletes();
             $table->timestamps();
         });

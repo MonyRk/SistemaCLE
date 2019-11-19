@@ -3,7 +3,7 @@
     Agregar Estudiante
 @endsection
 @section('regresar')
-    {{ back() }}
+    {{ redirect()->back() }}
 @endsection
 @section('action')
 {{ url("guardarEstudiante") }}

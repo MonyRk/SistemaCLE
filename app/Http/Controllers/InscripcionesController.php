@@ -689,65 +689,70 @@ class InscripcionesController extends Controller
 
     public function inscripcionAlumno(Alumno $alumno){
         $estatus_inscripciones = Fechas::where('proceso','inscripciones')->first();
-        
-        if($estatus_inscripciones !=null && Carbon::now() >= $estatus_inscripciones->fecha_inicio && Carbon::now() <= $estatus_inscripciones->fecha_fin)
-        { 
-            
-            $periodo_actual = Periodo::where('actual',true)->get();
-            
-            //verifico si ya realizo el pago 
-            $pago = Inscripcion::where('num_control',$alumno->num_control)
-                        ->where('pago_verificado',true)
-                        ->whereNull('id_grupo')
-                        ->whereNull('deleted_at')
-                        ->where('periodo_pago',$periodo_actual[0]->id_periodo)
-                        ->get(); 
-            
-            if($pago->isNotEmpty()){
-            //busco el nivel del estudiante
-                $estudiante = Historial::where('historial.num_control',$alumno->num_control)
-                                            ->get();
-                if($estudiante[0]->A1M1 == null || $estudiante[0]->A1M1 == 'reprobado'){
-                    $nivel_estudiante = 'A1';
-                    $modulo_estudiante = 'M1';
+        $email_alumno = User::where('curp_user',$alumno->curp_alumno)->first();
+        if ($email_alumno->email != null) {
+            if($estatus_inscripciones !=null && Carbon::now() >= $estatus_inscripciones->fecha_inicio && Carbon::now() <= $estatus_inscripciones->fecha_fin)
+            { 
+                
+                $periodo_actual = Periodo::where('actual',true)->get();
+                
+                //verifico si ya realizo el pago 
+                $pago = Inscripcion::where('num_control',$alumno->num_control)
+                            ->where('pago_verificado',true)
+                            ->whereNull('id_grupo')
+                            ->whereNull('deleted_at')
+                            ->where('periodo_pago',$periodo_actual[0]->id_periodo)
+                            ->get(); 
+                
+                if($pago->isNotEmpty()){
+                //busco el nivel del estudiante
+                    $estudiante = Historial::where('historial.num_control',$alumno->num_control)
+                                                ->get();
+                    if($estudiante[0]->A1M1 == null || $estudiante[0]->A1M1 == 'reprobado'){
+                        $nivel_estudiante = 'A1';
+                        $modulo_estudiante = 'M1';
+                    }
+                    if( $estudiante[0]->A2M1 == 'reprobado' || $estudiante[0]->A2M1 == null  && $estudiante[0]->A1M1 == 'aprobado'){
+                        $nivel_estudiante = 'A2';
+                        $modulo_estudiante = 'M1';
+                    }
+                    if( $estudiante[0]->A2M2 == 'reprobado' || $estudiante[0]->A2M2 == null  && $estudiante[0]->A2M1 == 'aprobado'){
+                        $nivel_estudiante = 'A2';
+                        $modulo_estudiante = 'M2';
+                    }
+                    if( $estudiante[0]->B1M1 == 'reprobado' || $estudiante[0]->B1M1 == null  && $estudiante[0]->A2M2 == 'aprobado'){
+                        $nivel_estudiante = 'B1';
+                        $modulo_estudiante = 'M1';
+                    }
+                    if($estudiante[0]->B1M2 == 'reprobado' || $estudiante[0]->B1M2 == null  && $estudiante[0]->B1M1 == 'aprobado'){
+                        $nivel_estudiante = 'B1';
+                        $modulo_estudiante = 'M2';
+                    }
+                    // selecciono los grupos en el periodo seleccionado y el nivel al que se puede inscribir el estudiante
+                    $grupos = Grupo::leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
+                                        ->leftjoin('docentes','docentes.id_docente','=','grupos.docente')
+                                        ->leftjoin('personas','personas.curp','=','docentes.curp_docente')
+                                        ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
+                                        ->whereNull('grupos.deleted_at')
+                                        ->where('nivels.nivel',$nivel_estudiante)
+                                        ->where('nivels.modulo',$modulo_estudiante)
+                                        ->where('grupos.periodo',$periodo_actual[0]->id_periodo)// ->where('grupos.periodo',request('periodo'))
+                                        ->leftjoin('periodos','grupos.periodo','=','periodos.id_periodo')
+                                        ->select('grupos.*','nivels.*','aulas.*','docentes.curp_docente','personas.nombres','personas.ap_paterno','personas.ap_materno','periodos.*')
+                                        ->get();
+                                
+                    return view('inscripciones.inscripcionAlumno',compact('nivel_estudiante','modulo_estudiante','grupos'));
+                }else{
+                    return back()->with('error','Realiza el pago o verifica en la coordinación que tu pago se haya validado y que actualmente no estes inscrito en otro grupo.');
+                
                 }
-                if( $estudiante[0]->A2M1 == 'reprobado' || $estudiante[0]->A2M1 == null  && $estudiante[0]->A1M1 == 'aprobado'){
-                    $nivel_estudiante = 'A2';
-                    $modulo_estudiante = 'M1';
-                }
-                if( $estudiante[0]->A2M2 == 'reprobado' || $estudiante[0]->A2M2 == null  && $estudiante[0]->A2M1 == 'aprobado'){
-                    $nivel_estudiante = 'A2';
-                    $modulo_estudiante = 'M2';
-                }
-                if( $estudiante[0]->B1M1 == 'reprobado' || $estudiante[0]->B1M1 == null  && $estudiante[0]->A2M2 == 'aprobado'){
-                    $nivel_estudiante = 'B1';
-                    $modulo_estudiante = 'M1';
-                }
-                if($estudiante[0]->B1M2 == 'reprobado' || $estudiante[0]->B1M2 == null  && $estudiante[0]->B1M1 == 'aprobado'){
-                    $nivel_estudiante = 'B1';
-                    $modulo_estudiante = 'M2';
-                }
-                // selecciono los grupos en el periodo seleccionado y el nivel al que se puede inscribir el estudiante
-                $grupos = Grupo::leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
-                                    ->leftjoin('docentes','docentes.id_docente','=','grupos.docente')
-                                    ->leftjoin('personas','personas.curp','=','docentes.curp_docente')
-                                    ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
-                                    ->whereNull('grupos.deleted_at')
-                                    ->where('nivels.nivel',$nivel_estudiante)
-                                    ->where('nivels.modulo',$modulo_estudiante)
-                                    ->where('grupos.periodo',$periodo_actual[0]->id_periodo)// ->where('grupos.periodo',request('periodo'))
-                                    ->leftjoin('periodos','grupos.periodo','=','periodos.id_periodo')
-                                    ->select('grupos.*','nivels.*','aulas.*','docentes.curp_docente','personas.nombres','personas.ap_paterno','personas.ap_materno','periodos.*')
-                                    ->get();
-                            
-                return view('inscripciones.inscripcionAlumno',compact('nivel_estudiante','modulo_estudiante','grupos'));
-            }else{
-                return back()->with('error','Realiza el pago o verifica en la coordinación que tu pago se haya validado y que actualmente no estes inscrito en otro grupo.');
-            
+            }else {
+                return redirect()->route('sinAcceso')->with('info','El proceso de inscripciones aún no esta disponible. Consulta las fechas en la Coordinación de Lenguas Extranjeras.');
             }
-        }else {
-            return redirect()->route('sinAcceso')->with('info','El proceso de inscripciones aún no esta disponible. Consulta las fechas en la Coordinación de Lenguas Extranjeras.');
+        } else {
+            return back()->with('info','Debes registrar un correo electronico para inscribirte.');
         }
+        
     }
 
     public function agregarAlumno(){

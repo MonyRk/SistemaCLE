@@ -98,119 +98,56 @@ $usuarioactual = \Auth::user();
                 @endphp
                 {{-- {{ dd($docente_a_evaluar) }} --}}
                 <input type="hidden" name="docente" value="{{ $docente_a_evaluar->id_docente }}">
-                <input type="hidden" name="periodo" value="{{ $periodo }}">
+                <input type="hidden" name="periodo" value="{{ $periodo->id_periodo }}">
                 <input type="hidden" name="grupo" value="{{ $docente_a_evaluar->id_grupo }}">
                 <div class="row">
                     Evaluaci&oacute;n docente a: &nbsp; <h5 class=" mb-1">{{ $docente_a_evaluar->nombres }} {{ $docente_a_evaluar->ap_paterno }} @if($docente_a_evaluar->ap_materno) {{ $docente_a_evaluar->ap_materno }} @endif
                 </div>
                 </h5>
-    
-
             @endif
 
-            <hr class="my-4" />
-            <h6 class="heading-small text-muted mb-4">Enfoque de Enseñanza</h6>
             @php $i=0 @endphp
-            @foreach ($enfoque as $pEnfoque)
-            @php $i++ @endphp
-            <div class="row" id="{{ $pEnfoque->id_pregunta }}">
-                @if ($usuarioactual->tipo == 'coordinador')
-                    <a href="" data-idpreg="{{ $pEnfoque->id_pregunta }}" data-preg="{{ $pEnfoque->pregunta }}" data-toggle="modal" data-target="#modal-edit"><i class="fas fa-edit"></i></a>
-                    <a href="" id="" data-preguntaid="{{ $pEnfoque->id_pregunta }}" data-toggle="modal" data-target="#modal-delete"><i class="fas fa-eraser"></i></a>
-                @endif
-                <input type="hidden" name="preg-res{{ $i }}[]" value="{{ $pEnfoque->id_pregunta }}">
-                <div class="form-group col-md">
-                    <label class="form-control-label" for="input-pregunta">{{ $i.'.' }}{{ $pEnfoque->pregunta }}</label>
-                    <select id="input-pregunta" class="form-control col-md-4" name="preg-res{{$pEnfoque->id_pregunta}}[]">
-                        <option selected value="">Elija una opci&oacute;n</option>
-                        {{ $respuestas = App\Respuesta::where('grupo_respuesta', $pEnfoque->id_respuesta)->get() }}
-                        @foreach ($respuestas as $respuesta)
-                          <option value="{{ $respuesta->id_respuesta }}">{{ $respuesta->respuesta }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            @endforeach
-            
-            <hr class="my-4" />
-            <h6 class="heading-small text-muted mb-4">Clima Afectivo</h6>
-            
-            @foreach ($clima as $climaA)
-            @php $i++ @endphp
-            <div class="row" id="{{ $climaA->id_pregunta }}">
-                @if ($usuarioactual->tipo == 'coordinador')
-                    <a href="" data-idpreg="{{ $climaA->id_pregunta }}" data-preg="{{ $climaA->pregunta }}" data-toggle="modal" data-target="#modal-edit"><i class="fas fa-edit"></i></a>
-                    <a href="" id="" data-preguntaid="{{ $climaA->id_pregunta }}" data-toggle="modal" data-target="#modal-delete"><i class="fas fa-eraser"></i></a>
-                @endif
-                <input type="hidden" name="preg-res{{ $i }}[]" value="{{ $climaA->id_pregunta }}">
-                <div class="form-group col-md">
-                    <label class="form-control-label" for="input-pregunta">{{ $i.'.' }}{{ $climaA->pregunta }}</label>
-                    <select id="input-pregunta" class="form-control col-md-4" name="preg-res{{$climaA->id_pregunta}}[]">
-                        <option selected value="">Elija una opci&oacute;n</option>
-                        {{ $respuestas = App\Respuesta::where('grupo_respuesta', $climaA->id_respuesta)->get() }}
-                        @foreach ($respuestas as $respuesta)
-                        <option value="{{ $respuesta->id_respuesta }}">{{ $respuesta->respuesta }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            @endforeach
 
-            <hr class="my-4" />
-            <h6 class="heading-small text-muted mb-4">Proceso de Enseñanza</h6>
-            
-            @foreach ($enseñanzas as $pEnseñanza)
-            @php $i++ @endphp
-            <div class="row" id="{{ $pEnseñanza->id_pregunta }}">
-                @if ($usuarioactual->tipo == 'coordinador')
-                    <a href="" data-idpreg="{{ $pEnseñanza->id_pregunta }}" data-preg="{{ $pEnseñanza->pregunta }}" data-toggle="modal" data-target="#modal-edit"><i class="fas fa-edit"></i></a>
-                    <a href="" id="" data-preguntaid="{{ $pEnseñanza->id_pregunta }}" data-toggle="modal" data-target="#modal-delete"><i class="fas fa-eraser"></i></a>
-                @endif
-                <input type="hidden" name="preg-res{{ $i }}[]" value="{{ $pEnseñanza->id_pregunta }}">
-                <div class="form-group col-md">
-                    <label class="form-control-label" for="input-pregunta">{{ $i.'.' }}{{ $pEnseñanza->pregunta }}</label>
-                    <select id="input-pregunta" class="form-control col-md-4" name="preg-res{{$pEnseñanza->id_pregunta}}[]">
-                        <option selected value="">Elija una opci&oacute;n</option>
-                        {{ $respuestas = App\Respuesta::where('grupo_respuesta', $pEnseñanza->id_respuesta)->get() }}
-                        @foreach ($respuestas as $respuesta)
-                        <option value="{{ $respuesta->id_respuesta }}">{{ $respuesta->respuesta }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            @endforeach
-
-            <hr class="my-4" />
-            <h6 class="heading-small text-muted mb-4">Estrategias de Retroalimentaci&oacute;n </h6>
-           
-            @foreach ($retroalimentacion as $retroa)
-            @php $i++ @endphp
-            <div class="row" id="{{ $retroa->id_pregunta }}">
-                @if ($usuarioactual->tipo == 'coordinador')
-                <a href="" data-toggle="modal" data-target="#modal-edit" data-idpreg="{{ $retroa->id_pregunta }}" data-preg="{{ $retroa->pregunta }}"><i class="fas fa-edit"></i></a>
-                <a href="" id="" data-preguntaid="{{ $retroa->id_pregunta }}" data-toggle="modal" data-target="#modal-delete"><i class="fas fa-eraser"></i></a>
-                @endif
-                <input type="hidden" name="preg-res{{ $i }}[]" value="{{ $retroa->id_pregunta }}">
-                <div class="form-group col-md">
-                    <label class="form-control-label" for="input-pregunta">{{ $i.'.' }}{{ $retroa->pregunta }}</label>
-                    <select id="input-pregunta" class="form-control col-md-4" name="preg-res{{$retroa->id_pregunta}}[]">
-                        <option selected value="">Elija una opci&oacute;n</option>
-                        {{ $respuestas = App\Respuesta::where('grupo_respuesta', $retroa->id_respuesta)->get() }}
-                        @foreach ($respuestas as $respuesta)
-                        <option value="{{ $respuesta->id_respuesta }}">{{ $respuesta->respuesta }}</option>
-                        @endforeach
-                        
-                    </select>
+            @foreach ($tipoPregunta as $tipo)
+                <hr class="my-4" />
+                <h6 class="heading-small text-muted mb-4">{{ $tipo->clasificacion }}</h6>
+                
+                @foreach ($preguntas as $pregunta)
                     
-                </div>
-            </div>
+                    
+                    @if ($pregunta->id_clasificacion == $tipo->id_clasificacion)
+                    @php $i++ @endphp
+                        <div class="row" id="{{ $pregunta->id_pregunta }}">
+                            @if ($usuarioactual->tipo == 'coordinador')
+                                <a href="" data-idpreg="{{ $pregunta->id_pregunta }}" data-preg="{{ $pregunta->pregunta }}" data-toggle="modal" data-target="#modal-edit"><i class="fas fa-edit"></i></a>
+                               @php
+
+                                    $estatus_evaluacion = App\Fechas::where('proceso','evaluacion')->first();
+                               @endphp
+                                @if($estatus_evaluacion ==null || Carbon\Carbon::now() < $estatus_evaluacion->fecha_inicio || Carbon\Carbon::now() > $estatus_evaluacion->fecha_fin)
+                                    <a href="" id="" data-preguntaid="{{ $pregunta->id_pregunta }}" data-toggle="modal" data-target="#modal-delete"><i class="fas fa-eraser"></i></a>
+                                @endif
+                            @endif
+                            <input type="hidden" name="preg-res{{ $i }}[]" value="{{ $pregunta->id_pregunta }}">
+                            <div class="form-group col-md">
+                                <label class="form-control-label" for="input-pregunta">{{ $i.'.' }}{{ $pregunta->pregunta }}</label>
+                                <select id="input-pregunta" class="form-control col-md-4" name="preg-res{{ $i }}[1]" required ><!-- name="preg-res{{-- $pregunta->id_pregunta--}}[]"-->
+                                    <option selected value="">Elija una opci&oacute;n</option>
+                                    {{-- {{ $respuestas = App\Respuesta::where('grupo_respuesta', $pregunta->id_respuesta)->get() }} --}}
+                                    @foreach ($respuestas as $respuesta)
+                                    <option value="{{ $respuesta->id_respuesta }}">{{ $respuesta->respuesta }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
             @endforeach
             @if ($usuarioactual->tipo != 'coordinador')
                 <div class="text-center">
                     <button type="sumbit" class="btn btn-primary my-4">{{ __('Guardar') }}</button>
                 </div>
             @endif
-            
     </form>
 <br><br>
 @include('layouts.footers.nav')
@@ -248,25 +185,11 @@ $usuarioactual = \Auth::user();
                                         <select id="input-tipo" class="form-control" name="tipo">
                                             <option selected value="">Clasificaci&oacute;n</option>
                                             @foreach ($tipoPregunta as $tipo)
-                                                <option value="{{ $tipo->tipo }}">{{ $tipo->tipo }}</option>    
+                                                <option value="{{ $tipo->id_clasificacion }}">{{ $tipo->clasificacion }}</option>    
                                             @endforeach
                                          </select>
                                     </div>
                                 </div>
-                                <label class="form-control-label" for="input-respuestas">{{ __('Grupos de Respuestas') }}</label>
-                                {{-- <div class="form-group mb-3">
-                                    <div class="input-group input-group-alternative">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-pencil-alt"></i></span>
-                                        </div>
-                                        <select id="input-respuestas" class="form-control" name="respuestas">
-                                            <option selected value="">Tipo de Respuestas</option>
-                                            @foreach ($grupoRs as $r)
-                                            <option value="{{ $r->id_grupoRespuestas }}">{{ $r->grupoRespuesta }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div> --}}
                                 <label class="form-control-label" for="input-vigencia">{{ __('Año de Vigencia') }}</label>
                                 <div class="form-group mb-3">
                                     <div class="input-group input-group-alternative">
@@ -366,12 +289,12 @@ $usuarioactual = \Auth::user();
                                         <select id="input-tipo" class="form-control" name="tipo">
                                             <option selected value="">Clasificaci&oacute;n</option>
                                             @foreach ($tipoPregunta as $tipo)
-                                                <option value="{{ $tipo->tipo }}">{{ $tipo->tipo }}</option>    
+                                                <option value="{{ $tipo->id_clasificacion }}">{{ $tipo->clasificacion }}</option>    
                                             @endforeach
                                             </select>
                                     </div>
                                 </div>
-                                <label class="form-control-label" for="input-respuestas">{{ __('Grupos de Respuestas') }}</label>
+                                {{-- <label class="form-control-label" for="input-respuestas">{{ __('Grupos de Respuestas') }}</label>
                                 <div class="form-group mb-3">
                                     <div class="input-group input-group-alternative">
                                         <div class="input-group-prepend">
@@ -384,7 +307,7 @@ $usuarioactual = \Auth::user();
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <label class="form-control-label" for="input-vigencia">{{ __('Año de Vigencia') }}</label>
                                 <div class="form-group mb-3">
                                     <div class="input-group input-group-alternative">
@@ -436,7 +359,7 @@ $usuarioactual = \Auth::user();
         var idpregunta = button.attr('data-idpreg')
         // var idpregunta = button.data('idpreg')
         var pregunt = button.attr('data-preg')
-        // console.log($(event.relatedTarget))
+        console.log(idpregunta);
         var modal = $(this)
         modal.find('.modal-body #preguntaEdit').val(pregunt);
         modal.find('.modal-body #idpreg').val(idpregunta);

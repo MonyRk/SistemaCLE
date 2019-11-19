@@ -36,4 +36,8 @@ class Inscripcion extends Model
     public function periodo(){
         return $this->hasOne(Periodo::class,'id_periodo','num_inscripcion');
     }
+
+    public function alumno(){
+        return $this->belongsTo(Alumno::class,'num_control');
+    }
 }
