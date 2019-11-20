@@ -43,7 +43,7 @@ class DocentesController extends Controller
     {
         $search = $request->all(); 
         
-        $datos_docentes = DB::table('docentes')
+        $docentes = DB::table('docentes')
                 ->leftjoin('personas','personas.curp','=','docentes.curp_docente')
                 ->where('tipo', 'like' , '%docente%')
                 ->whereNull('personas.deleted_at')
@@ -57,7 +57,7 @@ class DocentesController extends Controller
                 ->paginate(25)
                 ->appends('buscar',$search['buscar']);
                         
-        return view ('docentes.docentes',compact('datos_docentes'));
+        return view ('docentes.docentes',compact('docentes'));
     }
 
     /**

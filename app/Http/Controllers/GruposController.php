@@ -71,6 +71,9 @@ class GruposController extends Controller
                 ->orWhere('aulas.edificio','like','%'.$search['buscar'].'%')
                 ->orWhere('periodos.descripcion','like','%'.$search['buscar'].'%')
                 ->orWhere('periodos.anio','like','%'.$search['buscar'].'%')
+                ->orWhere('personas.nombres','like','%'.$search['buscar'].'%')
+                ->orWhere('personas.ap_paterno','like','%'.$search['buscar'].'%')
+                ->orWhere('personas.ap_materno','like','%'.$search['buscar'].'%')
                 ->paginate(25)
                 ->appends('buscar',$search['buscar']);
 

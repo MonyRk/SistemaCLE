@@ -44,7 +44,7 @@
             @method('post')
 
             <h6 class="heading-small text-muted mb-4">{{ __('Información Personal') }}</h6>
-            
+            <p class="text-muted">La informaci&oacute;n proporcionada ser&aacute; utilizada para fines educativos y solo por la Coordinaci&oacute;n de Lenguas Extranjeras.</p>
             @if (session('status'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('status') }}

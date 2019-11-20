@@ -86,15 +86,16 @@
                                         @php
                                             $docente_en_grupo = App\Grupo::where('docente',$docente->id_docente)->get();
                                         @endphp
-                                        @if($docente_en_grupo->isEmpty())
-                                            <td class="text-center"> 
+                                        <td class="text-center"> 
                                                 <a href="docentes/{{ $docente->id_docente }}/editar" class="text-primary"><i class="fas fa-edit"></i></a>
                                             </td>
+                                        @if($docente_en_grupo->isEmpty())
+                                            
                                             <td class="text-center">
                                                 <a href="" id="docenteid" class="text-danger" data-docenteid="{{ $docente->id_docente }}" data-toggle="modal" data-target="#modal-notification" ><i class="far fa-trash-alt"></i></a>
                                             </td>
                                         @else
-                                            <td colspan="2" class="text-center">
+                                            <td colspan="" class="text-center">
                                                 <a href="" class="text-primary" data-toggle="modal" data-target="#modal-notification2" ><i class="far fa-question-circle"></i></a>
                                             </td>
                                         @endif

@@ -6,7 +6,7 @@
                     <img src="{{ asset('argon') }}/img/brand/logosep.png" class="img-responsive" HSPACE="10" VSPACE="10">
                     <img src="{{ asset('argon') }}/img/brand/logotecnmblanco1.png" style="" HSPACE="10" VSPACE="10">
                 </div>
-                <div class="offset-1 ">
+                <div class="offset-1 " align="right">
                     <img src="{{ asset('argon') }}/img/brand/logotec1.png" class="" HSPACE="10" VSPACE="10">
                     <img src="{{ asset('argon') }}/img/brand/logo11.png" class="" HSPACE="10" VSPACE="10">
                 </div>

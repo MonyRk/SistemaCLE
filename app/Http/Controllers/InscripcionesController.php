@@ -55,6 +55,8 @@ class InscripcionesController extends Controller
                     ->orWhere('grupos_periodos.modulo','like','%'.$search['buscar'].'%')
                     ->orWhere('grupos_periodos.num_aula','like','%'.$search['buscar'].'%')
                     ->orWhere('grupos_periodos.edificio','like','%'.$search['buscar'].'%')
+                    ->orWhere('grupos_periodos.nombres','like','%'.$search['buscar'].'%')           
+                    ->orWhere('grupos_periodos.hora','like','%'.$search['buscar'].'%')
                     ->orderBy('grupos_periodos.nivel','ASC')
                     ->orderBy('grupos_periodos.modulo','ASC')
                     ->paginate(25)
@@ -74,8 +76,10 @@ class InscripcionesController extends Controller
         $aulas = Aula::leftjoin('horas_disponibles','horas_disponibles.id_hora','=','aulas.hrdisponible')
         ->select('aulas.*','horas_disponibles.*')
         ->get();
+
+        $fecha_inscripciones = Fechas::where('proceso','inscripciones')->first();
                 
-        return view ('inscripciones.inscripciones',compact('grupos','niveles','aulas','p','docentes'));
+        return view ('inscripciones.inscripciones',compact('grupos','niveles','aulas','p','docentes','fecha_inscripciones'));
     }
     
     //buscar por estudiante en el grupo a inscribir
