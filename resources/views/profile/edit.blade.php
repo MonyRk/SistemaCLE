@@ -1,15 +1,16 @@
 @extends('layouts.app', ['title' => __('Perfil de usuario')])
 
 @section('content')
-    @include('users.partials.header', [
+    {{-- @include('users.partials.header', [
         'title' => __('Hola') . ' '. auth()->user()->name,
         'description' => __('Este es tu pagina de perfil'),
         'class' => 'col-lg-7'
-    ])   
+    ])    --}}
 
-    <div class="container-fluid mt--7">
-        <div class="row">
-            <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
+    <div class="container-fluid mt-4">
+        <h1>{{ 'Bienvenido(a)'.' '. auth()->user()->name }}</h1>
+        <div class="row mt-4">
+            {{-- <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
                 <div class="card card-profile shadow">
                     <div class="row justify-content-center">
                         <div class="col-lg-3 order-lg-2">
@@ -21,16 +22,16 @@
                         </div>
                     </div>
                     <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
-                        {{-- <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between">
                             <a href="#" class="btn btn-sm btn-info mr-4">{{ __('Connect') }}</a>
                             <a href="#" class="btn btn-sm btn-default float-right">{{ __('Mensaje') }}</a>
-                        </div> --}}
+                        </div>
                     </div>
                     <div class="card-body pt-0 pt-md-4">
                         <div class="row">
                             <div class="col">
                                 <div class="card-profile-stats d-flex justify-content-center mt-md-5">
-                                    {{-- <div>
+                                    <div>
                                         <span class="heading">22</span>
                                         <span class="description">{{ __('Amigos') }}</span>
                                     </div>
@@ -41,7 +42,7 @@
                                     <div>
                                         <span class="heading">89</span>
                                         <span class="description">{{ __('Comentarios') }}</span>
-                                    </div> --}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -64,7 +65,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             <div class="col-xl-8 order-xl-1">
                 <div class="card bg-lighter shadow">
                     <div class="card-header bg-white border-0">
@@ -109,6 +110,10 @@
                                         </span>
                                     @endif
                                 </div>
+                                <div class="form-group">
+                                        <label class="form-control-label" for="input-email">{{ __('CURP') }}</label>
+                                        <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder="{{ __('CURP') }}" value="{{ old('email', auth()->user()->curp_user) }}" readonly>
+                                    </div>
 
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-success mt-4">{{ __('Guardar') }}</button>

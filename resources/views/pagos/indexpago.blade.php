@@ -44,7 +44,7 @@ $usuarioactual = \Auth::user();
             <div class="col-md-2 text-center">
                 <a href="" data-toggle="modal" data-target="#modal-form">
                     <i class="fas fa-money-check-alt fa-5x text-dark"></i>
-                   <h5 class="text-dark">Agregar Pago</h5>
+                   <h5 class="text-dark">Registrar Pago</h5>
                 </a>
             </div>
             <div class="col-md-2"></div>

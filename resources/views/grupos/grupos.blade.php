@@ -46,7 +46,7 @@
                         <div class="card-header border-3">
                             <div class="row align-items-center">
                                 <div class="col">
-                                    <h4 class="mb-0">{{ __('Información de los Grupos') }}</h4>
+                                    <h4 class="mb-0">{{ __('Información de los Grupos') }} {{ $periodos->descripcion }} {{ $periodos->anio }}</h4>
                                 </div>
                                 <div class="col text-right">
                                     <a href="{{ url("/agregarGrupo") }}" class="btn btn-sm btn-gray">Crear
@@ -65,7 +65,7 @@
                                         <th scope="col">Aula</th>
                                         <th scope="col">Hora</th>
                                         <th scope="col">Docente</th>
-                                        <th scope="col">Periodo</th>
+                                        {{-- <th scope="col">Periodo</th> --}}
                                         <th scope="col">Modalidad</th>
                                         <th scope="col">Editar</th>
                                         <th scope="col">Eliminar</th>
@@ -92,9 +92,9 @@
                                         <td>
                                             {{ $grupo->nombres }} {{ $grupo->ap_paterno }} @if ( $grupo->ap_materno != null ) {{ $grupo->ap_materno }} @endif
                                         </td>
-                                        <td>
+                                        {{-- <td>
                                             {{ $grupo->descripcion }} {{ $grupo->anio }}
-                                        </td>
+                                        </td> --}}
                                         <td>
                                             {{ $grupo->modalidad }}
                                         </td>

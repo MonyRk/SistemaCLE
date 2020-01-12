@@ -59,7 +59,7 @@ class InscripcionesController extends Controller
                     ->orWhere('grupos_periodos.hora','like','%'.$search['buscar'].'%')
                     ->orderBy('grupos_periodos.nivel','ASC')
                     ->orderBy('grupos_periodos.modulo','ASC')
-                    ->paginate(25)
+                    ->paginate(25) 
                     ->appends('buscar',$search['buscar']);    
 
         $docentes = Persona::leftjoin('docentes','docentes.curp_docente','=','personas.curp')
@@ -76,10 +76,15 @@ class InscripcionesController extends Controller
         $aulas = Aula::leftjoin('horas_disponibles','horas_disponibles.id_hora','=','aulas.hrdisponible')
         ->select('aulas.*','horas_disponibles.*')
         ->get();
+        $usuarioactual = \Auth::user();
+        $usuario = User::select('docentes.id_docente')
+        ->where('users.id',$usuarioactual->id)
+        ->leftjoin('docentes','docentes.curp_docente','=','users.curp_user')->get();
+        $periodo_actual = Periodo::where('actual',true)->get();
 
         $fecha_inscripciones = Fechas::where('proceso','inscripciones')->first();
-                
-        return view ('inscripciones.inscripciones',compact('grupos','niveles','aulas','p','docentes','fecha_inscripciones'));
+        return view('inscripciones.inscripciones',compact('grupos','niveles','p','aulas','fecha_inscripciones','usuarioactual','periodo_actual'));   
+        // return view ('inscripciones.inscripciones',compact('grupos','niveles','aulas','p','docentes','fecha_inscripciones'));
     }
     
     //buscar por estudiante en el grupo a inscribir
@@ -235,10 +240,10 @@ class InscripcionesController extends Controller
             $arrayInscribir = request()->input('inscribir');
             // $this->verificar($arrayInscribir,$data['periodo'],$data['grupo']);
         }
-        if (request()->has('quitar')) {
-            $totalEstudiantes -= count(request()->input('quitar'));
-            $arrayQuitar = request()->input('quitar');
-        }
+        // if (request()->has('quitar')) {
+        //     $totalEstudiantes -= count(request()->input('quitar'));
+        //     $arrayQuitar = request()->input('quitar');
+        // }
 
          
         // dependiendo del cupo se agregan o no los estudiantes seleccionados
@@ -302,11 +307,11 @@ class InscripcionesController extends Controller
                     }
             }
     
-            if (request()->has('quitar')) {
-                for ($i = 0; $i < count($arrayQuitar); $i++){
-                    $this->destroy($arrayQuitar[$i],$data['grupo']);
-                }
-            }
+            // if (request()->has('quitar')) {
+            //     for ($i = 0; $i < count($arrayQuitar); $i++){
+            //         $this->destroy($arrayQuitar[$i],$data['grupo']);
+            //     }
+            // }
             
         }else{
             return back()->with('error','La cantidad de estudiantes es mayor al cupo del grupo');
@@ -399,7 +404,7 @@ class InscripcionesController extends Controller
                 return back()->with('error','No hay grupos en el periodo seleccionado.'); 
             }
         }else {
-            return view('inscripciones.inscripciones',compact('grupos','niveles','p','aulas','fecha_inscripciones','usuarioactual'));
+            return view('inscripciones.inscripciones',compact('grupos','niveles','p','aulas','fecha_inscripciones','usuarioactual','periodo_actual'));
         }
 
         
@@ -539,7 +544,7 @@ class InscripcionesController extends Controller
         
         $data = request()->validate([
             'numControl' => array('required','regex:/^[A-Z]{1}\d{8}|\d{8}$/'),
-            'folio' => 'required|numeric|unique:alumno_inscrito,folio_pago',
+            'folio' => 'required|digits_between:4,8|unique:alumno_inscrito,folio_pago',
             'monto' => 'required|numeric',
             'date' => 'required|date_format:d/m/Y'
         ]);
@@ -649,7 +654,6 @@ class InscripcionesController extends Controller
     }
 
     public function guardarVerificados(){
-        // dd(request()->all());
 
         $data = request()->all();
         foreach ($data['verificado'] as $verificar) {
@@ -740,7 +744,7 @@ class InscripcionesController extends Controller
                                         ->whereNull('grupos.deleted_at')
                                         ->where('nivels.nivel',$nivel_estudiante)
                                         ->where('nivels.modulo',$modulo_estudiante)
-                                        ->where('grupos.periodo',$periodo_actual[0]->id_periodo)// ->where('grupos.periodo',request('periodo'))
+                                        ->where('grupos.periodo',$periodo_actual[0]->id_periodo)
                                         ->leftjoin('periodos','grupos.periodo','=','periodos.id_periodo')
                                         ->select('grupos.*','nivels.*','aulas.*','docentes.curp_docente','personas.nombres','personas.ap_paterno','personas.ap_materno','periodos.*')
                                         ->get();
@@ -858,6 +862,54 @@ class InscripcionesController extends Controller
         
 
         return back()->with('success','¡Las fechas de inscripciones se guardaron correctamente!');
+    }
+
+    public function quitarEstudiante($grupo)
+    { 
+        $grupo = DB::table('grupos')
+        ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
+        ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
+        ->where('id_grupo',$grupo)
+        ->get();
+
+        $periodo_actual = Periodo::where('actual',true)->get();
+        // $periodo_actual = Periodo::where('id_periodo',$grupo[0]->periodo)->get(); 
+        // $nivel_del_grupo = $grupo[0]->nivel;
+        // $modulo_del_grupo = $grupo[0]->modulo;
+        $curso = $grupo[0]->nivel.$grupo[0]->modulo;
+
+        $alumnos_en_el_grupo = Alumno::leftjoin('personas','alumnos.curp_alumno','=','personas.curp')
+        ->leftjoin('alumno_inscrito','alumnos.num_control','=','alumno_inscrito.num_control')
+        ->leftjoin('grupos','alumno_inscrito.id_grupo','=','grupos.id_grupo')
+        ->whereNull('personas.deleted_at')
+        ->whereNull('alumno_inscrito.deleted_at')
+        ->where('alumno_inscrito.id_grupo',$grupo[0]->id_grupo)
+        ->get();
+        return view('inscripciones.listaQuitar',compact('grupo','periodo_actual','curso','alumnos_en_el_grupo'));
+    }
+
+    public function modificar(){
+        $data = request()->all();
+        $grupo = Grupo::where('id_grupo',$data['grupo'])
+                        ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
+                        ->leftjoin('nivels','grupos.nivel_id','=','nivels.id_nivel')
+                        ->get();
+
+        $nivel = $grupo[0]->nivel.$grupo[0]->modulo;
+                        
+        //cuenta cuantos estudiantes estan en el grupo
+        $totalEstudiantes = Inscripcion::where('id_grupo',$data['grupo'])->count();
+        
+        if (request()->has('quitar')) {
+            $totalEstudiantes -= count(request()->input('quitar'));
+            $arrayQuitar = request()->input('quitar');
+            for ($i = 0; $i < count($arrayQuitar); $i++){
+                $this->destroy($arrayQuitar[$i],$data['grupo']);
+            }
+        }
+
+        return back()->with('success','La lista se modificó correctamente.');
+
     }
 
 }

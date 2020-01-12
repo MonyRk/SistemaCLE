@@ -184,6 +184,7 @@ return [
         'puntos'                => 'Puntos Obtenidos',
         'inicio'                => 'Fecha de Inicio',
         'fin'                   => 'Fecha Final',
+        'cp'                    => 'Código Postal',
         'today'                 => 'Hoy',
         'curp_user'             => 'CURP',
         'year'                  => 'año',

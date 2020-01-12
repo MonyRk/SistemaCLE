@@ -10,7 +10,7 @@ class Docente extends Model
 {
     protected $primaryKey = 'id_docente';
     protected $fillable = [
-        'curp_docente','grado_estudios','titulo','ced_prof', 'rfc', 'tipo'
+        'curp_docente','grado_estudios','titulo','ced_prof', 'rfc', 'tipo','certificaciones'
     ];
     use SoftDeletes;
     protected $dates = ['deleted_at'];

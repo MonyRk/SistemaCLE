@@ -236,7 +236,7 @@ $usuarioactual = \Auth::user();
             </h5>
         </div>
     </div>
-    <form action="{{ route('descargarResultados') }}" method="get">
+    {{-- <form action="{{ route('descargarResultados') }}" method="get">
         <input type="hidden" name="docente" value="{{ $docente[0]->curp_docente }}">
         <input type="hidden" name="periodo" value="{{ $periodo[0]->id_periodo }}">
         <button type="submit"  class="btn btn-outline-info btn-sm mt-4">
@@ -244,7 +244,7 @@ $usuarioactual = \Auth::user();
                 <i class="fas fa-file-download"></i> &nbsp; Descargar Resultados
             </span>
         </button>
-    </form>
+    </form> --}}
 </div>
 <br><br>
 @include('layouts.footers.nav')

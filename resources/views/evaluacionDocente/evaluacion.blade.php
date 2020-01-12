@@ -145,7 +145,7 @@ $usuarioactual = \Auth::user();
             @endforeach
             @if ($usuarioactual->tipo != 'coordinador')
                 <div class="text-center">
-                    <button type="sumbit" class="btn btn-primary my-4">{{ __('Guardar') }}</button>
+                    <button type="sumbit" class="btn btn-primary my-4">{{ __('Enviar Respuestas') }}</button>
                 </div>
             @endif
     </form>

@@ -195,6 +195,7 @@ class EvaluacionDocenteController extends Controller
                                                 ->where('evaluacion.periodo',$data['periodo'])
                                                 ->where('id_respuesta',$respuestas[$j])
                                                 ->where('preguntas.id_clasificacion',$clasificacion[$i]) 
+                                                ->where('evaluacion.curp_docente',$docente[0]->curp_docente)
                                                 ->get());
                                                 $k++;
                     }
@@ -231,6 +232,7 @@ class EvaluacionDocenteController extends Controller
                                                     ->where('evaluacion.periodo',$data['periodo'])
                                                     ->where('id_respuesta',$respuestas[$j])
                                                     ->where('preguntas.id_clasificacion',$clasificacion[$i]) 
+                                                    ->where('evaluacion.curp_docente',$docente[0]->curp_docente)
                                                     ->get());
                         $k++;
                     }

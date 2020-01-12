@@ -2,8 +2,10 @@
     @include('flash-message')
 </div> --}}
 {{-- COORDINADOR --}}
+@if($usuarioactual->tipo == 'escolares') @include('layouts.headers.cardsEscolares') @endif
 @if($usuarioactual->tipo == 'docente') @include('layouts.headers.cardsDocente') @endif
 @if($usuarioactual->tipo == 'alumno') @include('layouts.headers.cardsEstudiante') @endif
+@if($usuarioactual->tipo == 'coordinador') 
 <div class="header bg-gradient-lighter pb-3 pt-5 pt-md-8" @if($usuarioactual->tipo != 'coordinador')style = "display:none;" @else style="display:block" @endif>
             
     <div class="container-fluid">
@@ -49,7 +51,7 @@
                     <div class="col-xl-3 col-lg-6">
                         <div class="card card-stats mb-4 mb-xl-0">
                             <div class="card-body">
-                                <a href="{{ route('verGrupos') }}">
+                                <a href="{{ route('indexGrupos') }}">
                                     <div class="row">
                                         <div class="col">
                                             <span class=" font-weight-bold mb-0">Grupos</span>
@@ -109,7 +111,7 @@
                                 <a href="{{ route('cursos') }}">
                                     <div class="row">
                                         <div class="col">
-                                            <span class=" font-weight-bold mb-0">Cursos</span>
+                                            <span class=" font-weight-bold mb-0">Avance</span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="icon icon-shape bg-purple text-white rounded-circle shadow">
@@ -202,4 +204,4 @@
         </div>
     </div>
     <br><br>
-    
+    @endif

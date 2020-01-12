@@ -57,7 +57,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             {{-- <h6 class="text-uppercase text-muted ls-1 mb-1">Grupos por Periodo</h6> --}}
-                            <h3 class="mb-0">Estudiantes por G&eacute;nero</h3>
+                            <h3 class="mb-0">Estudiantes por Nivel</h3>
                         </div>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                     <!-- Chart -->
                     <div class="chart">
                         {{-- <canvas id="chart-orders2" class="chart-canvas"></canvas> --}}
-                        <canvas id="chart-orders5" width="400" height="400" class="chart-canvas"></canvas>
+                        <canvas id="chart-orders7" width="400" height="400" class="chart-canvas"></canvas>
                     </div>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             {{-- <h6 class="text-uppercase text-muted ls-1 mb-1">Grupos por Periodo</h6> --}}
-                            <h3 class="mb-0">Estudiantes por Nivel</h3>
+                            <h3 class="mb-0">Estudiantes por G&eacute;nero</h3>
                         </div>
                     </div>
                 </div>
@@ -86,7 +86,7 @@
                     <!-- Chart -->
                     <div class="chart">
                         {{-- <canvas id="chart-orders2" class="chart-canvas"></canvas> --}}
-                        <canvas id="chart-orders7" width="400" height="400" class="chart-canvas"></canvas>
+                        <canvas id="chart-orders5" width="400" height="400" class="chart-canvas"></canvas>
 
                     </div>
                 </div>
@@ -98,7 +98,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             {{-- <h6 class="text-uppercase text-muted ls-1 mb-1">Grupos por Periodo</h6> --}}
-                            <h3 class="mb-0">Índices de Aprobación</h3>
+                            <h3 class="mb-0">Estudiantes Aprobados</h3>
                         </div>
                     </div>
                 </div>
@@ -113,17 +113,19 @@
             </div>
         </div>
     </div>
+    {{-- BOTON PARA DESCARGAR PDF --}}
     <div class="text-right">
-        {{-- <a href="{{ route('descargarEstadisticas') }}" class="btn btn-outline-info btn-sm mt-4"> --}}
+        <a href="{{ route('descargarEstadisticas') }}">
             <form action="{{ route('descargarEstadisticas') }}" method="get">
                 <button type="submit"  class="btn btn-outline-info btn-sm mt-4">
                     <span>
                         <i class="fas fa-file-download"></i> &nbsp; Descargar Datos
                     </span>
-                    <input type="hidden" name="periodo" value="{{ $periodo[0]->id_periodo }}">
                 </button>
+                    <input type="hidden" name="periodo" value="{{ $periodo[0]->id_periodo }}">
+                
             </form>
-        {{-- </a> --}}
+        </a>
     </div>
     <br><br>
 @include('layouts.footers.nav')

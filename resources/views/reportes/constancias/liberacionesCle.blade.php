@@ -8,7 +8,7 @@
 <div class="container-fluid m--t">
         <div class="header pb-1 pt-4 pt-lg-7 d-flex align-items-center text-center">
             <div class="col-lg col-md">
-                <h4 class="text-dark"></h4>
+                <h4 class="text-dark">Constancias de Liberaci&oacute;n CLE</h4>
             </div>
         </div>
         <div class="card-body">
@@ -60,8 +60,8 @@
                         <label class="form-control-label" for="input-nivel">{{ __('Nivel Final') }}</label>
                         <select id="input-nivel" class="form-control" name="nivel">
                             <option selected value="">Elegir Opcion</option>
-                            <option value="A2">A2</option>
-                            <option value="B1">B1</option>
+                            <option value="A2M2">A2</option>
+                            <option value="B1M2">B1</option>
                         </select>   
                     </div>
                     <div class="text-center">

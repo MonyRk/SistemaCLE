@@ -39,12 +39,13 @@
             @endif                           
             @endif
 
-        <form method="post" action="@yield('action')" autocomplete="off">
+        <form method="post" action="@yield('action')" autocomplete="off" enctype="multipart/form-data">
             @csrf
             @method('post')
 
             <h6 class="heading-small text-muted mb-4">{{ __('Información Personal') }}</h6>
-            <p class="text-muted">La informaci&oacute;n proporcionada ser&aacute; utilizada para fines educativos y solo por la Coordinaci&oacute;n de Lenguas Extranjeras.</p>
+            <p class="text-muted">La informaci&oacute;n proporcionada en &eacute;sta p&aacute;gina web ser&aacute; utilizada para fines 
+                acad&eacute;micos y s&oacute;lo por la Coordinaci&oacute;n de Lenguas Extranjeras.</p>
             @if (session('status'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('status') }}
@@ -73,7 +74,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-5">
                         <label class="form-control-label" for="input-curp">{{ __('CURP') }}</label>
-                        <input type="text" class="form-control" name="curp" id="input-curp" onkeyup="this.value = this.value.toUpperCase();" value="{{ old('curp') }}">
+                        <input type="text" class="form-control" name="curp" id="input-curp" onkeyup="this.value = this.value.toUpperCase();" value="{{ old('curp') }}" data-toggle="tooltip" data-placement="bottom" title="Aseg&uacute;rate de escribir la CURP correctamente">
                     </div>
                     <div class="form-group col-md-2">
                         <label class="form-control-label" for="input-edad">{{ __('Edad') }}</label>
@@ -93,32 +94,32 @@
                         </div>
                     </div>
                 </div>
-
+                <label class="form-control-label">{{ __('Dirección') }}</label>
                 <div class="row">
-                    <div class="form-group col-md">
-                        <label class="form-control-label" for="input-calle">{{ __('Dirección') }}</label>
-                        <input type="text" name="calle" id="input-calle" class="form-control" placeholder="Calle" value="{{ old('calle') }}" >
+                    <div class="form-group col-md" id="direccion">
+                        <label class="form-control-label" for="input-calle">{{ __('Calle') }}</label>
+                        <input type="text" name="calle" id="input-calle" class="form-control"  value="{{ old('calle') }}" >
                     </div>
                     <div class="form-group col-md">
-                            <label class="form-control-label" for="input-numero">{{ __('') }}</label>
-                        <input type="text" name="numero" id="input-numero" class="form-control" placeholder="Número" value="{{ old('numero') }}" >
+                            <label class="form-control-label" for="input-numero">{{ __('Número') }}</label>
+                        <input type="text" name="numero" id="input-numero" class="form-control"  value="{{ old('numero') }}" >
                     </div>
                     <div class="form-group col-md">
-                            <label class="form-control-label" for="input-colonia">{{ __(' ') }}</label>
-                        <input type="text" name="colonia" id="input-colonia" class="form-control" placeholder="Colonia" value="{{ old('colonia') }}" >
+                            <label class="form-control-label" for="input-colonia">{{ __('Colonia') }}</label>
+                        <input type="text" name="colonia" id="input-colonia" class="form-control"  value="{{ old('colonia') }}" >
                     </div>
                     <div class="form-group col-md">
-                        <label class="form-control-label" for="input-municipio">{{ __(' ') }}</label>
+                        <label class="form-control-label" for="input-municipio">{{ __('Municipio') }}</label>
                         <select id="input-municipio" class="form-control" name="municipio">
-                            <option selected value="">Municipio</option>
+                            <option selected value=""></option>
                                 @foreach ($nombres_municipios as $mun)
                                 <option value="{{ $mun->id }}">{{ $mun->nombre_municipio }}</option>                             
                                 @endforeach
                         </select>                  
                     </div>
                     <div class="form-group col-md">
-                            <label class="form-control-label" for="input-cp">{{ __(' ') }}</label>
-                        <input type="text" name="cp" id="input-cp" class="form-control" placeholder="C.P." value="{{ old('cp') }}" >
+                            <label class="form-control-label" for="input-cp">{{ __('C. P.') }}</label>
+                        <input type="text" name="cp" id="input-cp" class="form-control" value="{{ old('cp') }}" >
                     </div>
                 </div>
 <br>

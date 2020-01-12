@@ -14,7 +14,14 @@
                 <a class="nav-link" href="" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <div class="media align-items-center">
                         {{-- <span class="avatar avatar-sm rounded-circle"> --}}
-                            <span class="mb-0 text-sm  font-weight-bold text-black">{{ auth()->user()->name }}</span>{{-- <img alt="Image placeholder" src="{{ asset('argon') }}/img/theme/team-1-800x800.jpg"> --}}
+                            <span class="mb-0 text-sm  font-weight-bold text-black">
+                                @php
+                                    if (auth()->user()){
+                                        echo(auth()->user()->name);
+                                    }
+                                @endphp
+                            </span>
+                            {{-- <img alt="Image placeholder" src="{{ asset('argon') }}/img/theme/team-1-800x800.jpg"> --}}
                         {{-- </span> --}}
                     </div>
                 </a>
@@ -97,7 +104,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('verGrupos') }}">
+                    <a class="nav-link" href="{{ route('indexGrupos') }}">
                         <i class="fas fa-list-ol text-yellow"></i>{{ __('Grupos') }}
                     </a>
                 </li>
@@ -113,7 +120,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('cursos') }}">
-                        <i class="fas fa-layer-group text-purple"></i> {{ __('Cursos') }}
+                        <i class="fas fa-layer-group text-purple"></i> {{ __('Avance') }}
                     </a>
                 </li>
                 <li class="nav-item">

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-		@php
+    @php
         setlocale (LC_TIME, "es_ES");
+        $formato = App\NumFormato::first();
     @endphp
 <style>
 #caja {
@@ -23,7 +24,7 @@
 <br><br><br><br><br><br><br><br>
 <p align="right">Oaxaca de Ju&aacute;rez, Oax, a {{ strftime("%e-%b-%Y") }}
 <br>
-OFICIO No. CIDEP-660/2019
+OFICIO No. CIDEP-{{ $formato->num }}/{{ date('Y') }}
 </p>
 <br><br><br>
 <p>A QUIEN CORRESPONDA:</p><br>

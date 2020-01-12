@@ -94,7 +94,7 @@
                                 <a href="{{ route('avance').'?numControl='.$alumno[0]->num_control }}">
                                     <div class="row">
                                         <div class="col">
-                                            <span class=" font-weight-bold mb-0">Cursos</span>
+                                            <span class=" font-weight-bold mb-0">Avance</span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="icon icon-shape bg-purple text-white rounded-circle shadow">

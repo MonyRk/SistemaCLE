@@ -50,6 +50,8 @@ $usuarioactual = \Auth::user();
 
             <h6 class="heading-small text-muted mb-4">{{ __('Información Personal') }}</h6>
             
+            <p class="text-muted">La informaci&oacute;n proporcionada en &eacute;sta p&aacute;gina web ser&aacute; utilizada para fines 
+                    acad&eacute;micos y s&oacute;lo por la Coordinaci&oacute;n de Lenguas Extranjeras.</p>
             @if (session('status'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('status') }}
@@ -99,26 +101,29 @@ $usuarioactual = \Auth::user();
                         </div>
                     </div>
                 </div>
+                <label class="form-control-label">{{ __('Dirección') }}</label>
                 <div class="row">
                     <div class="form-group col-md">
-                        <label class="form-control-label" for="input-calle">{{ __('Dirección') }}</label>
-                        <input type="text" name="calle" id="input-calle" class="form-control" placeholder="Calle" value="{{ old('calle', $datos_alumno[0]->calle) }}" required autofocus>
+                        <label class="form-control-label" for="input-calle">{{ __('Calle') }}</label>
+                        <input type="text" name="calle" id="input-calle" class="form-control"  value="{{ old('calle', $datos_alumno[0]->calle) }}"  >
                     </div>
                     <div class="form-group col-md">
-                            <label class="form-control-label" for="input-numero">{{ __('') }}</label>
-                        <input type="text" name="numero" id="input-numero" class="form-control" placeholder="Número" value="{{ old('numero', $datos_alumno[0]->numero) }}" required autofocus>
+                            <label class="form-control-label" for="input-numero">{{ __('Número') }}</label>
+                        <input type="text" name="numero" id="input-numero" class="form-control" value="{{ old('numero', $datos_alumno[0]->numero) }}" >
                     </div>
                     <div class="form-group col-md">
-                            <label class="form-control-label" for="input-colonia">{{ __(' ') }}</label>
-                        <input type="text" name="colonia" id="input-colonia" class="form-control" placeholder="Colonia" value="{{ old('colonia', $datos_alumno[0]->colonia) }}" required autofocus>
+                            <label class="form-control-label" for="input-colonia">{{ __('Colonia') }}</label>
+                        <input type="text" name="colonia" id="input-colonia" class="form-control" value="{{ old('colonia', $datos_alumno[0]->colonia) }}">
                     </div>
                     <div class="form-group col-md">
-                            <label class="form-control-label" for="input-municipio">{{ __(' ') }}</label>
+                            <label class="form-control-label" for="input-municipio">{{ __('Municipio') }}</label>
                         <select id="input-municipio" class="form-control" name="municipio">
                             
                                 {{ $nm = App\Municipio::select('id','nombre_municipio')->where('id',$datos_alumno[0]->municipio)->pluck('nombre_municipio') }}
                             
-                        <option selected value="{{ old('municipio', $datos_alumno[0]->municipio) }}">{{ $nm[0] }} </option>
+                        <option selected @if($datos_alumno[0]->municipio != null)value="{{ old('municipio', $datos_alumno[0]->municipio) }}" @endif>
+                        @if($datos_alumno[0]->municipio != null){{ $nm[0] }} @endif
+                        </option>
                         @foreach ($nombres_municipios as $mun)
                         <option value="{{ $mun }}">{{ $mun }}</option>  
                         @endforeach
@@ -126,14 +131,14 @@ $usuarioactual = \Auth::user();
                         </select>                  
                     </div>
                     <div class="form-group col-md">
-                        <label class="form-control-label" for="input-cp">{{ __(' ') }}</label>
-                    <input type="text" name="cp" id="input-cp" class="form-control" placeholder="C.P." value="{{ old('cp', $datos_alumno[0]->cp) }}" required autofocus>
+                        <label class="form-control-label" for="input-cp">{{ __('C. P.') }}</label>
+                    <input type="text" name="cp" id="input-cp" class="form-control" value="{{ old('cp', $datos_alumno[0]->cp) }}" >
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-telefono">{{ __('Teléfono') }}</label>
-                        <input type="text" name="telefono" id="input-telefono" class="form-control" placeholder="" value="{{ old('telefono', $datos_alumno[0]->telefono) }}"autofocus>
+                        <input type="text" name="telefono" id="input-telefono" class="form-control" placeholder="" value="{{ old('telefono', $datos_alumno[0]->telefono) }}">
                     </div>
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-email">{{ __('Email') }}</label>
@@ -152,7 +157,7 @@ $usuarioactual = \Auth::user();
                 <div class="form-group col-md-4">
                     <label class="form-control-label" for="input-numControl">{{ __('Número de Control') }}</label>
                     <input type="text" name="numControl" id="input-numControl" class="form-control" placeholder="" value="{{ old('numControl', $datos_alumno[0]->num_control) }}"
-                    @if ($usuarioactual->tipo != 'coordinador') readonly  @endif>
+                    @if ($usuarioactual->tipo != 'coordinador') readonly  @endif >
                 </div>
                 <div class="form-group col-md-6">
                     <label class="form-control-label" for="input-carrera">{{ __('Carrera') }}</label>

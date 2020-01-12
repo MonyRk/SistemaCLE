@@ -7,6 +7,11 @@
 @section('content')
 
     <div class="container-fluid m--t">
+            <div class="header pb-2 pt-5 pt-lg-8 d-flex align-items-center text-center" >
+                    <div class="col-lg col-md">
+                        <h4 class="text-dark">Crear Nuevo Grupo</h4>
+                    </div>
+                </div>
             <div class="text-right">
                     <a href="{{route('verGrupos')}} " class="btn btn-outline-primary btn-sm mt-4">
                         <span>
@@ -109,7 +114,7 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary mt-4">{{ __('Guardar') }}</button>
+                    <button type="submit" class="btn btn-primary mt-4">{{ __('Crear') }}</button>
                 </div>
             </div>
         </form>

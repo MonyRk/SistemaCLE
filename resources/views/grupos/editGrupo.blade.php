@@ -114,7 +114,7 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary mt-4">{{ __('Guardar') }}</button>
+                    <button type="submit" class="btn btn-primary mt-4">{{ __('Actualizar') }}</button>
                 </div>
             </div>
         </form>

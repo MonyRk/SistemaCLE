@@ -110,51 +110,56 @@ class BoletaController extends Controller
     {
         
         $data = request()->all();
-        
+        // dd($data);
         $total = count($data)-3;
         
         for ($i=0; $i < $total; $i++) { 
             $arregloCalif = $data['calif'.$i];
-            if ($arregloCalif[4] < 9) {
+            if ($arregloCalif[4] < 9) {//si no tiene mas de 8 faltas
                 $c_final = round(($arregloCalif[1]+$arregloCalif[2]+$arregloCalif[3])/3);
             } else{
                 $c_final = 0;
             }
+
             Boleta::where('num_control',$arregloCalif[0])
-                    ->where('id_grupo',$data['grupo'])
-                    ->update([
-                        'calif1' => $arregloCalif[1],
-                        'calif2' => $arregloCalif[2],
-                        'calif3' => $arregloCalif[3],
-                        'faltas' => $arregloCalif[4],
-                        'calif_f' => $c_final
-                    ]); 
+                ->where('id_grupo',$data['grupo'])
+                ->update([
+                    'calif1' => $arregloCalif[1],
+                    'calif2' => $arregloCalif[2],
+                    'calif3' => $arregloCalif[3],
+                    'faltas' => $arregloCalif[4],
+                    'calif_f' => $c_final
+                ]); 
             $grupo = Grupo::where('grupos.id_grupo',$data['grupo'])
                             ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
                             ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
                             ->get(); 
-            $avance = Historial::where('historial.num_control',$arregloCalif[0])
-                                ->where('historial.grupo',$grupo[0]->grupo)
-                                ->where('historial.periodo',$grupo[0]->descripcion)
-                                ->where('historial.anio',$grupo[0]->anio)
-                                ->get();
-            $columna = $grupo[0]->nivel.$grupo[0]->modulo;
-            // dd($columna);
-            if ($arregloCalif[3]!=null && $arregloCalif[3]>0) { //si ya hay una calificacion del 3er parcial
-                if ($c_final<70) { //si la calificacion final es menor a 70
-                    $avance[0]->$columna = 'reprobado';
-                    $avance[0]->save();
-                }else{ // si la calificacion final es mayor = a 70
-                    $avance[0]->$columna = 'aprobado';
-                    $avance[0]->save();
-                }
-            } else{
-                $avance[0]->$columna = 'cursando';
-                $avance[0]->save();
-            }
+                    
+                    
+            //ACTUALIZA EL HISTORIAL AL GENERAR EL ACTA DE CALIFICACIONES
+            // $avance = Historial::where('historial.num_control',$arregloCalif[0])
+            //                     ->where('historial.grupo',$grupo[0]->grupo)
+            //                     ->where('historial.periodo',$grupo[0]->descripcion)
+            //                     ->where('historial.anio',$grupo[0]->anio)
+            //                     ->get();
+            // $columna = $grupo[0]->nivel.$grupo[0]->modulo;
+            // // dd($arregloCalif);
+            // if ($arregloCalif[3]!=null && $arregloCalif[3]>0) { //si ya hay una calificacion del 3er parcial
+            //     if ($c_final<70) { //si la calificacion final es menor a 70
+            //         $avance[0]->$columna = 'reprobado';
+            //         $avance[0]->save();
+            //     }else{ // si la calificacion final es mayor = a 70
+            //         $avance[0]->$columna = 'aprobado';
+            //         $avance[0]->save();
+            //     }
+            // } else{
+            //     $avance[0]->$columna = 'cursando';
+            //     $avance[0]->save();
+            // }
+            
                                
             
-        }
+        }//end for
 
         return back()->with('success','¡Las calificaciones se han actualizado correctamente!');
         
@@ -178,6 +183,7 @@ class BoletaController extends Controller
             return response()->json($gruposArray);
         }
     }
+
     public function getGruposDocente(Request $request)
     {         
         if($request->ajax()){ 
@@ -228,6 +234,8 @@ class BoletaController extends Controller
         ->leftjoin('docentes','docentes.id_docente','=','grupos.docente')
         ->leftjoin('personas','docentes.curp_docente','=','personas.curp')
         ->get();
+        
+        $nivelGrupo = $infoGrupo[0]->nivel.$infoGrupo[0]->modulo;
 
         $alumnos_inscritos = Inscripcion::where('alumno_inscrito.id_grupo',$grupo)
                                         ->leftJoin('alumnos','alumnos.num_control','=','alumno_inscrito.num_control')
@@ -238,14 +246,25 @@ class BoletaController extends Controller
                                         ->orderBy('personas.ap_paterno','ASC')  
                                         ->get();
                                         
-        foreach ($alumnos_inscritos as $alumno) {
-            Alumno::find($alumno->num_control)->update(['estatus' => 'No Inscrito']);
-        }
-                                        
+        
+        $this->actualizarHistoriales($alumnos_inscritos,$nivelGrupo,$infoGrupo[0]->id_grupo);               
         // return view('pdf.actaCalificaciones',compact('infoGrupo','alumnos_inscritos'));                          
         $pdfBoleta =  PDF::loadView('pdf.actaCalificaciones',compact('infoGrupo','alumnos_inscritos'));
         return $pdfBoleta->download($infoGrupo[0]->grupo.'-ActaCalificaciones-'.strftime("%b%Y").'.pdf');
 
+    }
+
+    public function actualizarHistoriales($alumnos,$nivelGrupo,$id_grupo){
+        // dd($alumnos,$nivelGrupo,$id_grupo);
+        foreach ($alumnos as $alumno) {
+            $boleta = Boleta::where('num_control',$alumno->num_control)->where('id_grupo',$id_grupo)->get();
+
+            if($boleta[0]->calif_f > 69){
+                Historial::where('num_control',$alumno->num_control)->update([$nivelGrupo => 'aprobado']);
+            }else{
+                Historial::where('num_control',$alumno->num_control)->update([$nivelGrupo => 'reprobado']);
+            }
+        }
     }
 
 }

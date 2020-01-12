@@ -8,7 +8,7 @@
     <div class="container-fluid m--t">
         <div class="header pb-1 pt-4 pt-lg-7 d-flex align-items-center text-center">
             <div class="col-lg col-md">
-                <h4 class="text-dark">Cursos</h4>
+                <h4 class="text-dark">Avance</h4>
             </div>
         </div>
         <div class="card-body">

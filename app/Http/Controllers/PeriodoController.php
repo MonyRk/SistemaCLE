@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Alumno;
 use App\Periodo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -52,6 +53,11 @@ class PeriodoController extends Controller
         Periodo::where('id_periodo',$data)->update([
             'actual' => true
         ]);
+        
+        $alumnos = Alumno::where('estatus','Inscrito')->get();
+        foreach ($alumnos as $alumno) {
+            Alumno::find($alumno->num_control)->update(['estatus' => 'No Inscrito']);
+        }
         
         return back()->with('success','¡El periodo se ha actualizado correctamente!');
     }

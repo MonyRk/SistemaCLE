@@ -13,6 +13,9 @@ $usuarioactual = \Auth::user();
 @if ($usuarioactual->tipo == 'docente')
 @include('layouts.navbars.sidebarDocentes')
 @endif
+@if ($usuarioactual->tipo == 'escolares')
+@include('layouts.navbars.sidebarEscolares')
+@endif
 @endsection
 
 @section('content')
@@ -45,7 +48,7 @@ $usuarioactual = \Auth::user();
             </span>
         </a>
     </div> 
-    <div class="mb-3" @if($usuarioactual->tipo=='alumno') style="display:none" @else style="display:block" @endif>
+    <div class="mb-3" @if($usuarioactual->tipo=='alumno' || $usuarioactual->tipo=='escolares') style="display:none" @else style="display:block" @endif>
         <a href=" {{ route('actaCalificaciones',$infoGrupo[0]->id_grupo) }} " class="btn btn-outline-default btn-sm mt-3">
             <span>
                 <i class="far fa-file-alt"></i> &nbsp; Acta de Calificaciones
@@ -85,23 +88,23 @@ $usuarioactual = \Auth::user();
                                             <input type="hidden" name="calif{{ $i }}[]" value="{{ $alumno->num_control }}">
                                             <th class="pt-3-half">{{ $alumno->ap_paterno }} {{ $alumno->ap_materno }} {{ $alumno->nombres }} </th>
                                             <td class="calif1 pt-3-half ">
-                                                <input type="text" name="calif{{ $i }}[]" class="sinborde ancho"  @if($alumno->calif1==null) value="0" @else value="{{ $alumno->calif1 }}"@endif
-                                                @if($usuarioactual->tipo=='docente') @if($alumno->calif1!=null && $alumno->calif1>0) readonly @endif @endif 
+                                                <input type="number" max="100" name="calif{{ $i }}[]" class="sinborde ancho"  @if($alumno->calif1==null) value="0" @else value="{{ $alumno->calif1 }}"@endif
+                                                @if($usuarioactual->tipo=='docente' || $usuarioactual->tipo=='coordinador') @if($alumno->calif1!=null && $alumno->calif1>0) readonly @endif @endif 
                                                 @if($usuarioactual->tipo=='alumno') readonly @endif>
                                             </td>
                                             <td class="calif2 pt-3-half">
-                                                <input type="text" name="calif{{ $i }}[]" class="sinborde ancho" @if($alumno->calif2==null) value="0" @else value="{{ $alumno->calif2 }}"@endif
-                                                @if($usuarioactual->tipo=='docente') @if($alumno->calif2!=null && $alumno->calif2>0) readonly @endif @endif 
+                                                <input type="number" max="100" name="calif{{ $i }}[]" class="sinborde ancho" @if($alumno->calif2==null) value="0" @else value="{{ $alumno->calif2 }}"@endif
+                                                @if($usuarioactual->tipo=='docente' || $usuarioactual->tipo=='coordinador') @if($alumno->calif2!=null && $alumno->calif2>0) readonly @endif @endif 
                                                 @if($usuarioactual->tipo=='alumno') readonly @endif>
                                             </td>
                                             <td class="calif3 pt-3-half">
-                                                <input type="text" name="calif{{ $i }}[]" class="sinborde ancho" @if($alumno->calif3==null) value="0" @else value="{{ $alumno->calif3 }}"@endif
-                                                @if($usuarioactual->tipo=='docente') @if($alumno->calif3!=null && $alumno->calif3>0) readonly @endif @endif 
+                                                <input type="number" max="100" name="calif{{ $i }}[]" class="sinborde ancho" @if($alumno->calif3==null) value="0" @else value="{{ $alumno->calif3 }}"@endif
+                                                @if($usuarioactual->tipo=='docente' || $usuarioactual->tipo=='coordinador') @if($alumno->calif3!=null && $alumno->calif3>0) readonly @endif @endif 
                                                 @if($usuarioactual->tipo=='alumno') readonly @endif>
                                             </td>
                                             <td class="faltas pt-3-half">
-                                                <input type="text" name="calif{{ $i }}[]" class="sinborde ancho" @if($alumno->faltas==null) value="0" @else value="{{ $alumno->faltas }}"@endif
-                                                @if($usuarioactual->tipo=='docente') @if($alumno->faltas!=null) readonly @endif @endif 
+                                                <input type="number" max="100" name="calif{{ $i }}[]" class="sinborde ancho" @if($alumno->faltas==null) value="0" @else value="{{ $alumno->faltas }}"@endif
+                                                @if($usuarioactual->tipo=='docente' || $usuarioactual->tipo=='coordinador') @if($alumno->faltas!=null) readonly @endif @endif 
                                                 @if($usuarioactual->tipo=='alumno') readonly @endif>
                                             </td>
                                             <th class="pt-3-half">{{ $alumno->calif_f }}</th>
@@ -121,7 +124,7 @@ $usuarioactual = \Auth::user();
             </div>
         </div>
         <div class="text-center" @if($usuarioactual->tipo=='alumno') style="display:none" @else style="display:block" @endif>
-            <button type="submit" id="guardar" class="btn btn-primary mt-4">Guardar</button>
+            <button type="submit" id="guardar" class="btn btn-primary mt-4">Registrar Calificaciones</button>
         </div>
     </form>
     <br><br>

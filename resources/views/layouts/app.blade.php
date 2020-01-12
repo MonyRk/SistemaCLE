@@ -39,7 +39,7 @@
             
             @yield('content')
         </div>
-        <br><br>
+        {{-- <br><br> --}}
         
         <script src="{{ asset('argon') }}/vendor/jquery/dist/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -69,5 +69,6 @@
         <script src="{{ asset('argon') }}/vendor/chart.js/dist/Chart.extension.js"></script>
         <script src=" https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script> --}}
    @yield('script')
+  
     </body>
 </html>

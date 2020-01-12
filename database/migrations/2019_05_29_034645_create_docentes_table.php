@@ -21,6 +21,12 @@ class CreateDocentesTable extends Migration
             $table->string('grado_estudios');
             $table->string('titulo');
             $table->string('ced_prof');
+            $table->text('certificaciones')->nullable();
+            $table->string('dominio_idioma')->nullable();
+            $table->string('curso')->nullable();
+            $table->text('didactica')->nullable();
+            $table->integer('experiencia')->nullable();
+            $table->text('actualizacion')->nullable();
             $table->enum('estatus',['Activo','Inactivo'])->default('Activo');
             $table->softDeletes();
             $table->timestamps();

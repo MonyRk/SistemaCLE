@@ -15,9 +15,9 @@
 
 @section('informacionporTipo')
     <div class="form-row">
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-4" >
             <label class="form-control-label" for="input-numControl">{{ __('Número de Control') }}</label>
-            <input type="text" name="numControl" id="input-numControl" class="form-control" placeholder="" value="{{ old('numControl') }}">
+            <input type="text" name="numControl" id="input-numControl" class="form-control" placeholder="" value="{{ old('numControl') }}" data-toggle="tooltip" data-placement="bottom" title="Aseg&uacute;rate de escribir correctamente el N&uacute;mero de Control">
         </div>
         <div class="form-group col-md-6">
             <label class="form-control-label" for="input-carrera">{{ __('Carrera') }}</label>

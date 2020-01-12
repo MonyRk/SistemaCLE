@@ -8,7 +8,7 @@
 <div class="container-fluid m--t">
     <div class="header pb-1 pt-4 pt-lg-7 d-flex align-items-center text-center" >
         <div class="col-lg col-md">
-            <h4 class="text-dark">Periodo</h4>
+            <h4 class="text-dark">Periodo para Datos Estad&iacute;sticos</h4>
         </div>
     </div>
     <div class="card-body">
@@ -58,7 +58,9 @@
         </form>
         
         <br><br>
-        @include('layouts.footers.nav')
+        <div>
+            @include('layouts.footers.nav')
+        </div>
 </div>
 
 @endsection

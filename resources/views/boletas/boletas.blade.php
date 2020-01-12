@@ -13,8 +13,11 @@ $usuarioactual = \Auth::user();
 @if ($usuarioactual->tipo == 'docente')
 @include('layouts.navbars.sidebarDocentes')
 @endif
+@if ($usuarioactual->tipo == 'escolares')
+@include('layouts.navbars.sidebarEscolares')
+@endif
 @endsection
-
+ 
 @section('content')
 <div class="container-fluid m--t">
     <div class="header pb-1 pt-4 pt-lg-7 d-flex align-items-center text-center" >
@@ -38,7 +41,7 @@ $usuarioactual = \Auth::user();
 
     <div class="text-right">
         
-        <a href="{{ route('boletas') }}" class="btn btn-outline-primary btn-sm mt-4">
+        <a href="{{ route('home') }}" class="btn btn-outline-primary btn-sm mt-4">
             <span>
                 <i class="fas fa-reply"></i> &nbsp; Regresar
             </span>

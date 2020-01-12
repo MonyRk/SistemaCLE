@@ -29,9 +29,9 @@
 </head>
 
 <body>
-    <div align="center">
+    {{-- <div align="center">
         <img src="{{ asset('argon') }}/img/brand/cabeceraSM.png" alt="cabecera" title="cabecera">
-    </div>
+    </div> --}}
     
     <p align="justify">
         “ADENDUM” A LA ORDEN DE SERVICIO PARA LA PRESTACIÓN DE SERVICIOS QUE CELEBRAN,

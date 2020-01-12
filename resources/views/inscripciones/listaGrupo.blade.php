@@ -39,7 +39,7 @@
                 <input type="hidden" name="periodo" value="{{ $grupo[0]->periodo }}">
                 <input type="hidden" name="cupo" value="{{ $grupo[0]->cupo }}">
                 <div class="row">
-                        <div class="col-xl-6 " >
+                        <div class="col-xl" >
                                 <div class="card shadow " >
                                     <div class="card-header border-3">
                                         <div class="row align-items-center">
@@ -81,56 +81,10 @@
                                 </div>
                             </div>
             
-                    <div class="col-xl-6">
-                        <div class="card shadow" >
-                            <div class="card-header border-3">
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        <h6 class="heading-small text-muted mb-4">{{ __('Estudiantes Inscritos') }}</h6>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table align-items-center table-flush th" id="datatable2">
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th scope="col">Núm.</th>
-                                            <th scope="col">Número <br> de Control</th>
-                                            <th scope="col">Nombre</th>
-                                            {{-- <th scope="col">Carrera</th> --}}
-                                            <th scope="col">Quitar de <br> la lista</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>@php ($i=1)
-                                        @foreach ($alumnos_en_el_grupo as $ag)
-                                        <tr>
-                                        <th scope="row">
-                                           {{ $i }}
-                                        </th>
-                                        <th scope="row">
-                                            {{ $ag->num_control }}
-                                        </th>
-                                        <th scope="row">
-                                            {{ $ag->nombres }} {{ $ag->ap_paterno }} {{ $ag->ap_materno }}
-                                        </th>
-                                        <td scope="row">
-                                            <span>
-                                                <input type="checkbox" name="quitar[]" value="{{ $ag->num_control }}">    
-                                            </span>{{-- <span id="alumnoid" class="quitar" data-alumnoid="{{ $ag->num_control }}" data-nombre="{{ $ag->nombres }} {{ $ag->ap_paterno }} {{ $ag->ap_materno }}"><i class="fas fa-times"></i></span> --}}
-                                        </td>
-                                        {{-- <input type="hidden" id="array" name="id[]" value="{{ $ag->num_control }}"> --}}
-                                        </tr>@php ($i++)
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
                     
                 </div>  
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary mt-4" id="guardar">{{ __('Guardar') }}</button>
+                    <button type="submit" class="btn btn-primary mt-4" id="guardar">{{ __('Inscribir Estudiantes') }}</button>
                 </div>
             </form>
         </div>

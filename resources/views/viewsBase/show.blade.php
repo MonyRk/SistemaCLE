@@ -61,7 +61,13 @@
                 </div>
                 <div class="col-auto">
                     <div class="">  
-                        <p class="card-text font-weight-bold">{{ $datos[0]->calle }} {{ $datos[0]->numero }}, {{ $datos[0]->colonia }}, {{ $municipio[0] }}, {{ $datos[0]->cp }}</p>
+                        <p class="card-text font-weight-bold">
+                            @if($datos[0]->calle != null) {{ $datos[0]->calle }}  @endif
+                            @if($datos[0]->numero != null) {{ $datos[0]->numero }}  @endif
+                            @if($datos[0]->colonia != null) {{ $datos[0]->colonia }}  @endif
+                            @if($municipio->isNotEmpty()) {{ $municipio[0] }}  @endif
+                            @if($datos[0]->cp != null) {{ $datos[0]->cp }}  @endif
+                        </p>
                     </div>
                 </div>
             </div>
@@ -77,7 +83,9 @@
                 </div>
                 <div class="col-auto">
                     <div class="">
-                        <p class="card-text font-weight-bold">{{ $datos[0]->telefono }}<p>
+                        <p class="card-text font-weight-bold">
+                            @if($datos[0]->telefono != null) {{ $datos[0]->telefono }}  @endif
+                        <p>
                     </div>
                 </div>
             </div>
@@ -95,7 +103,9 @@
                 </div>
                 <div class="col-auto">
                     <div class="">
-                        <p class="card-text font-weight-bold">{{ $datos[0]->email }}</p>
+                        <p class="card-text font-weight-bold">
+                            @if($datos[0]->email != null) {{ $datos[0]->email }}  @endif
+                        </p>
                     </div>
                 </div>
             </div>

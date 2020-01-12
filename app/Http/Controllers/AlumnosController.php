@@ -214,7 +214,7 @@ class AlumnosController extends Controller
         ->get();
 // dd($id);
         $municipio = Municipio::select('nombre_municipio')->where('id',$datos[0]->municipio)->pluck('nombre_municipio');//dd($nombres_municipios);//pluck('nombre_municipio');
-        // dd($id);
+        // dd($municipio);
         return view('alumnos.showEstudiante',compact('datos','municipio'));
 
     }
@@ -240,7 +240,12 @@ class AlumnosController extends Controller
                             ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
                             ->get();
                             // dd($sesion_actual[0]);
-                $email = $sesion_actual[0]->email;
+                if ($sesion_actual[0]->email != null) {
+                    $email = $sesion_actual[0]->email;
+                }else{
+                    $email = " ";
+                }
+                            // $email = $sesion_actual[0]->email;
             } else {
                 return back()
                 ->with('error','Lo sentimos, no tienes acceso a esta sección. Comunícate con la coordinación si necesitas el acceso.');//view('alumnos.editAlumno',compact('datos_alumno','nombres_municipios','niveles','email'));
@@ -250,24 +255,28 @@ class AlumnosController extends Controller
             ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
             ->get(); 
             $encontrar_email = User::select('email')->where('curp_user',$datos_alumno[0]->curp)->get();
-            $email = $encontrar_email[0]->email;
+            if ($encontrar_email->isNotEmpty()) {
+                $email = $encontrar_email[0]->email;
+            }else{
+                $email = " ";
+            }
         }        
         
-        // dd($email);
+        
                                   
         $nombres_municipios = Municipio::select('nombre_municipio')->pluck('nombre_municipio');
         
         $niveles = Nivel::select('*')->get();
 
         
-       
+    //    dd($datos_alumno);
         
         return view('alumnos.editAlumno',compact('datos_alumno','nombres_municipios','niveles','email','usuarioactual'));//,'email'));
     }
 
     public function update(Alumno $alumno)
     {                 
-        // dd($alumno);
+        
         $usuarioactual= \Auth::user();
         $periodo_actual = Periodo::where('actual',true)->get();
         $curp = $alumno->curp_alumno;//curp original
@@ -277,13 +286,13 @@ class AlumnosController extends Controller
             'curp' => array('required','alpha_num','regex:/^([A-Z][AEIOUX][A-Z]{2}\d{2}(?:0\d|1[0-2])(?:[0-2]\d|3[01])[HM](?:AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)$/'),
             'apPaterno' => 'required|alpha_spaces',
             // 'apMaterno' =>'alpha_spaces',
-            'calle' => array('required','regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ,.]*$/'),
-            'numero' => 'required|numeric',
-            'colonia' => 'required|alpha_spaces',
-            'municipio' => 'required',
-            'cp' => 'required|numeric',
-            'telefono' =>'required|numeric',
-            'email' => array('required','email','regex:/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/'),
+            'calle' => array('sometimes','nullable','regex:/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ,.]*$/'),
+            'numero' => 'sometimes|nullable|numeric',
+            'colonia' => 'sometimes|nullable|alpha_spaces',
+            'municipio' => 'sometimes|nullable',
+            'cp' => 'sometimes|nullable|numeric',
+            'telefono' =>'sometimes|nullable|numeric',
+            'email' => array('sometimes','nullable','email','regex:/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/'),
             'edad' =>'required|digits:2',
             'sexo' => 'required',
             'numControl' => array('required','regex:/^[A-Z]{1}\d{8}|\d{8}$/'),
@@ -298,7 +307,7 @@ class AlumnosController extends Controller
 
         //obtener los datos de la misma persona en todas las tablas relacionadas
         $apm = request()->all();
-
+// dd($alumno, $apm);
         // dd($apm);
             Persona::find($curp)->update([
             'ap_materno' => $apm['apMaterno']

@@ -24,7 +24,7 @@ class GruposController extends Controller
     public function index()
     {
         
-        // dd($usuario);
+        // dd(request()->all());
             $grupos = DB::table('grupos')
             ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
             ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
@@ -32,8 +32,9 @@ class GruposController extends Controller
             ->leftJoin('personas','personas.curp','=','docentes.curp_docente')
             ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
             ->whereNull('grupos.deleted_at')
-            ->orderByDesc('periodos.actual')
-            ->orderByDesc('periodos.anio')
+            ->where('grupos.periodo',request('periodo'))
+            // ->orderByDesc('periodos.actual')
+            // ->orderByDesc('periodos.anio')
             ->orderBy('periodos.descripcion')
             ->orderBy('grupos.grupo','ASC')
             ->paginate(25);
@@ -42,8 +43,8 @@ class GruposController extends Controller
         $niveles = Nivel::select('*')
         ->get();
 
-        $periodos = Periodo::select('*')
-        ->get();
+        $periodos = Periodo::find(request('periodo'));
+        // ->get();
         
         $aulas = Aula::leftjoin('horas_disponibles','horas_disponibles.id_hora','=','aulas.hrdisponible')
         ->select('aulas.*','horas_disponibles.*')
@@ -73,7 +74,7 @@ class GruposController extends Controller
                 ->orWhere('periodos.anio','like','%'.$search['buscar'].'%')
                 ->orWhere('personas.nombres','like','%'.$search['buscar'].'%')
                 ->orWhere('personas.ap_paterno','like','%'.$search['buscar'].'%')
-                ->orWhere('personas.ap_materno','like','%'.$search['buscar'].'%')
+                // ->orWhere('personas.ap_materno','like','%'.$search['buscar'].'%')
                 ->paginate(25)
                 ->appends('buscar',$search['buscar']);
 
@@ -150,7 +151,7 @@ class GruposController extends Controller
         }
 
         if($i>0){
-            return back()->with('warning','Revise los datos, el Docente ya tiene un grupo asignado a esa hora');
+            return back()->with('warning','Revise los datos, el Docente ya tiene un grupo asignado a esa hora')->withInput();
         // redirect()->route('crearGrupo')
         }else{ 
             $nuevo_grupo = Grupo::create([

@@ -8,7 +8,7 @@
 <div class="container-fluid m--t">
         <div class="header pb-1 pt-4 pt-lg-7 d-flex align-items-center text-center">
             <div class="col-lg col-md">
-                <h4 class="text-dark"></h4>
+                <h4 class="text-dark">Constancias de Liberaci&oacute;n con Certificaci&oacute;n</h4>
             </div>
         </div>
         <div class="card-body">
@@ -31,7 +31,7 @@
                 </span>
             </a>
         </div>
-        <form action="{{ route('generarLiberacionToefl') }}" method="GET">
+        <form action="{{ route('generarLiberacionCertificacion') }}" method="GET">
             <div class="row">
                 <div class="col-lg-4"></div>
                 <div class="col-lg-4 text-center">
@@ -69,8 +69,8 @@
                         </select>   
                     </div>
                     <div class="form-group col-md">
-                        <label class="form-control-label" for="input-toefl">{{ __('Certificación TOEFL') }}</label>
-                        <input id="input-toefl" class="form-control" name="toefl" value="{{ old('toefl') }}" onkeyup="this.value = this.value.toUpperCase();">
+                        <label class="form-control-label" for="input-toefl">{{ __('Certificación') }}</label>
+                        <input id="input-toefl" class="form-control" name="certificacion" value="{{ old('certificacion') }}" onkeyup="this.value = this.value.toUpperCase();">
                         {{-- <select id="input-toefl" class="form-control" name="toefl">
                             <option selected value="">Elegir Opcion</option>
                             <option value="ITP">ITP</option>

@@ -58,7 +58,7 @@
                             <table class="table align-items-center table-flush th">
                                 <thead class="thead-light">
                                     <tr> 
-                                        <th scope="col">Matricula</th>
+                                        {{-- <th scope="col">Matricula</th> --}}
                                         <th scope="col">Nombre</th>
                                         <th scope="col">Grado de <br> Estudios</th>
                                         <th scope="col">Estatus</th>
@@ -73,9 +73,9 @@
                                     @endphp
                                     @foreach ($docentes as $docente)
                                     <tr>
-                                        <th scope="row">
+                                        {{-- <th scope="row">
                                             {{ $docente->id_docente }}
-                                        </th>
+                                        </th> --}}
                                         <th>
                                             <a href="{{ route('verInfoDocente',$docente->id_docente) }}" class="text-dark">{{ $docente->nombres }} {{ $docente->ap_paterno }} {{ $docente->ap_materno }}</a>
                                         </th>                                      
@@ -168,8 +168,8 @@
                                     
                                     <div class="py-3 text-center">
                                             <i class="fas fa-exclamation fa-3x text-warning" style=""></i>
-                            <h4 class="heading mt-4">Los datos de este docente no se puede Eliminar y/o Editar</h4>
-                            <p>Los datos que contiene estan asociados a otros, si se elimina o se edita podr&iacute;a perderse informaci&oacute;n importante adem&aacute;s de generar inconsistencia de datos.</p>
+                            <h4 class="heading mt-4">Los datos de este docente no se puede Eliminar</h4>
+                            <p>Los datos de este docente estan asociados a uno o más grupos, por esta razón no se puede eliminar.</p>
                                         <input type="hidden" name="grupo_id" id="grupo_id" value="">
                                     </div>
                                     

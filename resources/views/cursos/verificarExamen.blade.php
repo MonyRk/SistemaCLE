@@ -11,7 +11,7 @@
 <div class="container-fluid m--t">
     <div class="header pb-1 pt-4 pt-lg-7 d-flex align-items-center text-center" >
         <div class="col-lg col-md">
-            <h4 class="text-dark">Examenes de Ubicaci&oacute;n Periodo: {{ $periodo_actual[0]->descripcion }} {{ $periodo_actual[0]->anio }}</h4>
+            <h4 class="text-dark">Exámenes de Ubicaci&oacute;n Periodo: {{ $periodo_actual[0]->descripcion }} {{ $periodo_actual[0]->anio }}</h4>
         </div>
     </div>
     <div class="card-body">
@@ -36,7 +36,7 @@
                         <div class="card-header border-3">
                             <div class="row align-items-center">
                                 <div class="col">
-                                    <h5>Examenes Registrados</h5>{{-- <strong class="mb-0"></strong>                            --}}
+                                    <h5>Exámenes Registrados</h5>{{-- <strong class="mb-0"></strong>                            --}}
                                 </div>
                                 {{-- <div class="col">N&uacute;mero de Control: <strong>{{ $pagos[0]->num_control }}</strong></div> --}}
                             </div>
@@ -79,7 +79,7 @@
             </div>
         </div>
         <div class="text-center">
-            <button type="sumbit" class="btn btn-primary my-4">{{ __('Guardar') }}</button>
+            <button type="sumbit" class="btn btn-primary my-4">{{ __('Guardar Verificados') }}</button>
         </div>
     </form>
     <br><br>

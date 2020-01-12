@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="header bg-gradient-lighter pb-8 pt-0 pt-md-0"><br><br>
+<div class="header bg-gradient-lighter pb-8 pt-0 pt-md-0">
     <div class="container-fluid m--t">
             {{-- <div class="container-fluid m--t"> --}}
                 <div>
@@ -71,17 +71,17 @@
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
 </div>
-<br><br>
+{{-- <br><br> --}}
 @include('layouts.footers.nav')
+</div>
+
 
 {{-- modal liberaciones --}}
 
 <div class="col-md-4">
-    
         <div class="modal fade" id="modal-form2" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
             <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
                 <div class="modal-content">
@@ -102,7 +102,7 @@
                                                 <select name="liberacion" id="liberacion" class="form-control">
                                                     <option selected>Tipo de Liberaci&oacute;n</option>
                                                     <option value="cle">CLE</option>
-                                                    <option value="toefl">TOEFL</option>
+                                                    <option value="certificacion">Certificaci&oacute;n</option>
                                                     <option value="habilidades">4 Habilidades</option>
                                                 </select>
                                             </div>
@@ -118,5 +118,6 @@
             </div>
         </div>
 </div>
+
 
 @endsection

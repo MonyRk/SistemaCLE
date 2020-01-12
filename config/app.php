@@ -178,7 +178,9 @@ return [
         App\Providers\CustomValidationRulesProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
-        // Spatie\Backup\BackupServiceProvider::class
+        Spatie\Backup\BackupServiceProvider::class,
+        Spatie\DbDumper\Databases\MySql::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
 
@@ -235,6 +237,7 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'PDFS' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];

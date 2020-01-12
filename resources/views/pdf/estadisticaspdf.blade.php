@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,9 +28,14 @@
     $indices_alumnos = $aprobados.','.$reprobados;
     @endphp 
 
-    <script type="text/javascript" src="http://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
+    {{-- <script type="text/javascript" src="http://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript"> --}}
 
+
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>  
+        <script type="text/javascript">
 // ESTUDIANTES POR CARRERA
 
     google.charts.load('current', {packages: ['corechart', 'bar']});
@@ -54,14 +60,19 @@
         var options = {
             title: 'Estudiantes por Carrera',
             hAxis: {
-            title: 'Carreras',
+            title: '',
             },
             vAxis: {
             title: 'Número de Estudiantes'
             }
         };
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        var chart_area = document.getElementById('chart_div')
+        var chart = new google.visualization.ColumnChart(chart_area);
+
+        google.visualization.events.addListener(chart, 'ready', function(){
+        chart_area.innerHTML = '<img src="' + chart.getImageURI() + '" class="img-responsive">';
+        });
         chart.draw(data, options);
     }
 
@@ -89,8 +100,13 @@
             title: 'Número de Estudiantes'
             }
         };
+        var chart_area = document.getElementById('chart_div1')
+        var chart = new google.visualization.ColumnChart(chart_area);
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
+        google.visualization.events.addListener(chart, 'ready', function(){
+        chart_area.innerHTML = '<img src="' + chart.getImageURI() + '" class="img-responsive">';
+        });
+        // var chart = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
         chart.draw(data, options);
     }
 
@@ -122,7 +138,13 @@
             }
         };
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
+        var chart_area = document.getElementById('chart_div2')
+        var chart = new google.visualization.ColumnChart(chart_area);
+
+        google.visualization.events.addListener(chart, 'ready', function(){
+        chart_area.innerHTML = '<img src="' + chart.getImageURI() + '" class="img-responsive">';
+        });
+        // var chart = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
         chart.draw(data, options);
     }
 
@@ -148,15 +170,22 @@ google.charts.load('current', {packages: ['corechart', 'bar']});
             }
         };
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div3'));
+        var chart_area = document.getElementById('chart_div3')
+        var chart = new google.visualization.ColumnChart(chart_area);
+
+        google.visualization.events.addListener(chart, 'ready', function(){
+        chart_area.innerHTML = '<img src="' + chart.getImageURI() + '" class="img-responsive">';
+        });
+        // var chart = new google.visualization.ColumnChart(document.getElementById('chart_div3'));
         chart.draw(data, options);
     }
 
     </script>
 </head>
 
-<body onload="init()">
-        
+<body>
+    {{-- onload="init();"    --}}
+    <div class="container" id="testing">
         <div align="center">
             <img src="{{ asset('argon') }}/img/brand/cabeceraSM.png" alt="cabecera" title="cabecera">
         </div>
@@ -169,11 +198,60 @@ google.charts.load('current', {packages: ['corechart', 'bar']});
 
         <h4 class="text-dark" align="center">Datos Estadisticos del Periodo {{ $periodo[0]->descripcion }} {{ $periodo[0]->anio }}</h4>
 
+        {{-- <table>
+            <thead>
+                <tr colspan="2">Estudiantes por Carrera</tr>
+                <tr>
+                    <th>Carrera</th>
+                    <th>N&uacute;m. Estudiantes</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $i=0;
+                @endphp
+                @foreach ($nombre_carreras as $carrera)
+                    <tr>
+                        <th>{{ $carrera }}</th>
+                        <td>{{ $carreras[$i] }}</td>
+                    </tr>
+                    @php
+                        $i++;
+                    @endphp
+                @endforeach
+            </tbody>
+        </table> --}}
+
+
+        {{-- <div align="center">
+            <form method="post" id="make_pdf" action="{{ route('pdfprueba') }}">
+                @csrf
+                @method('post')
+                <input type="hidden" name="hidden_html" id="hidden_html" />
+                <button type="button" name="create_pdf" id="create_pdf" class="btn btn-danger btn-xs">Make PDF</button>
+            </form>
+        </div> --}}
+
         <!-- Identify where the chart should be drawn. -->
-        <div id="chart_div" align="center"></div>
+        <div style="width:800px;height:200;">
+            {{-- <canvas id="myChart" > --}}
+                <div id="chart_div" style="width:800px;height:200;" align="center"></div>
+            {{-- </canvas> --}}
+        </div>
+        
         <div id="chart_div1" align="center"></div>
         <div id="chart_div2" align="center"></div>
         <div id="chart_div3" align="center"></div>
+    </div>
     </body>
 
 </html>
+
+<script>
+    $(document).ready(function(){
+     $('#create_pdf').click(function(){
+      $('#hidden_html').val($('#testing').html());
+      $('#make_pdf').submit();
+     });
+    });
+</script>

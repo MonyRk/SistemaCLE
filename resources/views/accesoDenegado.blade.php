@@ -5,7 +5,7 @@
         <div class="col-md">
             <div class="text-right">
 
-                <a href="{{ back() }}" class="btn btn-sm btn-outline-primary mt-4">
+                <a href="{{ route('home') }}" class="btn btn-sm btn-outline-primary mt-4">
                     <span>
                         <i class="fas fa-reply"></i> &nbsp; Regresar
                     </span>

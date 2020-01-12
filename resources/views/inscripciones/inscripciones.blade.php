@@ -65,7 +65,7 @@ $usuarioactual = \Auth::user();
             @csrf
             @method('post')
             
-        <div class="row" @if($usuarioactual->tipo != 'coordinador') style="display:none;" @endif>
+        <div class="row" @if($usuarioactual->tipo != 'coordinador') style="display:none;" @else @if($periodo_actual[0]->id_periodo != $p[0]->id_periodo) style="display:none;"@endif @endif>
             @php
                 if ($fecha_inscripciones == null) {
                     $inicio = '';
@@ -107,13 +107,16 @@ $usuarioactual = \Auth::user();
                             <thead class="thead-light">
                                 <tr>
                                     <th scope="col">Grupo</th>
-                                    <th scope="col">Nivel</th>{{--viene nivel y modulo --}}
+                                    <th scope="col">Nivel</th>
                                     <th scope="col">Idioma</th>
                                     <th scope="col">Aula</th>
                                     <th scope="col">Hora</th>
                                     @if($usuarioactual->tipo == 'coordinador')
-                                        <th scope="col">Docente</th>                                     
-                                        <th scope="col">Inscribir</th>
+                                        <th scope="col">Docente</th> 
+                                        @if($periodo_actual[0]->id_periodo == $p[0]->id_periodo)                                     
+                                            <th scope="col">Inscribir</th>
+                                            <th scope="col">Modificar</th>
+                                        @endif
                                     @endif
                                     
                                     <th scope="col">Lista</th>
@@ -142,12 +145,22 @@ $usuarioactual = \Auth::user();
                                     <th>
                                         {{ $grupo->nombres }} {{ $grupo->ap_paterno }} {{ $grupo->ap_materno }}
                                     </th> 
+                                    @if($periodo_actual[0]->id_periodo == $p[0]->id_periodo)  
+                                    <td >
+                                        <a href="{{ route('inscribirEstudiantes',$grupo->id_grupo) }}" class="text-primary">
+                                            <i class="far fa-list-alt"></i>
+                                        </a>
+                                    </td>
                                     <td>
-                                        <a href="{{ route('inscribirEstudiantes',$grupo->id_grupo) }}"><i class="far fa-list-alt"></i></a>
+                                        <a href="{{ route('quitarEstudiante',$grupo->id_grupo) }}" class="text-info">
+                                            <i class="far fa-edit"></i>
+                                        </a>
                                     </td>
                                     @endif
+                                    @endif
                                     <td>
-                                        <a href="{{ route('descargarLista',$grupo->id_grupo) }}"><i class="fas fa-file-download"></i></a>
+                                        <a href="{{ route('descargarLista',$grupo->id_grupo) }}" class="text-blue">
+                                            <i class="fas fa-file-download"></i></a>
                                     </td>
                                 </tr>
                                 @endforeach
