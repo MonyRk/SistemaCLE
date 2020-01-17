@@ -13,7 +13,6 @@ return [
     |
     */
 
-    'usuarioactual' => \Auth::user(),
-
+    
 
 ];

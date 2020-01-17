@@ -372,9 +372,9 @@ return $pdf->download('DatosEstadisticos-'.strftime("%b%Y").'.pdf');
 
     public function backup(){
         Dumper::create()
-            ->setDbName('sistemacle')
+            ->setDbName('sistem')
             ->setUserName('root')
-            ->setPassword('')
+            ->setPassword('Aldair_16')
             ->dumpToFile('respaldo.sql');
     }
 

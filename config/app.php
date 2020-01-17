@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://sistec.aldanet.ml'),
 
     'asset_url' => env('ASSET_URL', null),
 
@@ -179,7 +179,6 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
         Spatie\Backup\BackupServiceProvider::class,
-        Spatie\DbDumper\Databases\MySql::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
