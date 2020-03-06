@@ -37,7 +37,7 @@ $usuarioactual = \Auth::user();
         <div class="col-md">
             <div class="text-right">
 
-                <a href="{{ back() }}" class="btn btn-outline-primary mt-2 mb-4">
+                <a href="{{ route('home') }}" class="btn btn-outline-primary mt-2 mb-4">
                     <span>
                         <i class="fas fa-reply"></i> &nbsp; Regresar
                     </span>

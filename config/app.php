@@ -162,6 +162,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        
 
         /*
          * Package Service Providers...
@@ -180,6 +181,7 @@ return [
         Barryvdh\Snappy\ServiceProvider::class,
         Spatie\Backup\BackupServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        App\Providers\PhpSpreadsheetMacroServiceProvider::class,
 
     ],
 

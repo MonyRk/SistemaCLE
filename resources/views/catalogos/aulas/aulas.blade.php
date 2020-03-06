@@ -71,6 +71,7 @@
                                    @if ($aula->hora11 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora11 }}</option> @endif 
                                    @if ($aula->hora12 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora12 }}</option> @endif
                                    @if ($aula->hora13 != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->hora13 }}</option> @endif
+                                   @if ($aula->sabatino != null) <option value="{{ $aula->hrdisponible }}">{{ $aula->sabatino }}</option> @endif
                                </select>
                             </th>
                             <td>
@@ -226,6 +227,12 @@
                                                 <div class="custom-control custom-control-alternative custom-checkbox mb-3">
                                                     <input class="custom-control-input" id="19:00" name="horas[]" type="checkbox" value="19:00">
                                                     <label class="custom-control-label" for="19:00">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __('19:00') }}</label>
+                                                </div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="custom-control custom-control-alternative custom-checkbox mb-3">
+                                                    <input class="custom-control-input" id="sabados" name="sabados" type="checkbox" value="sabados">
+                                                    <label class="custom-control-label" for="sabados">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __('Sábados') }}</label>
                                                 </div>
                                             </div>
                                         </div>

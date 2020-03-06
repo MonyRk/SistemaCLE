@@ -49,6 +49,7 @@ $usuarioactual = \Auth::user();
     </div>
 
     <form action="{{ route('verBoleta','grupo') }}" method="GET">
+        
         <div class="row">
             <div class="col-lg-4"></div>
             <div class="col-lg-4 text-center">
@@ -99,6 +100,7 @@ $usuarioactual = \Auth::user();
 @else
    {{ $query='boletaGrupo' }} 
 @endif
+
 <script>
     var $jq = jQuery.noConflict();
     $jq(document).ready(function(){

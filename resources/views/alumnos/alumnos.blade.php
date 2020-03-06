@@ -7,7 +7,7 @@
     
      <div class="container-fluid m--t">
             <div class="text-right">
-                    <a href=" {{ back() }} " class="btn btn-outline-primary btn-sm mt-4">
+                    <a href=" {{ route('home') }} " class="btn btn-outline-primary btn-sm mt-4">
                         <span>
                             <i class="fas fa-reply"></i> &nbsp; Regresar
                         </span>
@@ -77,7 +77,7 @@
                                             {{ $alumno->num_control }}
                                         </th>
                                         <th scope="row">
-                                            <a href="{{ route('verInfoEstudiante',$alumno->num_control )}}" class="text-dark">{{ $alumno->nombres }} {{ $alumno->ap_paterno }} {{ $alumno->ap_materno }}</a>
+                                            <a href="{{ route('verInfoEstudiante',$alumno->num_control )}}" class="text-dark">{{ $alumno->ap_paterno }} {{ $alumno->ap_materno }} {{ $alumno->nombres }} </a>
                                         </th>
                                         <td scope="row">{{ $alumno->estatus }}</td>
                                         <td scope="row"> <a href="{{ route('editarEstudiante',$alumno->num_control) }}" class="text-primary"><i class="fas fa-edit"></i></a>

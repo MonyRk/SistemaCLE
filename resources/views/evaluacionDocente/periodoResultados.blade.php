@@ -33,7 +33,7 @@ $usuarioactual = \Auth::user();
 
     <div class="text-right">
         
-        <a href="{{ route('inicio') }}" class="btn btn-outline-primary mt-4">
+        <a href="{{ route('inicioEvaluacion') }}" class="btn btn-outline-primary mt-4">
             <span>
                 <i class="fas fa-reply"></i> &nbsp; Regresar
             </span>

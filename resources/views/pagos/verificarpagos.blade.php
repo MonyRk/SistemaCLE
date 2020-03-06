@@ -25,7 +25,7 @@
     </div>
 
     <div class="text-right">
-        <a href="{{ route('inicio') }}" class="btn btn-outline-primary btn-sm mt-2">
+        <a href="{{ route('indexpagos') }}" class="btn btn-outline-primary btn-sm mt-2">
             <span>
                 <i class="fas fa-reply"></i> &nbsp; Regresar
             </span>

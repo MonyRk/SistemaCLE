@@ -145,6 +145,20 @@ class DocentesController extends Controller
             
         }
 
+        if ($request->hasFile('documentos')) {
+            $documentos ="";
+                foreach ($data['documentos'] as $cert ) {
+                    $documentos = $documentos.','.$cert->getClientOriginalName();
+                    $fileName = $docente->id_docente.$cert->getClientOriginalName();
+                    $cert->storeAs('documentosCLE',$fileName);
+                    
+                }
+                $documentos = substr($documentos,1);
+                $docente->documentos = $documentos;
+                $docente->save();
+            
+        }
+
         User::firstOrCreate([
             'curp_user' => $data['curp']
         ],[
@@ -192,8 +206,8 @@ class DocentesController extends Controller
                         ->select('personas.*','docentes.*')
                         ->where('docentes.id_docente', '=' , $id)
                         ->get();
-                       
-        $nombres_municipios = Municipio::select('nombre_municipio')->pluck('nombre_municipio');
+                    //    dd($docente);
+        $nombres_municipios = Municipio::get();
         $email = User::where('curp_user',$docente[0]->curp)->get();
         if ($email->isNotEmpty()) {
             $email = $email[0]->email;
@@ -281,6 +295,20 @@ class DocentesController extends Controller
                 }
                 $certificaciones = substr($certificaciones,1);
                 $infoDocente->certificaciones = $certificaciones;
+            }
+
+            if(request()->has('documentos') && $c['documentos'][0]!=null){
+                $documentos ="";
+                foreach ($c['documentos'] as $cert ) {
+                    $documentos = $documentos.','.$cert->getClientOriginalName();
+                    $filedocumentos = $cert;    
+                    $fileName = $docente->id_docente.$filedocumentos->getClientOriginalName();
+                    
+                    $filedocumentos->move(storage_path('app').'/documentosCLE',$fileName);
+                    // $fileCertificaciones->move(public_path().'/documentosCLE/',$fileName);
+                }
+                $documentos = substr($documentos,1);
+                $infoDocente->documentos = $documentos;
             }
         }
             
@@ -425,6 +453,11 @@ class DocentesController extends Controller
 
     public function certificaciones($id,$certificacion){
         $p = storage_path('app').'/documentosCLE/'.$id.$certificacion;
+        return response()->file($p);
+    }
+
+    public function documentos($id,$documento){
+        $p = storage_path('app').'/documentosCLE/'.$id.$documento;
         return response()->file($p);
     }
 

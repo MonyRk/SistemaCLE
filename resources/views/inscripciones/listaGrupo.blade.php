@@ -14,13 +14,33 @@
 </div>
     <div class="container-fluid m--t"> 
         <div class="text-right">
-            <a href="{{ back() }}" class="btn btn-outline-primary btn-sm mt-4">
+            <a href="{{ route('periodoinscripciones') }}" class="btn btn-outline-primary btn-sm mt-4">
                 <span>
                     <i class="fas fa-reply"></i> &nbsp; Regresar
                     <input type="hidden" name="periodo" value="{{ $grupo[0]->periodo }}">
                 </span>
             </a>
         </div>
+
+        <div class="row ">
+            <div class="col-md"></div>
+            <div class="col-md">
+                <div class="">
+                    <form action=" {{ route('buscarEstudianteInscripcion') }} " method="GET" class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-9" style="margin-top: 15px">
+                        <div class="form-group mb-0">
+                            <div class="input-group input-group-alternative">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                </div>
+                                <input name="buscar" class="form-control" placeholder="Buscar" type="text">
+                                <input type="hidden" name="grupo" value="{{ $grupo[0]->id_grupo }}">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
            
             <div class="col-md">
@@ -66,7 +86,7 @@
                                                     {{ $alumno->num_control }}
                                                 </th>
                                                 <th scope="row">
-                                                    {{ $alumno->nombres }} {{ $alumno->ap_paterno }} {{ $alumno->ap_materno }}
+                                                    {{ $alumno->ap_paterno }} {{ $alumno->ap_materno }} {{ $alumno->nombres }} 
                                                 </th>
                                                 <td scope="row">
                                                     <span id="alumnoid" data-alumnoid="{{ $alumno->num_control }}" data-nombre="{{ $alumno->nombres }} {{ $alumno->ap_paterno }} {{ $alumno->ap_materno }}">
@@ -79,9 +99,7 @@
                                         </table>
                                     {{-- </div> --}}
                                 </div>
-                            </div>
-            
-                    
+                            </div>                    
                 </div>  
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary mt-4" id="guardar">{{ __('Inscribir Estudiantes') }}</button>

@@ -77,7 +77,7 @@
                                             {{ $docente->id_docente }}
                                         </th> --}}
                                         <th>
-                                            <a href="{{ route('verInfoDocente',$docente->id_docente) }}" class="text-dark">{{ $docente->nombres }} {{ $docente->ap_paterno }} {{ $docente->ap_materno }}</a>
+                                            <a href="{{ route('verInfoDocente',$docente->id_docente) }}" class="text-dark">{{ $docente->ap_paterno }} @if ($docente->ap_materno != null){{ $docente->ap_materno }} @endif {{ $docente->nombres }} </a>
                                         </th>                                      
                                         <td name="">{{ $docente->grado_estudios }}</td>
                                         <td>
@@ -87,7 +87,7 @@
                                             $docente_en_grupo = App\Grupo::where('docente',$docente->id_docente)->get();
                                         @endphp
                                         <td class="text-center"> 
-                                                <a href="docentes/{{ $docente->id_docente }}/editar" class="text-primary"><i class="fas fa-edit"></i></a>
+                                                <a href="{{ route('editarDocente',$docente->id_docente) }}"  class="text-primary"><i class="fas fa-edit"></i></a>
                                             </td>
                                         @if($docente_en_grupo->isEmpty())
                                             

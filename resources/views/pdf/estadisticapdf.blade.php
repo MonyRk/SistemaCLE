@@ -1,184 +1,86 @@
-                <table  cellspacing="0" cellpadding="0" align="center" border="1" style="padding-top:100px;">
-                    <thead>
-                        <tr colspan="2" ><h3 align="center">Estudiantes por Carrera</h3></tr>
-                        <tr >
-                            <th>Carrera</th>
-                            <th>N&uacute;m. Estudiantes</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bordes">
-                        @php
-                        $i=0;
-                        @endphp
-                        @foreach ($nombre_carreras as $carrera)
-                        <tr class="bordes">
-                            <td class="bordes">{{ $carrera }}</th>
-                            <td class="bordes" align="center">{{ $carreras[$i] }}</td>
-                        </tr>
-                        @php
-                        $i++;
-                        @endphp
-                        @endforeach
-                    </tbody>
-                </table>
+<!DOCTYPE html>
+<html>
 
-  {{-- <div>
-        <h3 class="text-dark" align="center">Ingresos Estimados de la CLE del Periodo {{ $periodo[0]->descripcion }} {{ $periodo[0]->anio }}</h3>
-    <h2 class="text-center mt-3" align="center">$ {{ $ingresos*814 }}.00</h2>
+<head>
+    <style>
+        table,
+        th,
+        td {
+            table-layout: fixed;
+            border: 1px solid #F57C00;
+            border-collapse: collapse;
+            
+        }
 
-    <h3 class="mt-6 text-center" align="center">Total de Estudiantes inscritos durante el periodo {{ $periodo[0]->descripcion }} {{ $periodo[0]->anio }}</h3>
-    <h2 class="text-center mt-3" align="center"> {{ $ingresos }}</h2>
+        .alto-30 {
+            height: 30px;
+        }
+    </style>
 
-    <h3 class="text-dark" align="center">Datos Estadisticos del Periodo {{ $periodo[0]->descripcion }} {{ $periodo[0]->anio }}</h3>
+</head>
 
-   </div> --}}
-{{-- <div> --}}
-        {{-- <table  align="center">
-                <thead>
-                    <tr colspan="2" ><h3 align="center">Estudiantes por Carrera</h3></tr>
-                    <tr >
-                        <th>Carrera</th>
-                        <th>N&uacute;m. Estudiantes</th>
-                    </tr>
-                </thead>
-                <tbody class="bordes">
-                    @php
-                    $i=0;
-                    @endphp
-                    @foreach ($nombre_carreras as $carrera)
-                    <tr class="bordes">
-                        <td class="bordes">{{ $carrera }}</th>
-                        <td class="bordes" align="center">{{ $carreras[$i] }}</td>
-                    </tr>
-                    @php
-                    $i++;
-                    @endphp
-                    @endforeach
-                </tbody>
-            </table>
-            <table class="bordes" style="width=50%" align="center">
-                    <thead class="bordes">
-                        <tr colspan="2" class="bordes"><h3 align="center">Estudiantes por Nivel</h3></tr>
-                        <tr class="bordes">
-                            <th class="bordes">Nivel</th>
-                            <th class="bordes">N&uacute;m. Estudiantes</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bordes">
-                            @php
-                            $i=0;
-                            @endphp
-                            @foreach ($nombre_niveles as $nivel)
-                            <tr class="bordes">
-                                <td class="bordes">{{ $nivel }}{{ $modulos[$i] }}</th>
-                                <td class="bordes" align="center">{{ $niveles[$i] }}</td>
-                            </tr>
-                            @php
-                            $i++;
-                            @endphp
-                            @endforeach
-                    </tbody>
-                </table> --}}
-    {{-- <table style="width=100%">
-        <tr>
-            <td style="width=50%">
-                <table class="bordes" align="center">
-                    <thead class="bordes">
-                        <tr colspan="2" class="bordes" ><h3 align="center">Estudiantes por Carrera</h3></tr>
-                        <tr class="bordes">
-                            <th class="bordes">Carrera</th>
-                            <th class="bordes">N&uacute;m. Estudiantes</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bordes">
-                        @php
-                        $i=0;
-                        @endphp
-                        @foreach ($nombre_carreras as $carrera)
-                        <tr class="bordes">
-                            <td class="bordes">{{ $carrera }}</th>
-                            <td class="bordes" align="center">{{ $carreras[$i] }}</td>
-                        </tr>
-                        @php
-                        $i++;
-                        @endphp
-                        @endforeach
-                    </tbody>
-                </table>
-            </td>
-            <td style="width=50%">
-                <table class="bordes" style="width=50%" align="center">
-                    <thead class="bordes">
-                        <tr colspan="2" class="bordes"><h3 align="center">Estudiantes por Nivel</h3></tr>
-                        <tr class="bordes">
-                            <th class="bordes">Nivel</th>
-                            <th class="bordes">N&uacute;m. Estudiantes</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bordes">
-                            @php
-                            $i=0;
-                            @endphp
-                            @foreach ($nombre_niveles as $nivel)
-                            <tr class="bordes">
-                                <td class="bordes">{{ $nivel }}{{ $modulos[$i] }}</th>
-                                <td class="bordes" align="center">{{ $niveles[$i] }}</td>
-                            </tr>
-                            @php
-                            $i++;
-                            @endphp
-                            @endforeach
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-    </table>
-    <table style="width=100%">
+<body>
+
+    <div align="center">
+        <img src="{{ asset('argon') }}/img/brand/cabeceraL.png" alt="cabecera" title="cabecera">
+        <p>{{ $membrete[0]->descripcion }}</p>
+    </div>
+<br>
+    <table style="width:100%">
+        <thead>
             <tr>
-                <td style="width=50%">
-                        <table class="bordes" style="width=50%" align="center">
-                                <thead class="bordes">
-                                    <tr colspan="2" class="bordes"><h3 align="center">Estudiantes por G&eacute;nero</h3></tr>
-                                    <tr class="bordes">
-                                        <th class="bordes">G&eacute;nero</th>
-                                        <th class="bordes">N&uacute;m. Estudiantes</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bordes">
-                                    @php $estudiantes_genero= ""; $estudiantes_genero = explode(',',$generos); @endphp
-                                    <tr class="bordes">
-                                        <td class="bordes">Mujeres</td>
-                                        <td class="bordes" align="center">{{ $estudiantes_genero[0] }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="bordes">Hombres</td>
-                                        <td class="bordes" align="center">{{ $estudiantes_genero[1] }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                </td>
-                <td style="width=50%">
-                    <table class="bordes" style="width=50%" align="center">
-                        <thead class="bordes">
-                            <tr colspan="2" class="bordes" ><h3 align="center">&Iacute;ndices de Aprobaci&oacute;n</h3></tr>
-                            <tr class="bordes">
-                                <th class="bordes">&Iacute;ndice</th>
-                                <th class="bordes">N&uacute;m. Estudiantes</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bordes">
-                            <tr class="bordes">
-                                <td class="bordes">Aprobados</td>
-                                <td class="bordes" align="center">{{ $aprobados }}</td>
-                            </tr>
-                            <tr>
-                                <td class="bordes">Reprobados</td>
-                                <td class="bordes" align="center">{{ $reprobados }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
+                <th scope="col" colspan="5" align="center" bgcolor="#F57C00">
+                    <h4 style="color:white">TOTAL DE NIVELES DE INGL&Eacute;S <br>
+                        {{ $periodo[0]->descripcion }} {{ $periodo[0]->anio }}
+                    </h4>
+                </th>
             </tr>
-        </table>
-             --}}
-{{-- </div> --}}
+            <tr bgcolor="#FDDDBB">
+                <th scope="col" class="alto-30" align="center">Niveles</th>
+                <th scope="col" class="alto-30" align="center">Lunes a Viernes</th>
+                <th scope="col" class="alto-30" align="center">S&aacute;bados</th>
+                <th scope="col" class="alto-30" align="center">Total Grupos</th>
+                <th scope="col" class="alto-30" align="center">Total Estudiantes</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @php
+                $i = 0;
+                $semanales = 0;
+                $sabatinos = 0;
+                $alumnos = 0;
+            @endphp
+           @foreach ($niveless as $nivel)
+                <tr class="text-center" @if ($i==1||$i==3||$i==5) bgcolor="#FDDDBB" @endif>
+                    <td scope="col" class="alto-30" align="center">{{ $nivel->nivel }}{{ $nivel->modulo }}</td>
+                    <td scope="col" class="alto-30" align="center" >{{ $grupos_semanales[$i] }}</td>
+                    <td scope="col" class="alto-30" align="center">{{ $grupos_sabatinos[$i] }}</td>
+                    <td scope="col" class="alto-30" align="center">{{ $grupos_semanales[$i]+$grupos_sabatinos[$i] }}</td>
+                    <td scope="col" class="alto-30" align="center">{{ $estudiantes[$i]->num_estudiantes }}</td> 
+                    {{-- $estudiantes[$i] --}}
+                </tr>
+                @php
+                    $semanales = $semanales + $grupos_semanales[$i];
+                    $sabatinos = $sabatinos + $grupos_sabatinos[$i];
+                    $alumnos = $alumnos + $estudiantes[$i]->num_estudiantes; // $estudiantes[$i]
+                    $i++;
+                @endphp
+            @endforeach
+            <tr class="text-center" bgcolor="#FDDDBB">
+                <th scope="col" class="alto-30" align="center">Totales</th>
+                <th scope="col" class="alto-30" align="center"> {{ $semanales }} </th>
+                <th scope="col" class="alto-30" align="center"> {{ $sabatinos }} </th>
+                <th scope="col" class="alto-30" align="center"> {{ $semanales+$sabatinos }} </th>
+                <th scope="col" class="alto-30" align="center"> {{ $alumnos }} </th>
+            </tr>
+        </tbody>
+    </table>
+<br>
+<p align="center">Vo. Bo. <br><br><br><br>
+    <strong>M.E. GABRIELA AGUILAR ORTIZ</strong> <br>
+    <small>JEFA DEL DEPTO. DE GESTI&Oacute;N TECNOL&Oacute;GICA Y VINCULACI&Oacute;N</small> 
+</p>
+</body>
+
+</html>

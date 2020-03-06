@@ -166,6 +166,8 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-xl col-lg">
                 <div class="card card-stats mb-4 mb-xl">
                     <div class="card-body">
@@ -190,8 +192,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
+        
+        
             <div class="col-xl col-lg">
                 <div class="card card-stats mb-4 mb-xl">
                     <div class="card-body">
@@ -233,6 +235,29 @@
                                     @php $actualizaciones = ""; $actualizaciones = explode(';',$datos[0]->actualizacion); @endphp
                                     @foreach ($actualizaciones as $nombre_actualizacion)
                                         <p  class="card-text font-weight-bold text-dark">{{ $nombre_actualizacion }}</p>
+                                    @endforeach
+                                @endif
+                                
+                                {{-- <a href="{{ route('verCertificaciones',$datos[0]->id_docente) }}" class="card-text font-weight-bold">{{ $datos[0]->certificaciones }}</a> --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl col-lg-6">
+                <div class="card card-stats mb-4 mb-xl">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <span class="card-title">{{ __('Documentos: ') }}</span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="">
+                                @if ($datos[0]->documentos != null)
+                                    @php $documentos1 = ""; $documentos1 = explode(',',$datos[0]->documentos); @endphp
+                                    @foreach ($documentos1 as $documento)
+                                        <a href="{{ route('verCertificaciones',[$datos[0]->id_docente,$documento]) }}" class="card-text font-weight-bold text-dark"><u>{{ $documento }}</u></a><br>
                                     @endforeach
                                 @endif
                                 

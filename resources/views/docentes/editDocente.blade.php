@@ -21,7 +21,12 @@ $usuarioactual = \Auth::user();
 
     <div class="container-fluid m--t">
             <div class="text-right">
-                    <a href="{{ back() }}" class="btn btn-outline-primary btn-sm mt-4">
+                    <a @if ($usuarioactual->tipo == 'coordinador')
+                        href=" {{ route('verDocentes') }} "
+                        @else
+                        href=" {{ route('home') }} "
+                        @endif
+                         class="btn btn-outline-primary btn-sm mt-4">
                         <span>
                             <i class="fas fa-reply"></i> &nbsp; Regresar
                         </span>
@@ -70,16 +75,16 @@ $usuarioactual = \Auth::user();
             <div class="pl-lg-4">
                 <div class="row">
                     <div class="col-md">
-                        <label class="form-control-label" for="input-name">{{ __('Nombre(s)') }}</label>
-                        <input type="text" name="name" id="input-name" class="form-control" placeholder="" value="{{ old('name', $docente[0]->nombres) }}"  autofocus>
+                        <label class="form-control-label" for="input-name"><b style="color:red;">*</b>{{ __('Nombre(s)') }}</label>
+                        <input type="text" name="name" id="input-name" class="form-control" placeholder="" @if ($docente[0]->nombres == null) value="" @else value="{{ old('name', $docente[0]->nombres) }}" @endif  autofocus>
                     </div>
                     <div class="col-md">
-                        <label class="form-control-label" for="input-apPaterno">{{ __('Apellido Paterno') }}</label>
-                        <input type="text" name="apPaterno" id="input-apPaterno" class="form-control" placeholder="" value="{{ old('apPaterno', $docente[0]->ap_paterno) }}"  >
+                        <label class="form-control-label" for="input-apPaterno"><b style="color:red;">*</b>{{ __('Apellido Paterno') }}</label>
+                        <input type="text" name="apPaterno" id="input-apPaterno" class="form-control" placeholder="" @if ($docente[0]->ap_paterno == null) value="" @else value="{{ old('apPaterno', $docente[0]->ap_paterno) }}" @endif  >
                     </div>
                     <div class="col-md">
-                        <label class="form-control-label" for="input-apMaterno">{{ __('Apellido Materno') }}</label>
-                        <input type="text" name="apMaterno" id="input-apMaterno" class="form-control" placeholder="" value="{{ old('apMaterno', $docente[0]->ap_materno) }}"  >
+                        <label class="form-control-label" for="input-apMaterno"><b style="color:red;">*</b>{{ __('Apellido Materno') }}</label>
+                        <input type="text" name="apMaterno" id="input-apMaterno" class="form-control" placeholder="" @if ($docente[0]->ap_materno == null) value="" @else value="{{ old('apMaterno', $docente[0]->ap_materno) }}" @endif  >
                     </div>
                 </div>
                 
@@ -87,15 +92,15 @@ $usuarioactual = \Auth::user();
 
                 <div class="form-row">
                     <div class="form-group col-md-5">
-                        <label class="form-control-label" for="input-curp">{{ __('CURP') }}</label>
-                        <input type="text" class="form-control" name="curp" id="input-curp" value="{{ old('curp', $docente[0]->curp) }}" @if($usuarioactual->tipo != 'coordinador') readonly @endif>
+                        <label class="form-control-label" for="input-curp"><b style="color:red;">*</b>{{ __('CURP') }}</label>
+                        <input type="text" class="form-control" name="curp" id="input-curp" onkeyup="this.value = this.value.toUpperCase();" @if ($docente[0]->curp == null) value="" @else value="{{ old('curp', $docente[0]->curp) }}" @endif  @if($usuarioactual->tipo != 'coordinador') readonly @endif>
                     </div>
                     <div class="form-group col-md-2">
-                        <label class="form-control-label" for="input-edad">{{ __('Edad') }}</label>
-                        <input type="text" class="form-control" name="edad" id="input-edad" value="{{ old('edad', $docente[0]->edad) }}">
+                        <label class="form-control-label" for="input-edad"><b style="color:red;">*</b>{{ __('Edad') }}</label>
+                        <input type="text" class="form-control" name="edad" id="input-edad"   @if ($docente[0]->edad == null) value="" @else value="{{ old('edad', $docente[0]->edad) }}" @endif>
                     </div>
                     <div class="form-group col-md">
-                        <label class="form-control-label" for="input-sexo" >{{ __('Sexo') }}</label>
+                        <label class="form-control-label" for="input-sexo" ><b style="color:red;">*</b>{{ __('Sexo') }}</label>
                         <div class="row">            
                             <div class="custom-control custom-radio">
                                 <input type="radio" id="sexof" name="sexo"  @if($docente[0]->sexo ='F') checked @endif value = {{ old('sexo',$docente[0]->sexo) }} class="custom-control-input">
@@ -110,16 +115,16 @@ $usuarioactual = \Auth::user();
                 </div>
                 <div class="row">
                     <div class="form-group col-md">
-                        <label class="form-control-label" for="input-calle">{{ __('Dirección') }}</label>
-                        <input type="text" name="calle" id="input-calle" class="form-control" placeholder="Calle" value="{{ old('calle', $docente[0]->calle) }}"  >
+                        <label class="form-control-label" for="input-calle"><b style="color:red;">*</b>{{ __('Dirección') }}</label>
+                        <input type="text" name="calle" id="input-calle" class="form-control" placeholder="Calle" @if ($docente[0]->calle == null) value="" @else value="{{ old('calle', $docente[0]->calle) }}" @endif>
                     </div>
                     <div class="form-group col-md">
                             <label class="form-control-label" for="input-numero">{{ __('') }}</label>
-                        <input type="text" name="numero" id="input-numero" class="form-control" placeholder="Número" value="{{ old('numero', $docente[0]->numero) }}"  >
+                        <input type="text" name="numero" id="input-numero" class="form-control" placeholder="Número" @if ($docente[0]->numero == null) value="" @else value="{{ old('numero', $docente[0]->numero) }}" @endif>
                     </div>
                     <div class="form-group col-md">
                             <label class="form-control-label" for="input-colonia">{{ __(' ') }}</label>
-                        <input type="text" name="colonia" id="input-colonia" class="form-control" placeholder="Colonia" value="{{ old('colonia', $docente[0]->colonia) }}"  >
+                        <input type="text" name="colonia" id="input-colonia" class="form-control" placeholder="Colonia" @if ($docente[0]->colonia == null) value="" @else value="{{ old('colonia', $docente[0]->colonia) }}" @endif>
                     </div>
                     <div class="form-group col-md">
                             <label class="form-control-label" for="input-municipio">{{ __(' ') }}</label>
@@ -127,30 +132,29 @@ $usuarioactual = \Auth::user();
                             
                                 {{ $nm = App\Municipio::select('id','nombre_municipio')->where('id',$docente[0]->municipio)->pluck('nombre_municipio') }}
                             
-                        <option selected value="{{ old('municipio', $docente[0]->municipio) }}">{{ $nm[0] }} </option>
-                        @forelse ($nombres_municipios as $mun)
-                        <option value="{{ $mun }}">{{ $mun }}</option>  
-                        @empty
-                            
-                        @endforelse
+                                @if ($docente[0]->municipio == null) <option selected value="">Municipio </option> @else <option selected value="{{ old('municipio', $docente[0]->municipio) }}">{{ $nm[0] }} </option> @endif
+                                {{-- {{ $nm }} --}}
+                                @foreach ($nombres_municipios as $mun) 
+                                <option value="{{ $mun->id }}">{{ $mun->nombre_municipio }}</option>
+                                @endforeach
                         
                         </select>
                                          
                     </div>
                     <div class="form-group col-md">
                             <label class="form-control-label" for="input-cp">{{ __(' ') }}</label>
-                            <input type="text" name="cp" id="input-cp" class="form-control" placeholder="C.P." value="{{ old('cp', $docente[0]->cp) }}"  >
+                            <input type="text" name="cp" id="input-cp" class="form-control" placeholder="C.P." @if ($docente[0]->cp == null) value="" @else value="{{ old('cp', $docente[0]->cp) }}" @endif>
                         </div> 
 
                 </div>
                 <div class="row">
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-telefono">{{ __('Teléfono') }}</label>
-                        <input type="text" name="telefono" id="input-telefono" class="form-control" placeholder="" value="{{ old('telefono', $docente[0]->telefono) }}"  >
+                        <input type="text" name="telefono" id="input-telefono" class="form-control" placeholder="" @if ($docente[0]->telefono == null) value="" @else value="{{ old('telefono', $docente[0]->telefono) }}" @endif>
                     </div>
                     <div class="form-group col-md">
                         <label class="form-control-label" for="input-email">{{ __('Email') }}</label>
-                        <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder=""value="{{ old('email',$email) }}"  >
+                        <input type="email" name="email" id="input-email" class="form-control form-control-alternative" placeholder="" @if ($docente[0]->email == null) value="" @else value="{{ old('email',$email) }}" @endif>
                     </div>
                 </div>
         
@@ -163,8 +167,8 @@ $usuarioactual = \Auth::user();
             <div class="pl-lg-4 prof">
                     <div class="form-row">  
                             <div class="form-group col-md-6">
-                                <label class="form-control-label" for="input-estudios">{{ __('Grado de Estudios') }}</label>
-                                <input class="form-control" type="text" id="input-estudios" name="estudios" value="{{ old('estudios',$docente[0]->grado_estudios) }}">
+                                <label class="form-control-label" for="input-estudios"><b style="color:red;">*</b>{{ __('Grado de Estudios') }}</label>
+                                <input class="form-control" type="text" id="input-estudios" name="estudios" @if ($docente[0]->grado_estudios == null) value="" @else value="{{ old('estudios',$docente[0]->grado_estudios) }}" @endif>
                                 {{-- <select id="input-estudios" class="form-control" name="estudios">
                                 <option value="{{ old('estudios',$docente[0]->grado_estudios) }}"selected>{{ old('estudios',$docente[0]->grado_estudios) }}</option>
                                 <option value="Licenciatura">{{ __('Licenciatura') }}</option>
@@ -195,7 +199,7 @@ $usuarioactual = \Auth::user();
                             <div class="field_wrapper form-group col-md">
                                 <div>
                                     <label class="form-control-label" for="didactica">{{ __('Certificaciones de Didáctica') }}</label>
-                                    <input type="text" class="form-control form-control-alternative" id="didactica" name="didactica[]" value="{{ old('didactica') }}"/>
+                                    <input type="text" class="form-control form-control-alternative" id="didactica" name="didactica[]" >
                                     <a href="javascript:void(0);" class="add_button" title="Add field"><i class="fas fa-plus text-info"></i></a>
                                 </div>
                             </div>
@@ -218,7 +222,7 @@ $usuarioactual = \Auth::user();
                         </div>
                         <div class="form-row" @if($usuarioactual->tipo != 'coordinador')style = "display:none;" @else style="display:block" @endif>
                             <div class="form-group col-md-6">
-                                <label class="form-control-label" for="input-rfc">{{ __('RFC') }}</label>
+                                <label class="form-control-label" for="input-rfc"><b style="color:red;">*</b>{{ __('RFC') }}</label>
                                 <div class="form-group">
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" id="input-rfc" aria-describedby="input-rfc" name="rfc" value="{{ old('rfc',$docente[0]->rfc) }}" lang="es">
@@ -229,7 +233,7 @@ $usuarioactual = \Auth::user();
                         </div>
                         <div class="form-row" @if($usuarioactual->tipo != 'coordinador')style = "display:none;" @else style="display:block" @endif>
                             <div class="form-group col-md-6">
-                                <label class="form-control-label" for="input-titulo">{{ __('Título') }}</label>
+                                <label class="form-control-label" for="input-titulo"><b style="color:red;">*</b>{{ __('Título') }}</label>
                                 <div class="form-group">
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" id="input-titulo" aria-describedby="input-titulo" name="titulo" value="{{ old('titulo',$docente[0]->titulo) }}">
@@ -240,7 +244,7 @@ $usuarioactual = \Auth::user();
                         </div>
                         <div class="form-row" @if($usuarioactual->tipo != 'coordinador')style = "display:none;" @else style="display:block" @endif>
                             <div class="form-group col-md-6">
-                                <label class="form-control-label" for="input-cedula">{{ __('Cédula Profesional') }}</label>
+                                <label class="form-control-label" for="input-cedula"><b style="color:red;">*</b>{{ __('Cédula Profesional') }}</label>
                                 <div class="form-group">
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" id="input-cedula" aria-describedby="input-cedula" name="cedula" value="{{ old('cedula',$docente[0]->ced_prof) }}">
@@ -257,6 +261,18 @@ $usuarioactual = \Auth::user();
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" id="input-certificaciones" aria-describedby="input-certificaciones" name="certificaciones[]" value="{{ old('certificaciones') }}" multiple>
                                         <label class="custom-file-label" for="input-certificaciones" data-browse="Bestand kiezen"></label>
+                                    </div>
+                                    {{-- <input type="file" class="form-control-file" id="input-certificaciones" name="certificaciones[]" value="{{ old('certificaciones') }}" multiple="multiple"> --}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row" @if($usuarioactual->tipo != 'coordinador')style = "display:none;" @else style="display:block" @endif>
+                            <div class="form-group col-md-6">
+                                <label class="form-control-label" for="input-documentos">{{ __('Documentación') }}</label>
+                                <div class="form-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="input-documentos" aria-describedby="input-documentos" name="documentos[]" value="{{ old('documentos') }}" multiple>
+                                        <label class="custom-file-label" for="input-documentos" data-browse="Bestand kiezen"></label>
                                     </div>
                                     {{-- <input type="file" class="form-control-file" id="input-certificaciones" name="certificaciones[]" value="{{ old('certificaciones') }}" multiple="multiple"> --}}
                                 </div>
@@ -287,6 +303,8 @@ $usuarioactual = \Auth::user();
             <p class="text-muted">*El reestablecimiento de la contraseña no es obligatorio al ver o actualizar otro dato</p>          
         </div>
     </div>
+
+    <b style="color:red;">*</b><span class="text-muted">Campos Obligatorios</span>
 
             <div class="text-center">
                 <button type="submit" class="btn btn-primary mt-4">{{ __('Actualizar') }}</button>

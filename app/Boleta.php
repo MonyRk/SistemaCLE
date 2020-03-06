@@ -21,5 +21,9 @@ class Boleta extends Model
     public function estudiante(){
         return $this->belongsTo(Alumno::class,'num_control');
     }
+
+    public function cambio(){
+        return $this->hasMany(Cambio::class,'id_cambio');
+    }
     
 }

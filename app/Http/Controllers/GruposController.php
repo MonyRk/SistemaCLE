@@ -23,8 +23,10 @@ class GruposController extends Controller
     
     public function index()
     {
-        
+        $search['periodo'] = request('periodo');
         // dd(request()->all());
+        $periodos = Periodo::find(request('periodo'));
+        // dd($periodos[0]->id_periodo);
             $grupos = DB::table('grupos')
             ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
             ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
@@ -35,28 +37,32 @@ class GruposController extends Controller
             ->where('grupos.periodo',request('periodo'))
             // ->orderByDesc('periodos.actual')
             // ->orderByDesc('periodos.anio')
-            ->orderBy('periodos.descripcion')
-            ->orderBy('grupos.grupo','ASC')
-            ->paginate(25);
+            // ->orderBy('periodos.descripcion')
+            ->orderBy('nivels.nivel','ASC')
+            ->orderBy('nivels.modulo','ASC')
+            ->orderBy('grupos.hora')
+            ->paginate(25)
+            ->appends('periodo',request('periodo'));
         
 // dd($)
         $niveles = Nivel::select('*')
         ->get();
 
-        $periodos = Periodo::find(request('periodo'));
+       
         // ->get();
         
         $aulas = Aula::leftjoin('horas_disponibles','horas_disponibles.id_hora','=','aulas.hrdisponible')
         ->select('aulas.*','horas_disponibles.*')
         ->get();
-        return view('grupos.grupos',compact('grupos','niveles','aulas','periodos'));
+        return view('grupos.grupos',compact('grupos','niveles','aulas','periodos','search'));
     }
 
 
     public function search(Request $request)
     {
+        // dd($request);
         $search = $request->all();
-        
+        // dd($search);
         $grupos = DB::table('grupos')
                 ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
                 ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
@@ -65,30 +71,34 @@ class GruposController extends Controller
                 ->leftJoin('personas','docentes.curp_docente','=','personas.curp')
                 ->whereNull('grupos.deleted_at')
                 ->where('grupos.grupo','like','%'.$search['buscar'].'%')
-                ->orWhere('nivels.nivel','like','%'.$search['buscar'].'%')
-                ->orWhere('nivels.modulo','like','%'.$search['buscar'].'%')
+                // ->orWhere('nivels.nivel','like','%'.$search['buscar'].'%')
+                // ->orWhere('nivels.modulo','like','%'.$search['buscar'].'%')
+                ->orWhere('grupos.nivel_completo','like','%'.$search['buscar'].'%')
                 ->orWhere('nivels.idioma','like','%'.$search['buscar'].'%')
                 ->orWhere('aulas.num_aula','like','%'.$search['buscar'].'%')
                 ->orWhere('aulas.edificio','like','%'.$search['buscar'].'%')
-                ->orWhere('periodos.descripcion','like','%'.$search['buscar'].'%')
-                ->orWhere('periodos.anio','like','%'.$search['buscar'].'%')
+                // ->orWhere('periodos.descripcion','like','%'.$search['buscar'].'%')
+                // ->orWhere('periodos.anio','like','%'.$search['buscar'].'%')
                 ->orWhere('personas.nombres','like','%'.$search['buscar'].'%')
                 ->orWhere('personas.ap_paterno','like','%'.$search['buscar'].'%')
                 // ->orWhere('personas.ap_materno','like','%'.$search['buscar'].'%')
+                ->orderBy('nivels.nivel','ASC')
+                ->orderBy('nivels.modulo','ASC')
+                ->orderBy('grupos.hora')
                 ->paginate(25)
+                // ->appends('periodo',$search['periodo'])
                 ->appends('buscar',$search['buscar']);
 
                 $niveles = Nivel::select('*')
                 ->get();
 
-                $periodos = Periodo::select('*')
-                ->get();
-                
+                $periodos = Periodo::find(request('periodo'));
+
                 $aulas = Aula::leftjoin('horas_disponibles','horas_disponibles.id_hora','=','aulas.hrdisponible')
                 ->select('aulas.*','horas_disponibles.*')
                 ->get();
-                //    dd($grupos);     
-        return view ('grupos.grupos',compact('grupos','niveles','aulas','periodos'));
+                //    dd($periodos);     
+        return view ('grupos.grupos',compact('grupos','niveles','aulas','periodos','search'));
     }
   
     public function create()
@@ -289,7 +299,7 @@ class GruposController extends Controller
                             ->get();
 
             foreach ($aulas as $aula) {
-                $aulasArray[$aula->hrdisponible] = array ($aula->hora1, $aula->hora2, $aula->hora3,$aula->hora4, $aula->hora5, $aula->hora6,$aula->hora7, $aula->hora8, $aula->hora9,$aula->hora10, $aula->hora11, $aula->hora12,$aula->hora13);
+                $aulasArray[$aula->hrdisponible] = array ($aula->hora1, $aula->hora2, $aula->hora3,$aula->hora4, $aula->hora5, $aula->hora6,$aula->hora7, $aula->hora8, $aula->hora9,$aula->hora10, $aula->hora11, $aula->hora12,$aula->hora13, $aula->sabatino);
             }
             return response()->json($aulasArray);
         }

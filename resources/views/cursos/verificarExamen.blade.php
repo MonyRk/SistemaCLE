@@ -20,12 +20,32 @@
 
     <div class="text-right">
         
-        <a href="{{ back() }}" class="btn btn-outline-primary btn-sm mt-4">
+        <a href="{{ route('cursos') }}" class="btn btn-outline-primary btn-sm mt-4">
             <span>
                 <i class="fas fa-reply"></i> &nbsp; Regresar
             </span>
         </a>
     </div>
+
+    <div class="row ">
+        <div class="col-md"></div>
+        <div class="col-md">
+            <div class="">
+                <form action=" {{ route('buscarEstudianteExamen') }} " method="GET" class="navbar-search navbar-search-dark form-inline mr-5 d-none d-md-flex ml-lg-9" style="margin-top: 15px">
+                    <div class="form-group mb-0">
+                        <div class="input-group input-group-alternative">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            </div>
+                            <input name="buscar" class="form-control" placeholder="Buscar" type="text">
+                            {{-- <input type="hidden" name="grupo" value="{{ $periodo_actual[0]->id_periodo }}"> --}}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <form action="{{ route('verificarExamenes') }}" method="post">
         @csrf
         @method('post')
@@ -58,7 +78,7 @@
                                                 {{ $alumno->num_control }}
                                             </td>
                                             <td>
-                                                {{ $alumno->nombres }} {{ $alumno->ap_paterno }} @if ($alumno->ap_materno) {{ $alumno->ap_materno }} @endif
+                                                {{ $alumno->ap_paterno }} @if ($alumno->ap_materno) {{ $alumno->ap_materno }} @endif {{ $alumno->nombres }}
                                             </td>
                                             <td>
                                                 {{ $alumno->nivel_inicial }}

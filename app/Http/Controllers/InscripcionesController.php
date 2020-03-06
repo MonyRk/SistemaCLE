@@ -13,12 +13,15 @@ use App\Periodo;
 use App\HorasDisponible;
 use App\Inscripcion;
 use App\Historial;
+use App\Membrete;
 use App\User;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\Builder;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ListasExport;
 
 class InscripcionesController extends Controller
 {
@@ -39,7 +42,6 @@ class InscripcionesController extends Controller
     public function search(Request $request)
     {
         $search = $request->all();
-
         $grupos_periodo = Grupo::leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
                             ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
                             ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
@@ -51,15 +53,20 @@ class InscripcionesController extends Controller
         $grupos = DB::table(DB::raw("({$grupos_periodo->toSql() }) as grupos_periodos"))
                     ->mergeBindings($grupos_periodo->getQuery())
                     ->orWhere('grupos_periodos.grupo','like','%'.$search['buscar'].'%')
-                    ->orWhere('grupos_periodos.nivel','like','%'.$search['buscar'].'%')
-                    ->orWhere('grupos_periodos.modulo','like','%'.$search['buscar'].'%')
+                    // ->orWhere('grupos_periodos.nivel','like','%'.$search['buscar'].'%')
+                    // ->orWhere('grupos_periodos.modulo','like','%'.$search['buscar'].'%')
+                    // ->orWhere(DB::raw("CONCAT('grupos_periodos.nivel,grupos_periodos.modulo') as nivelm"),'like','%'.$search['buscar'].'%')
+                    ->orWhere('grupos_periodos.nivel_completo','like','%'.$search['buscar'].'%')
                     ->orWhere('grupos_periodos.num_aula','like','%'.$search['buscar'].'%')
                     ->orWhere('grupos_periodos.edificio','like','%'.$search['buscar'].'%')
                     ->orWhere('grupos_periodos.nombres','like','%'.$search['buscar'].'%')           
                     ->orWhere('grupos_periodos.hora','like','%'.$search['buscar'].'%')
+
                     ->orderBy('grupos_periodos.nivel','ASC')
                     ->orderBy('grupos_periodos.modulo','ASC')
+                    ->orderBy('grupos_periodos.hora')
                     ->paginate(25) 
+                    // ->appends('periodo',$search[])
                     ->appends('buscar',$search['buscar']);    
 
         $docentes = Persona::leftjoin('docentes','docentes.curp_docente','=','personas.curp')
@@ -88,27 +95,172 @@ class InscripcionesController extends Controller
     }
     
     //buscar por estudiante en el grupo a inscribir
-    public function searchE(Request $request)
+    public function searchEstudiante()
     {
-        $search = $request->all();
-        
+        $search = request()->all();
+        // dd($search);
         $grupo = DB::table('grupos')
         ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
         ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
         ->where('id_grupo',$search['grupo'])
         ->get();
 
-        $alumnos = DB::table('alumnos')
-        ->leftjoin('personas','alumnos.curp_alumno','=','personas.curp')
+        $periodo_actual = Periodo::where('actual',true)->get();
+        // $periodo_actual = Periodo::where('id_periodo',$grupo[0]->periodo)->get(); 
+        // $nivel_del_grupo = $grupo[0]->nivel;
+        // $modulo_del_grupo = $grupo[0]->modulo;
+        $curso = $grupo[0]->nivel.$grupo[0]->modulo;
+
+        $alumnos_en_el_grupo = Alumno::leftjoin('personas','alumnos.curp_alumno','=','personas.curp')
+        ->leftjoin('alumno_inscrito','alumnos.num_control','=','alumno_inscrito.num_control')
+        ->leftjoin('grupos','alumno_inscrito.id_grupo','=','grupos.id_grupo')
         ->whereNull('personas.deleted_at')
-        ->where('alumnos.num_control','like','%'.$search['buscar'].'%')
-        ->orWhere('personas.nombres','like','%'.$search['buscar'].'%')
-        ->orWhere('personas.ap_paterno','like','%'.$search['buscar'].'%')
-        ->orWhere('personas.ap_materno','like','%'.$search['buscar'].'%')
-        ->paginate(25)
-        ->appends('buscar',$search['buscar']);   
-                        
-       return view('inscripciones.listaGrupo',compact('grupo','alumnos'))->with('success','probando');
+        ->whereNull('alumno_inscrito.deleted_at')
+        ->where('alumno_inscrito.id_grupo',$search['grupo'])
+        ->orderBy('alumnos.num_control')
+        ->get();
+        // dd($curso);
+       
+
+        if ($curso == 'A1M1') {
+       
+            $alumnos_posibles = Inscripcion::where('alumno_inscrito.pago_verificado',true)
+                                ->leftjoin('alumnos','alumno_inscrito.num_control','=','alumnos.num_control')
+                                ->leftjoin('historial','historial.num_control','=','alumnos.num_control')
+                                ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+                                ->whereNull('alumnos.deleted_at')
+                                ->where('alumnos.estatus','like','%No Inscrito%')
+                                ->whereNull('alumno_inscrito.id_grupo')
+                                ->whereNull('historial.A1M1')
+                                ->orWhere('historial.A1M1','reprobado')
+                                ->whereNull('historial.grupo')
+                                ->select('alumno_inscrito.num_control','personas.nombres','personas.ap_paterno','personas.ap_materno','alumno_inscrito.num_inscripcion');
+                                // ->orderBy('alumnos.num_control');
+                                // ->get();
+                                // dd($alumnos_posibles);
+
+                                                   
+        $aprobados = DB::table(DB::raw("({$alumnos_posibles->toSql() }) as estudiantes_posibles"))
+        ->mergeBindings($alumnos_posibles->getQuery())
+        ->orWhere('estudiantes_posibles.num_control','like','%'.$search['buscar'].'%')
+        ->orWhere('estudiantes_posibles.ap_paterno','like','%'.$search['buscar'].'%')
+        ->orWhere('estudiantes_posibles.nombres','like','%'.$search['buscar'].'%')
+        ->orderBy('estudiantes_posibles.num_control')
+        ->get();
+ 
+        };
+        // dd($aprobados);
+        if ($curso == 'A2M1') {
+            $alumnos_posibles = Inscripcion::where('alumno_inscrito.pago_verificado',true)
+                                ->leftjoin('alumnos','alumno_inscrito.num_control','=','alumnos.num_control')
+                                ->leftjoin('historial','historial.num_control','=','alumnos.num_control')
+                                ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+                                ->whereNull('alumnos.deleted_at')
+                                ->where('alumnos.estatus','like','%No Inscrito%')
+                                ->whereNull('alumno_inscrito.id_grupo')
+                                ->where('historial.A1M1','aprobado')
+                                ->whereNull('historial.A2M1')
+                                ->orWhere('historial.A2M1','reprobado')
+                                ->whereNull('historial.grupo')
+                                ->select('alumno_inscrito.num_control','personas.nombres','personas.ap_paterno','personas.ap_materno','alumno_inscrito.num_inscripcion');
+                                // ->orderBy('alumnos.num_control');
+                                // ->get();
+                                // dd($alumnos_posibles);
+
+                                                   
+        $aprobados = DB::table(DB::raw("({$alumnos_posibles->toSql() }) as estudiantes_posibles"))
+        ->mergeBindings($alumnos_posibles->getQuery())
+        ->orWhere('estudiantes_posibles.num_control','like','%'.$search['buscar'].'%')
+        ->orWhere('estudiantes_posibles.ap_paterno','like','%'.$search['buscar'].'%')
+        ->orWhere('estudiantes_posibles.nombres','like','%'.$search['buscar'].'%')
+        ->orderBy('estudiantes_posibles.num_control')
+        ->get();
+ 
+        };
+        
+        if ($curso == 'A2M2') {
+            $alumnos_posibles = Inscripcion::where('alumno_inscrito.pago_verificado',true)
+                                ->leftjoin('alumnos','alumno_inscrito.num_control','=','alumnos.num_control')
+                                ->leftjoin('historial','historial.num_control','=','alumnos.num_control')
+                                ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+                                ->whereNull('alumnos.deleted_at')
+                                ->where('alumnos.estatus','like','%No Inscrito%')
+                                ->whereNull('alumno_inscrito.id_grupo')
+                                ->where('historial.A2M1','aprobado')
+                                ->whereNull('historial.A2M2')
+                                ->orWhere('historial.A2M2','reprobado')
+                                ->whereNull('historial.grupo')
+                                ->select('alumno_inscrito.num_control','personas.nombres','personas.ap_paterno','personas.ap_materno','alumno_inscrito.num_inscripcion');
+                                // ->orderBy('alumnos.num_control');
+                                // ->get();
+                                // dd($alumnos_posibles);
+
+                                                   
+        $aprobados = DB::table(DB::raw("({$alumnos_posibles->toSql() }) as estudiantes_posibles"))
+        ->mergeBindings($alumnos_posibles->getQuery())
+        ->orWhere('estudiantes_posibles.num_control','like','%'.$search['buscar'].'%')
+        ->orWhere('estudiantes_posibles.ap_paterno','like','%'.$search['buscar'].'%')
+        ->orWhere('estudiantes_posibles.nombres','like','%'.$search['buscar'].'%')
+        ->orderBy('estudiantes_posibles.num_control')
+        ->get();
+        };
+        if ($curso == 'B1M1') {
+            $alumnos_posibles = Inscripcion::where('alumno_inscrito.pago_verificado',true)
+                                ->leftjoin('alumnos','alumno_inscrito.num_control','=','alumnos.num_control')
+                                ->leftjoin('historial','historial.num_control','=','alumnos.num_control')
+                                ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+                                ->whereNull('alumnos.deleted_at')
+                                ->where('alumnos.estatus','like','%No Inscrito%')
+                                ->whereNull('alumno_inscrito.id_grupo')
+                                ->where('historial.A2M2','aprobado')
+                                ->whereNull('historial.B1M1')
+                                ->orWhere('historial.B1M1','reprobado')
+                                ->whereNull('historial.grupo')
+                                ->select('alumno_inscrito.num_control','personas.nombres','personas.ap_paterno','personas.ap_materno','alumno_inscrito.num_inscripcion');
+                                // ->orderBy('alumnos.num_control');
+                                // ->get();
+                                // dd($alumnos_posibles);
+
+                                                   
+        $aprobados = DB::table(DB::raw("({$alumnos_posibles->toSql() }) as estudiantes_posibles"))
+        ->mergeBindings($alumnos_posibles->getQuery())
+        ->orWhere('estudiantes_posibles.num_control','like','%'.$search['buscar'].'%')
+        ->orWhere('estudiantes_posibles.ap_paterno','like','%'.$search['buscar'].'%')
+        ->orWhere('estudiantes_posibles.nombres','like','%'.$search['buscar'].'%')
+        ->orderBy('estudiantes_posibles.num_control')
+        ->get();
+        };
+        if ($curso == 'B1M2') {
+            $alumnos_posibles = Inscripcion::where('alumno_inscrito.pago_verificado',true)
+                                ->leftjoin('alumnos','alumno_inscrito.num_control','=','alumnos.num_control')
+                                ->leftjoin('historial','historial.num_control','=','alumnos.num_control')
+                                ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+                                ->whereNull('alumnos.deleted_at')
+                                ->where('alumnos.estatus','like','%No Inscrito%')
+                                ->whereNull('alumno_inscrito.id_grupo')
+                                ->where('historial.B1M1','aprobado')
+                                ->whereNull('historial.B1M2')
+                                ->orWhere('historial.B1M2','reprobado')
+                                ->whereNull('historial.grupo')
+                                ->select('alumno_inscrito.num_control','personas.nombres','personas.ap_paterno','personas.ap_materno','alumno_inscrito.num_inscripcion');
+                                // ->orderBy('alumnos.num_control');
+                                // ->get();
+                                // dd($alumnos_posibles);
+
+                                                   
+        $aprobados = DB::table(DB::raw("({$alumnos_posibles->toSql() }) as estudiantes_posibles"))
+        ->mergeBindings($alumnos_posibles->getQuery())
+        ->orWhere('estudiantes_posibles.num_control','like','%'.$search['buscar'].'%')
+        ->orWhere('estudiantes_posibles.ap_paterno','like','%'.$search['buscar'].'%')
+        ->orWhere('estudiantes_posibles.nombres','like','%'.$search['buscar'].'%')
+        ->orderBy('estudiantes_posibles.num_control')
+        ->get();
+        };
+
+
+
+       return view('inscripciones.listaGrupo',compact('grupo','aprobados','alumnos_en_el_grupo','periodo_actual'));
+       
     }
 
 
@@ -133,6 +285,7 @@ class InscripcionesController extends Controller
         ->whereNull('personas.deleted_at')
         ->whereNull('alumno_inscrito.deleted_at')
         ->where('alumno_inscrito.id_grupo',$id)
+        ->orderBy('alumnos.num_control')
         ->get();
         // dd($curso);
        
@@ -147,13 +300,10 @@ class InscripcionesController extends Controller
                                 ->where('alumnos.estatus','like','%No Inscrito%')
                                 ->whereNull('alumno_inscrito.id_grupo')
                                 ->whereNull('historial.A1M1')
-                                ->orWhere('historial.A1M1','reprobado')
-                                // ->orWhere('historial.A1M1','cursando')
-                                ->whereNull('historial.grupo')
-                                // ->where('alumnos.nivel_inicial',NULL)
-                                // ->where('alumno_inscrito.periodo_pago',$periodo_actual[0]->id_periodo)
+                                ->orWhere('historial.A1M1','reprobado')//este si
+                                // ->whereNull('historial.grupo')
                                 ->select('alumno_inscrito.num_control','personas.nombres','personas.ap_paterno','personas.ap_materno','alumno_inscrito.num_inscripcion')
-                                
+                                ->orderBy('alumnos.num_control')
                                 ->get();
                                 // dd($aprobado);
  
@@ -171,6 +321,7 @@ class InscripcionesController extends Controller
                                         // ->orWhere('historial.A2M1','cursando')
                                         ->where('alumnos.estatus','like','%No Inscrito%')
                                         ->where('pago_verificado',true)
+                                        ->orderBy('alumnos.num_control')
                                         ->get();
 
         };
@@ -187,6 +338,7 @@ class InscripcionesController extends Controller
                                     // ->orWhere('historial.A2M2','cursando')
                                     ->where('alumnos.estatus','like','%No Inscrito%')
                                     ->where('pago_verificado',true)
+                                    ->orderBy('alumnos.num_control')
                                     ->get();
         };
         if ($curso == 'B1M1') {
@@ -201,6 +353,7 @@ class InscripcionesController extends Controller
                                     // ->orWhere('historial.B1M1','cursando')
                                     ->where('alumnos.estatus','like','%No Inscrito%')
                                     ->where('pago_verificado',true)
+                                    ->orderBy('alumnos.num_control')
                                     ->get(); 
         };
         if ($curso == 'B1M2') {
@@ -214,6 +367,7 @@ class InscripcionesController extends Controller
                                     // ->orWhere('historial.B1M2','cursando')
                                     ->where('alumnos.estatus','like','%No Inscrito%')
                                     ->where('pago_verificado',true)
+                                    ->orderBy('alumnos.num_control')
                                     ->get();
         };
 
@@ -355,7 +509,12 @@ class InscripcionesController extends Controller
         $data = request()->validate([
             'periodo' => 'required'
         ]);
-      
+
+
+        
+
+
+      $periodo = $data['periodo'];
         if ($usuarioactual->tipo == 'docente') {
             $grupos = DB::table('grupos')
             ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
@@ -366,11 +525,16 @@ class InscripcionesController extends Controller
             ->whereNull('grupos.deleted_at')
             ->where('grupos.docente',$usuario[0]->id_docente)
             ->where('periodos.id_periodo','=',$periodo_actual[0]->id_periodo)
-            ->paginate(25);
+            ->orderBy('nivels.nivel','ASC')
+            ->orderBy('nivels.modulo','ASC')
+            ->orderBy('grupos.hora')
+            ->paginate(25)
+            ->appends('periodo',$data['periodo']);
 
             $p = Periodo::select('*')
                 ->where('id_periodo',$periodo_actual[0]->id_periodo)
                 ->get();
+
         } else {
             $grupos = DB::table('grupos')
             ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
@@ -380,12 +544,17 @@ class InscripcionesController extends Controller
             ->leftJoin('personas','personas.curp','=','docentes.curp_docente')
             ->whereNull('grupos.deleted_at')
             ->where('periodos.id_periodo','=',$data['periodo'])
-            ->paginate(25);
+            ->orderBy('nivels.nivel','ASC')
+            ->orderBy('nivels.modulo','ASC')
+            ->orderBy('grupos.hora')
+            ->paginate(25)
+            ->appends('periodo',$data['periodo']);
 
             $p = Periodo::select('*')
                 ->where('id_periodo',$data['periodo'])
                 ->get();
             // $fecha_inscripciones = Fechas::where('proceso','inscripciones')->first();
+
         }
         
         $niveles = Nivel::select('*')
@@ -404,7 +573,7 @@ class InscripcionesController extends Controller
                 return back()->with('error','No hay grupos en el periodo seleccionado.'); 
             }
         }else {
-            return view('inscripciones.inscripciones',compact('grupos','niveles','p','aulas','fecha_inscripciones','usuarioactual','periodo_actual'));
+            return view('inscripciones.inscripciones',compact('grupos','niveles','p','aulas','fecha_inscripciones','usuarioactual','periodo_actual','periodo'));
         }
 
         
@@ -452,7 +621,7 @@ class InscripcionesController extends Controller
         $usuarioactual = \Auth::user();
 
         $data = request()->validate([
-            'numControl' => array('required','regex:/^[A-Z]{1}\d{8}|\d{8}$/')
+            'numControl' => array('required','regex:/^[A-Z]{1}\d{8}|\d{8}|\d{9}$/')
             ]);
 
         $periodo_actual = Periodo::where('actual',true)->get();
@@ -503,6 +672,7 @@ class InscripcionesController extends Controller
     }
 
     public function mostrarExamenes(){
+        // dd(request()->all());
         $periodo_actual = Periodo::where('actual',true)->get();
         $alumnos_ubicados = Alumno::whereNotNull('nivel_inicial')
                 ->where('periodo_examen',$periodo_actual[0]->id_periodo)
@@ -533,6 +703,32 @@ class InscripcionesController extends Controller
         }
         
         
+    }
+
+    public function searchExamen(){
+        $search= request()->all();
+        $periodo_actual = Periodo::where('actual',true)->get();
+        $alumnos_examen = Alumno::leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+                ->whereNotNull('alumnos.nivel_inicial')
+                ->where('alumnos.periodo_examen',$periodo_actual[0]->id_periodo)
+                ->whereNull('alumnos.examen_verificado')
+                ->select('alumnos.*','personas.nombres','personas.ap_paterno','personas.ap_materno');
+                // ->get();
+                // dd($alumnos_examen);
+        $alumnos_ubicados = DB::table(DB::raw("({$alumnos_examen->toSql() }) as estudiantes_examen"))
+                ->mergeBindings($alumnos_examen->getQuery())
+                ->where('estudiantes_examen.num_control','like','%'.$search['buscar'].'%')
+                ->orWhere('estudiantes_examen.nombres','like','%'.$search['buscar'].'%')
+                ->orWhere('estudiantes_examen.ap_paterno','like','%'.$search['buscar'].'%')
+                // ->where()
+                ->get();
+
+        if ($alumnos_ubicados->isEmpty()) {
+            return back()->with('warning','No hay alumnos registrados con examenes de ubicacion para el periodo actual.');
+        } else {
+            return view('cursos.verificarExamen',compact('alumnos_ubicados','periodo_actual'));
+        }
+
     }
 
     public function indexPago()
@@ -682,16 +878,43 @@ class InscripcionesController extends Controller
                             ->leftjoin('docentes','docentes.id_docente','=','grupos.docente')
                             ->leftjoin('personas','docentes.curp_docente','=','personas.curp')
                             ->get();
-        // dd($datosGrupo);
+        
+        $membrete = Membrete::get();
+        // dd($membrete);
         if($alumnos_en_el_grupo->isEmpty()){
             return back()->with('error','El grupo no tiene ningún estudiante inscrito.');
         }else{
-            
-        $pdfLista =  PDF::setPaper('A4','landscape')->loadView('pdf.listaGrupo',compact('alumnos_en_el_grupo','datosGrupo'));
+            // dd($datosGrupo);
+            // return view('pdf.listaGrupo',compact('alumnos_en_el_grupo','datosGrupo','membrete'));
+        $pdfLista =  PDF::setPaper('A4','landscape')->loadView('pdf.listaGrupo',compact('alumnos_en_el_grupo','datosGrupo','membrete'));
 
         return $pdfLista->download('ListaGrupo-'.$alumnos_en_el_grupo[0]->grupo.'-'.strftime("%b%Y").'.pdf');
         }
 
+    }
+
+    public function export($id) 
+    {
+
+        $alumnos_en_el_grupo = Alumno::leftjoin('personas','alumnos.curp_alumno','=','personas.curp')
+        ->leftjoin('alumno_inscrito','alumnos.num_control','=','alumno_inscrito.num_control')
+        ->leftjoin('grupos','alumno_inscrito.id_grupo','=','grupos.id_grupo')
+        ->whereNull('personas.deleted_at')
+        ->whereNull('alumno_inscrito.deleted_at')
+        ->where('alumno_inscrito.id_grupo',$id)
+        ->get();
+
+        $datosGrupo = Grupo::where('grupos.id_grupo',$id)
+                            ->get();
+                            
+        if($alumnos_en_el_grupo->isEmpty()){
+            return back()->with('error','El grupo no tiene ningún estudiante inscrito.');
+        }else{
+            return  Excel::download(new ListasExport($id), 
+            'Lista-'.$datosGrupo[0]->grupo.'-'.$datosGrupo[0]->nivel_completo.'-'.strftime("%b%Y").'.xlsx');
+
+        }
+                
     }
 
 
@@ -736,7 +959,7 @@ class InscripcionesController extends Controller
                         $nivel_estudiante = 'B1';
                         $modulo_estudiante = 'M2';
                     }
-                    // selecciono los grupos en el periodo seleccionado y el nivel al que se puede inscribir el estudiante
+                    // muestra los grupos en el periodo seleccionado y el nivel al que se puede inscribir el estudiante
                     $grupos = Grupo::leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
                                         ->leftjoin('docentes','docentes.id_docente','=','grupos.docente')
                                         ->leftjoin('personas','personas.curp','=','docentes.curp_docente')
@@ -746,7 +969,8 @@ class InscripcionesController extends Controller
                                         ->where('nivels.modulo',$modulo_estudiante)
                                         ->where('grupos.periodo',$periodo_actual[0]->id_periodo)
                                         ->leftjoin('periodos','grupos.periodo','=','periodos.id_periodo')
-                                        ->select('grupos.*','nivels.*','aulas.*','docentes.curp_docente','personas.nombres','personas.ap_paterno','personas.ap_materno','periodos.*')
+                                        ->select('grupos.*','nivels.*','aulas.*','docentes.curp_docente',
+                                        'personas.nombres','personas.ap_paterno','personas.ap_materno','periodos.*')
                                         ->get();
                                 
                     return view('inscripciones.inscripcionAlumno',compact('nivel_estudiante','modulo_estudiante','grupos'));
@@ -870,6 +1094,7 @@ class InscripcionesController extends Controller
         ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
         ->leftjoin('aulas','aulas.id_aula','=','grupos.aula')
         ->where('id_grupo',$grupo)
+        // ->orderBy('alumnos.num_control')
         ->get();
 
         $periodo_actual = Periodo::where('actual',true)->get();
@@ -884,6 +1109,7 @@ class InscripcionesController extends Controller
         ->whereNull('personas.deleted_at')
         ->whereNull('alumno_inscrito.deleted_at')
         ->where('alumno_inscrito.id_grupo',$grupo[0]->id_grupo)
+        ->orderBy('alumnos.num_control')
         ->get();
         return view('inscripciones.listaQuitar',compact('grupo','periodo_actual','curso','alumnos_en_el_grupo'));
     }

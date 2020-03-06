@@ -13,6 +13,7 @@
             border: 1px solid black;
             border-collapse: collapse;
             /* width: 250px; */
+            font-size: 8pt;
         }
 
         .sinborde {
@@ -76,6 +77,7 @@
 <body>
     <div align="center">
         <img src="{{ asset('argon') }}/img/brand/cabeceraSM.png" alt="cabecera" title="cabecera">
+        <p>{{ $membrete[0]->descripcion }}</p>
     </div>
     <br><br>
 
@@ -94,7 +96,7 @@
             </tr>
             <tr>
                 <td scope="col" colspan="10" style="border:none;">PROFESOR: <strong>{{ $infoGrupo[0]->nombres }} {{ $infoGrupo[0]->ap_paterno }} @if ($infoGrupo[0]->ap_materno!=null){{ $infoGrupo[0]->ap_materno }} @endif</strong></td>
-                <td scope="col" colspan="4" style="border:none;">GRUPO: <strong>{{ $infoGrupo[0]->grupo }}</strong> </td>
+                <td scope="col" colspan="4" style="border:none;">GRUPO: <strong>{{ $infoGrupo[0]->grupo }} {{ $infoGrupo[0]->nivel }}{{ $infoGrupo[0]->modulo }} </strong> </td>
             </tr>
             <tr>
                 <td scope="col" colspan="10" style="border:none;">PERIODO: <strong>{{ $infoGrupo[0]->descripcion }} {{ $infoGrupo[0]->anio }}</strong></td>

@@ -27,7 +27,7 @@ $usuarioactual = \Auth::user();
 
     <div class="text-right">
         
-        <a href="{{ back() }}" class="btn btn-outline-primary btn-sm mt-4">
+        <a href="{{ route('indexpagos') }}" class="btn btn-outline-primary btn-sm mt-4">
             <span>
                 <i class="fas fa-reply"></i> &nbsp; Regresar
             </span>

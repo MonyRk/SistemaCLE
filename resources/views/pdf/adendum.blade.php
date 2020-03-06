@@ -36,7 +36,7 @@
     <p align="justify">
         “ADENDUM” A LA ORDEN DE SERVICIO PARA LA PRESTACIÓN DE SERVICIOS QUE CELEBRAN,
         POR UNA PARTE, <strong>EL INSTITUTO TECNOLÓGICO DE OAXACA, REPRESENTADO POR EL 
-            ING. FERNANDO TOLEDO TOLEDO</strong>, EN SU CARÁCTER DE DIRECTOR; Y POR LA OTRA, EL (LA) 
+            M.E. FERNANDO TOLEDO TOLEDO</strong>, EN SU CARÁCTER DE DIRECTOR; Y POR LA OTRA, EL (LA) 
         C. <strong style="text-transform:uppercase;">
             {{ $docente[0]->nombres }} {{ $docente[0]->ap_paterno }} @if( $docente[0]->ap_materno ){{ $docente[0]->ap_materno }} @endif
         </strong>
@@ -335,7 +335,7 @@
             </div>
             <br><br><br><br><br>
             <div id="texto-uno">
-                ING. FERNANDO TOLEDO TOLEDO
+                M.E. FERNANDO TOLEDO TOLEDO
             </div>
             <div id="texto-dos" style="text-transform: uppercase;">
                 {{ $docente[0]->nombres }} {{ $docente[0]->ap_paterno }} @if( $docente[0]->ap_materno ){{ $docente[0]->ap_materno }} @endif
@@ -349,7 +349,7 @@
             </div>    
             <br><br><br><br><br><br>
             <div id="texto-dos">
-                M.A. JUANA ISABEL RAMIREZ HERNANDEZ
+                M.E. GABRIELA AGUILAR ORTIZ
             </div>
             
     </div>

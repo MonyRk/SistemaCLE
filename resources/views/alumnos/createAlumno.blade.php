@@ -3,24 +3,76 @@
     Agregar Estudiante
 @endsection
 @section('regresar')
-    {{ redirect()->back() }}
+@auth()
+@if ($usuarioactual->tipo == 'coordinador')
+{{ route('verEstudiantes') }}
+@else 
+{{ route('home') }}
+@endif
+@endauth
+
+@guest()
+{{ route('login') }}
+@endguest
 @endsection
 @section('action')
 {{ url("guardarEstudiante") }}
 @endsection
 
 @section('nombreTipodeInformacion') 
+<div class="pl-lg-4">
+    <label class="form-control-label">{{ __('Dirección') }}</label>
+        <div class="row">
+            <div class="form-group col-md" id="direccion">
+                <label class="form-control-label" for="input-calle">{{ __('Calle') }}</label>
+                <input type="text" name="calle" id="input-calle" class="form-control"  value="{{ old('calle') }}" >
+            </div>
+            <div class="form-group col-md">
+                    <label class="form-control-label" for="input-numero">{{ __('Número') }}</label>
+                <input type="text" name="numero" id="input-numero" class="form-control"  value="{{ old('numero') }}" >
+            </div>
+            <div class="form-group col-md">
+                    <label class="form-control-label" for="input-colonia">{{ __('Colonia') }}</label>
+                <input type="text" name="colonia" id="input-colonia" class="form-control"  value="{{ old('colonia') }}" >
+            </div>
+            <div class="form-group col-md">
+                <label class="form-control-label" for="input-municipio">{{ __('Municipio') }}</label>
+                <select id="input-municipio" class="form-control" name="municipio">
+                    <option selected value=""></option>
+                        @foreach ($nombres_municipios as $mun)
+                        <option value="{{ $mun->id }}">{{ $mun->nombre_municipio }}</option>                             
+                        @endforeach
+                </select>                  
+            </div>
+            <div class="form-group col-md">
+                    <label class="form-control-label" for="input-cp">{{ __('C. P.') }}</label>
+                <input type="text" name="cp" id="input-cp" class="form-control" value="{{ old('cp') }}" >
+            </div>
+        </div>
+    </div>
+        <hr class="my-4" />
     <h6 class="heading-small text-muted mb-4">{{ __('Información Escolar') }}</h6>
 @endsection
 
 @section('informacionporTipo')
     <div class="form-row">
-        <div class="form-group col-md-4" >
-            <label class="form-control-label" for="input-numControl">{{ __('Número de Control') }}</label>
+        <div class="form-group col-md-3">
+            <label class="form-control-label" for="input-externo">{{ __('Estudiante Externo') }}</label>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" id="externo" name="externo" onchange="comprobar2(this);" value="true" class="custom-control-input">
+                <label class="custom-control-label" for="externo">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Es Estudiante Externo?</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-row" id="num_control">
+        <div class="form-group col-md-4"  >
+            <label class="form-control-label" for="input-numControl"><b style="color:red;">*</b>{{ __('Número de Control') }}</label>
             <input type="text" name="numControl" id="input-numControl" class="form-control" placeholder="" value="{{ old('numControl') }}" data-toggle="tooltip" data-placement="bottom" title="Aseg&uacute;rate de escribir correctamente el N&uacute;mero de Control">
         </div>
+    
+    
         <div class="form-group col-md-6">
-            <label class="form-control-label" for="input-carrera">{{ __('Carrera') }}</label>
+            <label class="form-control-label" for="input-carrera"><b style="color:red;">*</b>{{ __('Carrera') }}</label>
             <select id="input-carrera" class="form-control" name="carrera">
             <option selected value="{{ old('carrera') }}">{{ old('carrera') }}</option>
             <option value="Ingeniería Eléctrica">{{ __('Ing. Eléctrica') }}</option>
@@ -35,10 +87,10 @@
             </select>
         </div>
         <div class="form-group col-md-2">
-                <label class="form-control-label" for="input-semestre">{{ __('Semestre') }}</label>
+                <label class="form-control-label" for="input-semestre"><b style="color:red;">*</b>{{ __('Semestre') }}</label>
                 <select  id="input-semestre" class="form-control" name="semestre">
                 <option selected value="{{ old('semestre') }}">{{ old('semestre') }}</option>
-                    @for ($i = 1; $i <= 12; $i++)
+                    @for ($i = 1; $i <= 16; $i++)
                         <option value="{{ $i }}">{{ ($i) }}</option>
                     @endfor 
                 </select>
@@ -62,23 +114,6 @@
                         @endforeach
                 </select>                  
             </div>  
-                {{-- <div class="form-group col-md-3 text-center">
-                    <label for="activarpago" class="form-control-label">{{ __('Realizó Examen de ubicación') }}</label>
-                    <div>
-                        <label class="custom-toggle" >
-                            <input type="checkbox" id="activarpago" onchange="comprobar(this);">
-                            <span class="custom-toggle-slider rounded-circle"></span>
-                        </label>
-                    </div>
-                </div> --}}
-            {{-- <div class="form-group col-md-3" id="folio" {{-- style="display:none" }}>
-                <label for="foliopago" class="form-control-label"> {{ __('Folio de Pago') }}</label>
-                <input type="text" name="foliopago" id="foliopago" class="form-control" placeholder=""  value="{{ old('foliopago') }}">
-            </div>
-            <div class="form-group col-md-3" id="monto" {{--style="display:none">
-                <label for="foliopago" class="form-control-label"> {{ __('Monto de Pago') }}</label>
-                <input type="text" name="monto" id="monto" class="form-control" placeholder=""  value="{{ old('monto') }}">
-            </div> --}}
         </div>
     <script>
             function comprobar(obj)
@@ -89,6 +124,20 @@
                } else{
                    
                document.getElementById('inicial').style.display = "none";
+               }     
+               }
+
+
+
+
+               function comprobar2(obj)
+               {   
+                   if (obj.checked){
+                   
+               document.getElementById('num_control').style.display = "none";
+               } else{
+                   
+               document.getElementById('num_control').style.display = "";
                }     
                }
            </script>   

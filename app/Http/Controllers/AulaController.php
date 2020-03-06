@@ -46,20 +46,33 @@ class AulaController extends Controller
     public function store(Request $request)
      { 
         $data = request()->all();
+        // dd($data);
         $values = ""; 
-        $count = count($data['horas']);
+
+            $count = count($data['horas']);
        
-        for ($i=0; $i < 14; $i++) { 
-            if($i<$count){
-               $values=$values.'"'.$data['horas'][$i].'",';
-            }else{
-               $values=$values.'NULL,';
+            for ($i=0; $i < 14; $i++) { 
+                if($i<$count){
+                $values=$values.'"'.$data['horas'][$i].'",';
+                }else{
+                $values=$values.'NULL,';
+                }
             }
-        }
+        
+        
         
         $values=substr($values,0,-1); 
+        
+        if (request()->has('sabados')) {
+            // dd('INSERT INTO `horas_disponibles` (`id_hora`, `hora1`, `hora2`, `hora3`, `hora4`, `hora5`, `hora6`, `hora7`, `hora8`, `hora9`, `hora10`, `hora11`, `hora12`, `hora13`, `sabatino`, `deleted_at`) VALUES (NULL,'.$values.',8:00-13:30);');
+            DB::insert('INSERT INTO `horas_disponibles` (`id_hora`, `hora1`, `hora2`, `hora3`, `hora4`, `hora5`, `hora6`, `hora7`, `hora8`, `hora9`, `hora10`, `hora11`, `hora12`, `hora13`, `deleted_at`, `sabatino`) VALUES (NULL,'.$values.',"8:00-13:30");');
+        } else {
+            DB::insert('INSERT INTO `horas_disponibles` (`id_hora`, `hora1`, `hora2`, `hora3`, `hora4`, `hora5`, `hora6`, `hora7`, `hora8`, `hora9`, `hora10`, `hora11`, `hora12`, `hora13`, `sabatino`, `deleted_at`) VALUES (NULL,'.$values.',NULL);');
+            // $last_hora = HorasDisponible::select('id_hora')->orderBy('id_hora', 'DESC')->first();
 
-        DB::insert('INSERT INTO `horas_disponibles` (`id_hora`, `hora1`, `hora2`, `hora3`, `hora4`, `hora5`, `hora6`, `hora7`, `hora8`, `hora9`, `hora10`, `hora11`, `hora12`, `hora13`, `deleted_at`) VALUES (NULL,'.$values.');');
+        }
+        
+        // DB::insert('INSERT INTO `horas_disponibles` (`id_hora`, `hora1`, `hora2`, `hora3`, `hora4`, `hora5`, `hora6`, `hora7`, `hora8`, `hora9`, `hora10`, `hora11`, `hora12`, `hora13`, `deleted_at`) VALUES (NULL,'.$values.');');
        
         $last_hora = HorasDisponible::select('id_hora')->orderBy('id_hora', 'DESC')->first();
 
@@ -102,13 +115,6 @@ class AulaController extends Controller
         return view('catalogos.aulas.editAula',compact('aula1','horas'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Aula  $aula
-     * @return \Illuminate\Http\Response
-     */
     public function update(Aula $aula)
     {
         $data = request()->all();
@@ -150,6 +156,6 @@ class AulaController extends Controller
 
         $aulae[0]->delete();
         $horariodisponible[0]->delete();
-        return redirect()->route('verAulas')->with('warning','Los datos del aula se han eliminado.');
+        return redirect()->route('verAulas')->with('error','Los datos del aula se han eliminado.');
     }
 }

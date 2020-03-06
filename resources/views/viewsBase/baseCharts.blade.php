@@ -1,6 +1,194 @@
+{{-- //GRUPOS POR MODALIDAD --}}
+@section('script')
+@php
+    $grupos_sem="";
+@endphp
+@foreach ($grupos_semanales as $semanal)
+@php
+$grupos_sem = $grupos_sem.','.$semanal
+@endphp
+@endforeach
+@php
+    $grupos_sem = substr($grupos_sem,1)
+@endphp
+
+<script>
+     var OrdersChart = (function() {
+        // Variables
+        var $datosSemanal= "<?php echo $grupos_sem ?>"
+        var $datos = $datosSemanal.split(",");
+
+        var $chart = $('#chart-orders9');
+        var $ordersSelect = $('[name="ordersSelect"]');
+        // Methods
+        // Init chart
+        function initChart($chart) {
+            // Create chart
+            var ordersChart = new Chart($chart, {
+                type: 'bar',
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                callback: function(value) {
+                                    if (!(value % 10)) {
+                                        //return '$' + value + 'k'
+                                        return value
+                                    }
+                                }
+                            }
+                        }]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(item, data) {
+                                var label = data.datasets[item.datasetIndex].label || '';
+                                var yLabel = item.yLabel;
+                                var content = '';
+
+                                if (data.datasets.length > 1) {
+                                    content += '<span class="popover-body-label mr-auto">' + label + '</span>';
+                                }
+
+                                content += '<span class="popover-body-value">' + yLabel + '</span>';
+
+                                return content;
+                            }
+                        }
+                    }
+                },
+                data: {
+                        labels: ["A1","A2M1","A2M2","B1M1","B1M2"],
+                    datasets: [{
+                        label: 'Niveles',
+                        data: $datos,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+            // Save to jQuery object
+            $chart.data('chart', ordersChart);
+        }
+        // Init chart
+        if ($chart.length) {
+            initChart($chart);
+        }
+
+    })();
+
+</script>
+
+
+@php
+    $grupos_sab="";
+@endphp
+@foreach ($grupos_sabatinos as $sabatinos)
+@php
+$grupos_sab = $grupos_sab.','.$sabatinos
+@endphp
+@endforeach
+@php
+    $grupos_sab = substr($grupos_sab,1)
+@endphp
+
+<script>
+     var OrdersChart = (function() {
+        // Variables
+        var $datosSabados= "<?php echo $grupos_sab ?>"
+        var $datos = $datosSabados.split(",");
+
+        var $chart = $('#chart-orders10');
+        var $ordersSelect = $('[name="ordersSelect"]');
+        // Methods
+        // Init chart
+        function initChart($chart) {
+            // Create chart
+            var ordersChart = new Chart($chart, {
+                type: 'bar',
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                callback: function(value) {
+                                    if (!(value % 10)) {
+                                        //return '$' + value + 'k'
+                                        return value
+                                    }
+                                }
+                            }
+                        }]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(item, data) {
+                                var label = data.datasets[item.datasetIndex].label || '';
+                                var yLabel = item.yLabel;
+                                var content = '';
+
+                                if (data.datasets.length > 1) {
+                                    content += '<span class="popover-body-label mr-auto">' + label + '</span>';
+                                }
+
+                                content += '<span class="popover-body-value">' + yLabel + '</span>';
+
+                                return content;
+                            }
+                        }
+                    }
+                },
+                data: {
+                        labels: ["A1","A2M1","A2M2","B1M1","B1M2"],
+                    datasets: [{
+                        label: 'Niveles',
+                        data: $datos,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            });
+            // Save to jQuery object
+            $chart.data('chart', ordersChart);
+        }
+        // Init chart
+        if ($chart.length) {
+            initChart($chart);
+        }
+
+    })();
+
+</script>
+
+
 
 {{-- //ESTUDIANTES POR CARRERA --}}
-@section('script')
+{{-- @section('script') --}}
 @php
     $alumnos_carrera="";
 @endphp
@@ -100,6 +288,9 @@ $alumnos_carrera = $alumnos_carrera.','.$carrera
     })();
 
 </script>
+
+
+
 
 
 {{-- //ESTUDIANTES POR GENERO --}}

@@ -8,7 +8,7 @@
 
 <div class="container-fluid mt-4">
     <div class="text-right">
-        <a href="{{ route('inicio') }}" class="btn btn-outline-primary btn-sm mt-4">
+        <a href="{{ route('indexestadisticas') }}" class="btn btn-outline-primary btn-sm mt-4">
             <span>
                 <i class="fas fa-reply"></i> &nbsp; Regresar
             </span>
@@ -37,7 +37,7 @@
                     <div class="row align-items-center">
                         <div class="col">
                             {{-- <h6 class="text-uppercase text-muted ls-1 mb-1">Grupos por Periodo</h6> --}}
-                            <h3 class="mb-0">Estudiantes por Carrera</h3>
+                            <h3 class="mb-0">Grupos Semanales</h3>
                         </div>
                     </div>
                 </div>
@@ -45,12 +45,33 @@
                     <!-- Chart -->
                     <div class="chart">
                         {{-- <canvas id="chart-orders2" class="chart-canvas"></canvas> --}}
-                        <canvas id="chart-orders4" width="400" height="400" class="chart-canvas"></canvas>
-
+                        <canvas id="chart-orders9" width="400" height="400" class="chart-canvas"></canvas>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="col-xl-6">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            {{-- <h6 class="text-uppercase text-muted ls-1 mb-1">Grupos por Periodo</h6> --}}
+                            <h3 class="mb-0">Grupos Sabatinos</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Chart -->
+                    <div class="chart">
+                        {{-- <canvas id="chart-orders2" class="chart-canvas"></canvas> --}}
+                        <canvas id="chart-orders10" width="400" height="400" class="chart-canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        
         <div class="col-xl-6">
             <div class="card shadow">
                 <div class="card-header bg-transparent">
@@ -66,6 +87,26 @@
                     <div class="chart">
                         {{-- <canvas id="chart-orders2" class="chart-canvas"></canvas> --}}
                         <canvas id="chart-orders7" width="400" height="400" class="chart-canvas"></canvas>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div class="card shadow">
+                <div class="card-header bg-transparent">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            {{-- <h6 class="text-uppercase text-muted ls-1 mb-1">Grupos por Periodo</h6> --}}
+                            <h3 class="mb-0">Estudiantes por Carrera</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- Chart -->
+                    <div class="chart">
+                        {{-- <canvas id="chart-orders2" class="chart-canvas"></canvas> --}}
+                        <canvas id="chart-orders4" width="400" height="400" class="chart-canvas"></canvas>
                     </div>
                 </div>
             </div>
@@ -114,12 +155,12 @@
         </div>
     </div>
     {{-- BOTON PARA DESCARGAR PDF --}}
-    <div class="text-right">
+    <div class="text-center"> 
         <a href="{{ route('descargarEstadisticas') }}">
             <form action="{{ route('descargarEstadisticas') }}" method="get">
                 <button type="submit"  class="btn btn-outline-info btn-sm mt-4">
                     <span>
-                        <i class="fas fa-file-download"></i> &nbsp; Descargar Datos
+                        <i class="fas fa-file-download"></i> &nbsp; Descargar Totales de Grupos
                     </span>
                 </button>
                     <input type="hidden" name="periodo" value="{{ $periodo[0]->id_periodo }}">

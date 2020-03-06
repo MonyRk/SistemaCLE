@@ -143,6 +143,42 @@
                 </div>
                 <div class="col-xl col-lg">
                     <div class="card card-stats mb-4 mb-xl-0">
+                        <a href="{{ route('membrete')}}">
+                             <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class=" font-weight-bold mb-0">{{ __('Membrete') }}</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-gray text-white rounded-circle shadow">
+                                            <i class="far fa-file-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xl col-lg">
+                    <div class="card card-stats mb-4 mb-xl-0">
+                        <a href="{{ route('cambiosCalificaciones')}}">
+                             <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <span class=" font-weight-bold mb-0">{{ __('Actualizaciones Calificaciones') }}</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
+                                            <i class="far fa-edit"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {{-- <div class="col-xl col-lg">
+                    <div class="card card-stats mb-4 mb-xl-0">
                         <a href="{{ route('respaldo')}}">
                              <div class="card-body">
                                 <div class="row">
@@ -158,7 +194,7 @@
                             </div>
                         </a>
                     </div>
-                </div> 
+                </div>  --}}
             </div>
             
         </div>

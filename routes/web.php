@@ -53,7 +53,8 @@ Route::group(['middleware' => 'auth'], function () {
 	Route::put('/docentes/{docente}', 'DocentesController@update')->name('actualizarDocente');
 
 	Route::get('/inscripciones','InscripcionesController@show')->name('inscripciones');
-	Route::get('/inscripciones/lista/{grupo}','InscripcionesController@getLista')->name('descargarLista');
+	// Route::get('/inscripciones/lista/{grupo}','InscripcionesController@getLista')->name('descargarLista');// PARA DESCARGAR PDF
+	Route::get('/inscripciones/lista/{grupo}','InscripcionesController@export')->name('descargarLista'); //PARA DESCARGAR EXCEL
 
 	Route::get('/evaluacionDocente/descargarResultados','EvaluacionDocenteController@descargarResultados')->name('descargarResultados');
 
@@ -132,6 +133,7 @@ Route::group(['middleware' => ['usuarioCoordinador']], function () {
 	Route::get('/docente/cedula/{prefijo}/{cedula}', 'DocentesController@cedula')->name('verCedula');
 	Route::get('/docente/rfc/{prefijo}/{rfc}', 'DocentesController@rfc')->name('verRfc');
 	Route::get('/docente/{prefijo}/certificaciones/{documento}', 'DocentesController@certificaciones')->name('verCertificaciones');
+	Route::get('/docente/{prefijo}/documentos/{documento}', 'DocentesController@documentos')->name('verDocumentos');
 
 	Route::get('/evaluacionDocente/inicio', function(){return view('evaluacionDocente.inicioEvaluacion');})->name('inicioEvaluacion');
 
@@ -177,11 +179,13 @@ Route::group(['middleware' => ['usuarioCoordinador']], function () {
 	Route::any('/search/estudiantes', 'InscripcionesController@searchE')->name('buscarAlumnoInscribir');
 	Route::get('/inscripciones/modificar/{grupo}','InscripcionesController@quitarEstudiante')->name('quitarEstudiante');
 	Route::post('/inscripciones/modificar','InscripcionesController@modificar')->name('modificarLista');
+	Route::any('/search/estudiantes', 'InscripcionesController@searchEstudiante')->name('buscarEstudianteInscripcion');
 
 	Route::get('/cursos',function () {return view('cursos.indexCursos');})->name('cursos');
 	Route::get('/cursos/estudiante','InscripcionesController@getCursos')->name('buscarCurso');
 	Route::get('/cursos/verificarExamen', 'InscripcionesController@mostrarExamenes')->name('mostrarExamen');
 	Route::post('/cursos/guardarExamenesVerificados', 'InscripcionesController@verificarExamenes')->name('verificarExamenes');
+	Route::any('/search/estudiantes/examen', 'InscripcionesController@searchExamen')->name('buscarEstudianteExamen');
 
 	Route::get('/catalogos/clasificacion','ClasificacionesController@index')->name('clasificacion');
 	Route::post('/catalogos/clasificacion/agregar','ClasificacionesController@store')->name('agregarClasificacion');
@@ -193,6 +197,9 @@ Route::group(['middleware' => ['usuarioCoordinador']], function () {
 
 	Route::get('/catalogos/plantillaDocentes', 'DocentesController@plantilla')->name('plantillaDocentes');
 	
+	Route::get('/catalogos/actualizaciones', 'BoletaController@cambiosCalificaciones')->name('cambiosCalificaciones');
+	Route::any('/search/actualizaciones', 'BoletaController@buscarCambios')->name('buscarCambios');
+
 	Route::post('/pregunta/agregar','PreguntaController@store')->name('agregarPregunta');
 	Route::patch('pregunta/guardar/{pregunta}','PreguntaController@update')->name('guardarPregunta');
 	Route::delete('/pregunta/eliminar/{pregunta}','PreguntaController@destroy')->name('eliminarPregunta');
@@ -219,4 +226,6 @@ Route::post('/reportes/pdf', function () {
 	Route::post('/evaluacionDocente/guardarFechas','EvaluacionDocenteController@fechas')->name('fechasEvaluacion');
 	Route::get('/evaluacionDocente/periodos', 'EvaluacionDocenteController@index')->name('periodoEvaluacion');
 
+	Route::get('/membrete', 'ReportesController@membrete')->name('membrete');
+	// Route::get('/contra', 'AlumnosController@contrasenias');
 });

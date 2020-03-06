@@ -46,7 +46,8 @@
 
     {{-- <h2>Grupo: {{ $alumnos_en_el_grupo[0]->grupo }}</h2> --}}
     <div align="center">
-        <img src="{{ asset('argon') }}/img/brand/cabeceraSM.png" alt="cabecera" title="cabecera">
+        <img src="{{ asset('argon') }}/img/brand/cabeceraL.png" alt="cabecera" title="cabecera">
+        <p>{{ $membrete[0]->descripcion }}</p>
     </div>
     <br><br>
 
@@ -107,14 +108,14 @@
         {{ $datosGrupo[0]->nombres }} {{ $datosGrupo[0]->ap_paterno }} @if ($datosGrupo[0]->ap_materno!=null){{ $datosGrupo[0]->ap_materno }} @endif
     </div>
     <div id="texto-dos">
-        LIC. JUANA ISABEL RAM&Iacute;REZ HERN&Aacute;NDEZ
+        M.E. GABRIELA AGUILAR ORTIZ
     </div>
     <br>
     <div id="texto-uno">
         <small> DOCENTE
     </div>
     <div id="texto-dos">
-        JEFA DE LA DIVISI&Oacute;N DE ESTUDIOS PROFESIONALES</small>
+        JEFA DEL DEPTO. DE GESTI&Oacute;N TECNOL&Oacute;GICA Y VINCULACI&Oacute;N</small>
     </div>
 </div>
 

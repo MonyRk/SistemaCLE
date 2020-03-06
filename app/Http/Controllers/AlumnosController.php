@@ -16,7 +16,10 @@ use App\Http\Requests\ValidarCrearAlumnoRequest;
 use App\Inscripcion;
 use App\Periodo;
 use App\ResultadoPregunta;
+use App\NumFormato;
 use CreateAlumnosInscritosTable;
+
+use Barryvdh\DomPDF\Facade as PDF;
 
 class AlumnosController extends Controller
 {
@@ -37,8 +40,8 @@ class AlumnosController extends Controller
                     ->whereNull('personas.deleted_at')
                     ->orderBy('alumnos.num_control','ASC')
                     ->paginate(25);
-        // $alumnos_sin_actividad = Alumno::where
     
+                    
         return view('alumnos.alumnos',compact('datos_alumnos','usuarioactual'));
     }
 
@@ -65,13 +68,13 @@ class AlumnosController extends Controller
 
     public function create()
     {
-        // $usuarioactual=\Auth::user(); 
+        $usuarioactual=\Auth::user(); 
         // dd($usuarioactual);
         $nombres_municipios = Municipio::select('*')->get();
     
         $niveles = Nivel::select('*')->get();
        
-        return view('alumnos.createAlumno',compact('nombres_municipios','niveles'));
+        return view('alumnos.createAlumno',compact('nombres_municipios','niveles','usuarioactual'));
     }
 
     
@@ -83,7 +86,16 @@ class AlumnosController extends Controller
     public function store(ValidarCrearAlumnoRequest $request)
     {
         $data = request()->all();
+        if (request()->has('externo')) {
             
+        }else{
+            $data = request()->validate([
+                'numControl' => array('required','regex:/^[A-Z]{1}\d{8,10}|\d{8,10}$/'),
+                'carrera' => 'required',
+                'semestre' => 'required',
+            ]); 
+        }
+        
         // se crea la persona 
         $agregar = Persona::firstOrCreate([
             'curp' => $data['curp']
@@ -103,6 +115,25 @@ class AlumnosController extends Controller
 
         DB::update('update personas set ap_materno = ? where curp = ?', [$data['apMaterno'],$data['curp']]);
         
+            if(request()->has('externo')){
+                $cadena = '';
+                $numero = NumFormato::find(2);
+                $caracteres = 8-(strlen($numero->num));
+                for ($i=0; $i < $caracteres; $i++) { 
+                    $cadena = $cadena.'0';
+                }
+                // $numControlExterno = 
+                $data['numControl'] = 'E'.$cadena.$numero->num;
+                NumFormato::find(2)->update([
+                    'num' => $numero->num+1
+                    ]);
+                    
+                $data['carrera'] = 'Externo';
+                $data['semestre'] = 1;
+
+                
+            }
+// dd($data['numControl']);
         //se crea el estudiante
         Alumno::firstOrCreate([
             'curp_alumno' => $data['curp']
@@ -110,7 +141,7 @@ class AlumnosController extends Controller
             'num_control' => $data['numControl'],
             'carrera' => $data['carrera'],
             'semestre' => $data['semestre'],
-            'estatus' => 'no inscrito',
+            'estatus' => 'No Inscrito',
         ]);
 
         //se crea el usuario para accesar
@@ -295,7 +326,7 @@ class AlumnosController extends Controller
             'email' => array('sometimes','nullable','email','regex:/^[A-z0-9\\._-]+@[A-z0-9][A-z0-9-]*(\\.[A-z0-9_-]+)*\\.([A-z]{2,6})$/'),
             'edad' =>'required|digits:2',
             'sexo' => 'required',
-            'numControl' => array('required','regex:/^[A-Z]{1}\d{8}|\d{8}$/'),
+            'numControl' => array('required','regex:/^[A-Z]{1}\d{8,10}|\d{8,10}$/'),
             'carrera' => 'required',
             'semestre' => 'required',
         ]); 
@@ -505,5 +536,39 @@ class AlumnosController extends Controller
     }
 
     
+
+
+
+
+
+
+
+
+//     public function contrasenias(){
+//         $personas = Persona::where('tipo','alumno')
+//         // ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+//         ->leftjoin('alumnos','personas.curp','=','alumnos.curp_alumno')
+//         ->where('alumnos.num_control','like','91%')
+//         ->whereNull('alumnos.nivel_inicial')
+//         ->orderBy('personas.curp','DESC')->get();   
+//         // $pdfBoleta =  PDF::loadView('contra',compact('personas'));
+//         // return $pdfBoleta->download('usuarios.pdf');
+// // dd($personas);
+//         foreach ($personas as $persona) {
+//             User::firstOrCreate([
+//                 'curp_user' => $persona->curp
+//             ],[
+//                 'name' => $persona->nombres,
+//                 'password' => bcrypt($persona->curp),
+//                 'tipo' => 'alumno'
+//             ]);
+//         }
+     
+//         return 'Listo, segun';
+
+//     }
+
+
+
 
 }

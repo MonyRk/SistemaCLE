@@ -127,7 +127,12 @@
                             <label class="custom-control-label" for="19:00">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __('19:00') }}</label>
                         </div>
                     </div>
-                    <div class="col"></div>
+                    <div class="col">
+                        <div class="custom-control custom-control-alternative custom-checkbox mb-3">
+                            <input class="custom-control-input" id="sabados" name="sabados" type="checkbox" value="sabados">
+                            <label class="custom-control-label" for="sabados">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __('8:00-13:30') }}</label>
+                        </div>
+                    </div>
                     <div class="col"></div>
                 </div>
                 <div class="text-center">

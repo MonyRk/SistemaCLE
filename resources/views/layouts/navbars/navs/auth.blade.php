@@ -1,14 +1,15 @@
 <!-- Top navbar -->
 <div class=" bg-gradient-pantone py-3 py-lg-4 ">
         <div class="container">
-            <div class="row align-items-center" style="resize: both;">
-                <div class="navbar navbar-expand-lg" data-toggle="collapse" data-target="#icono">
-                    <img src="{{ asset('argon') }}/img/brand/logosep.png" class="img-responsive" HSPACE="10" VSPACE="10">
-                    <img src="{{ asset('argon') }}/img/brand/logotecnmx.png" style="" HSPACE="10" VSPACE="10">
+            <div class="row align-items-center">
+                <div class="navbar navbar-expand-lg">
+                    <img src="{{ asset('argon') }}/img/brand/logosep.png" class="img-responsive" HSPACE="10">
+                    <img src="{{ asset('argon') }}/img/brand/logotecnmx.png" style="" HSPACE="10">
                 </div>
-                <div class="pl-lg-9 pr-lg--9">
-                    <img src="{{ asset('argon') }}/img/brand/logotec1.png" class="" HSPACE="10" VSPACE="10">
-                    <img src="{{ asset('argon') }}/img/brand/logo11.png" class="" HSPACE="10" VSPACE="10">
+                <div class="navbar navbar-expand-lg"></div>
+                <div class="navbar navbar-expand-lg align-items-center pl-lg-9 pr-lg--9">
+                    <img src="{{ asset('argon') }}/img/brand/logotec1.png" HSPACE="10">
+                    <img style="float:right;" src="{{ asset('argon') }}/img/brand/logo11.png" HSPACE="10" >
                 </div>
             </div>
         </div>

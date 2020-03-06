@@ -188,6 +188,7 @@ google.charts.load('current', {packages: ['corechart', 'bar']});
     <div class="container" id="testing">
         <div align="center">
             <img src="{{ asset('argon') }}/img/brand/cabeceraSM.png" alt="cabecera" title="cabecera">
+            <p>{{ $membrete[0]->descripcion }}</p>
         </div>
 
         <h4 class="text-dark" align="center">Ingresos Estimados de la CLE del Periodo {{ $periodo[0]->descripcion }} {{ $periodo[0]->anio }}</h4>

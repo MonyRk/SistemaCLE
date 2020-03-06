@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Alumno;
 use App\Boleta;
+use App\Cambio;
 use App\Grupo;
 use App\Historial;
 use App\Inscripcion;
+use App\Membrete;
 use App\Periodo;
 use App\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class BoletaController extends Controller
 {
@@ -54,6 +57,7 @@ class BoletaController extends Controller
                                         ->leftjoin('grupos','grupos.id_grupo','=','boletas.id_grupo')
                                         ->leftjoin('alumnos','alumnos.num_control','=','boletas.num_control')
                                         ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+                                        // ->orderBy('alumnos.num_control')
                                         ->get();
 
             if ($alumnos_inscritos->isEmpty()) {
@@ -90,7 +94,7 @@ class BoletaController extends Controller
                                         ->leftJoin('personas','alumnos.curp_alumno','=','personas.curp')  
                                         ->where('boletas.id_grupo',$data['grupo']) 
                                         ->whereNull('boletas.deleted_at')
-                                        ->orderBy('personas.ap_paterno','ASC')  
+                                        ->orderBy('alumnos.num_control','ASC')  
                                         ->get();
 
         }
@@ -110,7 +114,9 @@ class BoletaController extends Controller
     {
         
         $data = request()->all();
-        // dd($data);
+        // dd(Carbon::now()->format('Y-m-d H:m:s'));
+        $usuarioactual= \Auth::user();
+        
         $total = count($data)-3;
         
         for ($i=0; $i < $total; $i++) { 
@@ -120,7 +126,28 @@ class BoletaController extends Controller
             } else{
                 $c_final = 0;
             }
+            $calificaciones_actuales =
+            Boleta::where('num_control',$arregloCalif[0])
+            ->where('id_grupo',$data['grupo'])->get();
 
+            if ($arregloCalif[1] != $calificaciones_actuales[0]->calif1 && $arregloCalif[1] > 0
+            ||$arregloCalif[2] != $calificaciones_actuales[0]->calif2 && $arregloCalif[2] > 0
+            ||$arregloCalif[3] != $calificaciones_actuales[0]->calif3 && $arregloCalif[3] > 0) {
+                Cambio::create([
+                    'boleta' => $calificaciones_actuales[0]->id_boleta,
+                    'calif1_previo' => $calificaciones_actuales[0]->calif1,
+                    'calif1_nuevo' => $arregloCalif[1],
+                    'calif2_previo' => $calificaciones_actuales[0]->calif2,
+                    'calif2_nuevo' => $arregloCalif[2],
+                    'calif3_previo' => $calificaciones_actuales[0]->calif3,
+                    'calif3_nuevo' => $arregloCalif[3],
+                    'usuario' => $usuarioactual->id,
+                    'fecha' => Carbon::now()->format('Y-m-d'),
+                    'hora' => Carbon::now()->format('H:m:s')
+                    ]);
+            }
+
+            $actualizacion_boleta =
             Boleta::where('num_control',$arregloCalif[0])
                 ->where('id_grupo',$data['grupo'])
                 ->update([
@@ -129,11 +156,15 @@ class BoletaController extends Controller
                     'calif3' => $arregloCalif[3],
                     'faltas' => $arregloCalif[4],
                     'calif_f' => $c_final
-                ]); 
-            $grupo = Grupo::where('grupos.id_grupo',$data['grupo'])
-                            ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
-                            ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
-                            ->get(); 
+                ]);
+                ;
+                // dd($calificaciones_actuales);
+                // UPDATE `boletas` SET `calif1`=NULL,`calif2`=NULL,`calif3`=NULL,`calif_f`=NULL,`faltas`=NULL WHERE `id_grupo` = 11
+
+            // $grupo = Grupo::where('grupos.id_grupo',$data['grupo'])
+            //                 ->leftjoin('periodos','periodos.id_periodo','=','grupos.periodo')
+            //                 ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
+            //                 ->get(); 
                     
                     
             //ACTUALIZA EL HISTORIAL AL GENERAR EL ACTA DE CALIFICACIONES
@@ -175,10 +206,11 @@ class BoletaController extends Controller
         if($request->ajax()){ 
         
             $grupos = Grupo::where('periodo',$request->id_periodo)
+                            ->leftjoin('nivels','nivels.id_nivel','=','grupos.nivel_id')
                         ->get();
-
+            
                     foreach ($grupos as $grupo) {
-                $gruposArray[$grupo->id_grupo] = array ($grupo->grupo);
+                $gruposArray[$grupo->id_grupo] = array ($grupo->grupo.' - '.$grupo->nivel.$grupo->modulo);
             }
             return response()->json($gruposArray);
         }
@@ -219,9 +251,9 @@ class BoletaController extends Controller
                             ->leftjoin('docentes','docentes.id_docente','=','grupos.docente')
                             ->leftjoin('personas','personas.curp','=','docentes.curp_docente')
                             ->get();
-                                    
+        $membrete = Membrete::get();                            
                                     // return view('pdf.boletaspdf',compact('datosEstudiante','datosGrupo'));
-        $pdfBoleta =  PDF::setPaper('A4','landscape')->loadView('pdf.boletaspdf',compact('datosEstudiante','datosGrupo'));
+        $pdfBoleta =  PDF::setPaper('A4','landscape')->loadView('pdf.boletaspdf',compact('datosEstudiante','datosGrupo','membrete'));
         return $pdfBoleta->download($alumno.'-Boleta-'.strftime("%b%Y").'.pdf');
     }
 
@@ -234,7 +266,7 @@ class BoletaController extends Controller
         ->leftjoin('docentes','docentes.id_docente','=','grupos.docente')
         ->leftjoin('personas','docentes.curp_docente','=','personas.curp')
         ->get();
-        
+        $membrete = Membrete::get();
         $nivelGrupo = $infoGrupo[0]->nivel.$infoGrupo[0]->modulo;
 
         $alumnos_inscritos = Inscripcion::where('alumno_inscrito.id_grupo',$grupo)
@@ -248,8 +280,8 @@ class BoletaController extends Controller
                                         
         
         $this->actualizarHistoriales($alumnos_inscritos,$nivelGrupo,$infoGrupo[0]->id_grupo);               
-        // return view('pdf.actaCalificaciones',compact('infoGrupo','alumnos_inscritos'));                          
-        $pdfBoleta =  PDF::loadView('pdf.actaCalificaciones',compact('infoGrupo','alumnos_inscritos'));
+        // return view('pdf.actaCalificaciones',compact('infoGrupo','alumnos_inscritos','membrete'));                          
+        $pdfBoleta =  PDF::loadView('pdf.actaCalificaciones',compact('infoGrupo','alumnos_inscritos','membrete'));
         return $pdfBoleta->download($infoGrupo[0]->grupo.'-ActaCalificaciones-'.strftime("%b%Y").'.pdf');
 
     }
@@ -265,6 +297,64 @@ class BoletaController extends Controller
                 Historial::where('num_control',$alumno->num_control)->update([$nivelGrupo => 'reprobado']);
             }
         }
+
+    }
+
+    public function cambiosCalificaciones(){
+        $cambios = Cambio::leftjoin('users','users.id','=','cambios.usuario')
+                ->leftjoin('personas','personas.curp','=','users.curp_user')
+                ->leftjoin('boletas','boletas.id_boleta','=','cambios.boleta')
+                ->leftjoin('alumnos','alumnos.num_control','=','boletas.num_control')
+                // ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+                ->orderBy('cambios.updated_at','desc')
+                ->orderBy('cambios.boleta')
+                ->select('users.id','users.curp_user','users.tipo',
+                         'personas.curp','personas.nombres','personas.ap_paterno','personas.ap_materno',
+                         'boletas.*',
+                         'cambios.*',
+                         'alumnos.num_control')
+                ->paginate(25);
+
+        // $estudiantes = Cambio::leftjoin('boletas','boletas.id_boleta','=','cambios.boleta')
+        //         ->leftjoin('alumnos','alumnos.num_control','=','boletas.num_control')
+        //         ->leftjoin('personas','personas.curp','=','alumnos.curp_alumno')
+        //         ->orderBy('cambios.updated_at','desc')
+        //         ->orderBy('cambios.boleta')
+        //         ->select('personas.curp','personas.nombres','personas.ap_paterno','personas.ap_materno',
+        //                 'boletas.id_boleta','boletas.num_control',
+        //                 'cambios.id_cambio','cambios.boleta',
+        //                 'alumnos.num_control')
+        //         ->get();
+        // dd($cambios,$estudiantes);
+        return view('catalogos.cambiosCalif.cambios',compact('cambios'));
+    }
+
+    public function buscarCambios(Request $request){
+        $search = $request->all();
+
+        $cambios = Cambio::leftjoin('users','users.id','=','cambios.usuario')
+                ->leftjoin('personas','personas.curp','=','users.curp_user')
+                ->leftjoin('boletas','boletas.id_boleta','=','cambios.boleta')
+                ->leftjoin('alumnos','alumnos.num_control','=','boletas.num_control')
+                ->orderBy('cambios.updated_at','desc')
+                ->orderBy('cambios.boleta')
+                ->select('users.id','users.curp_user','users.tipo',
+                        'personas.curp','personas.nombres','personas.ap_paterno','personas.ap_materno',
+                        'boletas.*',
+                        'cambios.*',
+                        'alumnos.num_control')
+                ->where('alumnos.num_control','like','%'.$search['buscar'].'%')
+                ->orWhere('personas.ap_paterno','like','%'.$search['buscar'].'%')
+                ->orWhere('personas.ap_materno','like','%'.$search['buscar'].'%')
+                ->orWhere('personas.nombres','like','%'.$search['buscar'].'%')
+                ->orWhere('users.tipo','like','%'.$search['buscar'].'%')
+                ->orWhere('cambios.fecha','=',$search['buscar'])
+                ->orWhere('cambios.hora','=',$search['buscar'])
+                ->paginate(25)
+                ->appends('buscar',$search['buscar']);
+
+        return view('catalogos.cambiosCalif.cambios',compact('cambios'));
+        
     }
 
 }

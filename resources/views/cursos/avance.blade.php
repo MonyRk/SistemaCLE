@@ -15,7 +15,12 @@ $usuarioactual = \Auth::user();
 
 <div class="container-fluid m--t text-center">
         <div class="text-right mt-2">
-            <a href="{{ route('inicio') }}" class="btn btn-outline-primary btn-sm mt-2">
+            <a @if ($usuarioactual->tipo == 'coordinador')
+                href="{{ route('buscarCurso') }}"
+                @else
+                href="{{ route('inicio') }}"
+                @endif
+             class="btn btn-outline-primary btn-sm mt-2">
                 <span>
                     <i class="fas fa-reply"></i> &nbsp; Regresar
                 </span>

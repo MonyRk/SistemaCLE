@@ -14,7 +14,7 @@
 </div>
     <div class="container-fluid m--t"> 
         <div class="text-right">
-            <a href="{{ back() }}" class="btn btn-outline-primary btn-sm mt-4">
+            <a href="{{ route('periodoinscripciones') }}" class="btn btn-outline-primary btn-sm mt-4">
                 <span>
                     <i class="fas fa-reply"></i> &nbsp; Regresar
                     <input type="hidden" name="periodo" value="{{ $grupo[0]->periodo }}">
@@ -70,7 +70,7 @@
                             {{ $ag->num_control }}
                         </th>
                         <th scope="row">
-                            {{ $ag->nombres }} {{ $ag->ap_paterno }} {{ $ag->ap_materno }}
+                            {{ $ag->ap_paterno }} @if ($ag->ap_materno != null ) {{ $ag->ap_materno }} @endif {{ $ag->nombres }} 
                         </th>
                         <td scope="row">
                                 <div class="custom-control custom-control-alternative custom-checkbox">

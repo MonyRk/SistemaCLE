@@ -2,7 +2,7 @@
     @include('flash-message')
 </div> --}}
 {{-- COORDINADOR --}}
-@if($usuarioactual->tipo == 'escolares') @include('layouts.headers.cardsEscolares') @endif
+@if($usuarioactual->tipo == 'escolares') @include('layouts.headers.cardsEscolares')@endif
 @if($usuarioactual->tipo == 'docente') @include('layouts.headers.cardsDocente') @endif
 @if($usuarioactual->tipo == 'alumno') @include('layouts.headers.cardsEstudiante') @endif
 @if($usuarioactual->tipo == 'coordinador') 

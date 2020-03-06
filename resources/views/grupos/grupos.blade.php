@@ -9,7 +9,7 @@
 
     <div class="container-fluid m--t">
         <div class="text-right">
-            <a href="{{ route('inicio') }} " class="btn btn-outline-primary btn-sm mt-4">
+            <a href="{{ route('indexGrupos') }} " class="btn btn-outline-primary btn-sm mt-4">
                 <span>
                     <i class="fas fa-reply"></i> &nbsp; Regresar
                 </span>
@@ -29,7 +29,9 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-search"></i></span>
                                     </div>
+                                    
                                     <input name="buscar" class="form-control" placeholder="Buscar" type="text">
+                                    <input type="hidden" name="periodo"  value="{{ $periodos->id_periodo }}">
                                 </div>
                             </div>
                         </form>
@@ -65,8 +67,8 @@
                                         <th scope="col">Aula</th>
                                         <th scope="col">Hora</th>
                                         <th scope="col">Docente</th>
-                                        {{-- <th scope="col">Periodo</th> --}}
                                         <th scope="col">Modalidad</th>
+                                        <th scope="col">Capacidad</th>
                                         <th scope="col">Editar</th>
                                         <th scope="col">Eliminar</th>
                                     </tr>
@@ -90,13 +92,13 @@
                                             {{ $grupo->hora }}
                                         </td>
                                         <td>
-                                            {{ $grupo->nombres }} {{ $grupo->ap_paterno }} @if ( $grupo->ap_materno != null ) {{ $grupo->ap_materno }} @endif
+                                            {{ $grupo->nombres }} {{ $grupo->ap_paterno }} @if ( $grupo->ap_materno != null ) {{ $grupo->ap_materno }} @endif 
                                         </td>
-                                        {{-- <td>
-                                            {{ $grupo->descripcion }} {{ $grupo->anio }}
-                                        </td> --}}
                                         <td>
                                             {{ $grupo->modalidad }}
+                                        </td>
+                                        <td>
+                                            {{ $grupo->cupo }}
                                         </td>
                                         @if ($periodo_actual[0]->id_periodo == $grupo->id_periodo)
                                             <td class="text-center"> 
@@ -115,7 +117,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        {{ $grupos->links() }}
+                        {{ $grupos->appends(['periodo' => $periodos->id_periodo])->links() }}
                     </div>
                 </div>
             </div>

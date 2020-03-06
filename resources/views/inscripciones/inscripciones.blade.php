@@ -113,6 +113,9 @@ $usuarioactual = \Auth::user();
                                     <th scope="col">Hora</th>
                                     @if($usuarioactual->tipo == 'coordinador')
                                         <th scope="col">Docente</th> 
+                                        <th scope="col">Modalidad</th>
+                                        <th scope="col">Capacidad Total</th>
+                                        <th scope="col">Capacidad Actual</th>
                                         @if($periodo_actual[0]->id_periodo == $p[0]->id_periodo)                                     
                                             <th scope="col">Inscribir</th>
                                             <th scope="col">Modificar</th>
@@ -132,19 +135,34 @@ $usuarioactual = \Auth::user();
                                     <th>
                                         {{ $grupo->nivel }}{{ $grupo->modulo }}
                                     </th>
-                                    <th>
+                                    <td>
                                         {{ $grupo->idioma }}
-                                    </th>
-                                    <th>
+                                    </td>
+                                    <td>
                                         {{ $grupo->edificio }}{{ $grupo->num_aula }}
-                                    </th>
-                                    <th>
+                                    </td>
+                                    <td>
                                         {{ $grupo->hora }}
-                                    </th>
+                                    </td>
                                     @if($usuarioactual->tipo == 'coordinador')
-                                    <th>
+                                    <td>
                                         {{ $grupo->nombres }} {{ $grupo->ap_paterno }} {{ $grupo->ap_materno }}
-                                    </th> 
+                                    </td> 
+                                    <td>
+                                        {{ $grupo->modalidad }}
+                                    </td>
+                                    <td>
+                                        {{ $grupo->cupo }}
+                                    </td>
+                                    <td>
+                                        @php
+                                            
+                                            $alumnos_en_el_grupo = 
+                                            App\Inscripcion::where('alumno_inscrito.id_grupo',$grupo->id_grupo)
+                                    ->count();
+                                        @endphp
+                                        {{ $alumnos_en_el_grupo }}
+                                    </td>
                                     @if($periodo_actual[0]->id_periodo == $p[0]->id_periodo)  
                                     <td >
                                         <a href="{{ route('inscribirEstudiantes',$grupo->id_grupo) }}" class="text-primary">
